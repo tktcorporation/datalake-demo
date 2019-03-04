@@ -1,0 +1,23 @@
+@import "~bootswatch/dist/darkly/_variables.scss";
+@import '~bootstrap/scss/bootstrap.scss';
+@import "~bootswatch/dist/darkly/_bootswatch.scss";
+
+@import './vars.scss';
+
+#app {
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: white;
+}
+
+// Helpers
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.uppercase {
+  text-transform: uppercase;;
+}

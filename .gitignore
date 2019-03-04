@@ -1,0 +1,29 @@
+certs
+#node_modules
+data
+public/uploads
+public/encoded
+backups
+dist
+*.log
+.env
+node_modules
+bower_components
+
+# Pinegrow
+_pgbackup
+
+# IntelliJ
+
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+*.iws
+.DS_Store
+log/
+target/
+
+# Sublime project files
+*.sublime*
