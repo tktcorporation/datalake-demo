@@ -1,14 +1,13 @@
 <template>
-    <div class="container" align="left">
+    <div id="SimilarPages" class="container" align="left">
 
       <div class="jumbotron mt-4">
 
         <h1 class="display-4">NLP Demo</h1>
 
-        <p class="lead">Enter a short, sample sentence as a seed to generate the fake content using the</a></p>
+        <p class="lead">Enter a some text and hit submit to find pages from VOA News that match.</a></p>
 
           <div class="form-group">
-            <label for="exampleInputEmail1">Text</label>
             <textarea 
                 type="email" 
                 @keyup.13="onSubmit()" 
@@ -19,38 +18,89 @@
                 :disabled="isLoading"
                 rows=4
                 v-model="seedText"></textarea>
-            <small id="emailHelp" class="form-text text-muted">Use simple, short and non complex text.</small>
           </div>
 
-          <div v-if="nlpInfo">
-              <div class="mb-1">
-                  <label>Entities</label>
-                <span v-for="(topic, index) in nlpInfo.topics" :key="index" class="badge badge-primary">{{topic}}</span>
+          <div v-if="nlpInfo" class="mb-4">
+              <div class="mt-1" v-if="nlpInfo.topics.length > 0">
+                  <h6 class="m-0">Topics</h6>
+                <span v-for="(topic, index) in nlpInfo.topics" :key="index" class="badge badge-primary mr-1">{{topic}}</span>
               </div>
-              <div class="mb-1">
-                  <label>Entities</label>
-                <span v-for="(cat, index) in nlpInfo.categories" :key="index" class="badge badge-info">{{cat}}</span>
+              <div class="mt-2" v-if="nlpInfo.categories.length > 0">
+                  <h6 class="m-0">Categories</h6>
+                <span v-for="(cat, index) in nlpInfo.categories" :key="index" class="badge badge-info mr-1">{{cat}}</span>
               </div>
-              <div class="mb-1">
-                  <label>Entities</label>
-                <span v-for="(entity, index) in nlpInfo.entities" :key="index" class="badge badge-success">{{entities}}</span>
+              <div class="mt-2" v-if="nlpInfo.entities.length > 0">
+                  <h6 class="m-0">Entities</h6>
+                <span v-for="(entity, index) in nlpInfo.entities" :key="index" class="badge badge-success mr-1">{{entity}}</span>
               </div>
           </div>
          
-          <button :disabled="isLoading" type="submit" class="btn btn-primary btn-lg" @click="onSubmit()">Submit</button>
+        <div class="row">
+            <div class="col" align="left">
+                  <button :disabled="isLoading" type="submit" class="btn btn-primary btn-lg" @click="onSubmit()">Submit</button>
+                    <span v-if="isLoading" class="text-primary" style="font-size:24px">
+                    <i class="fas fa-cog fa-spin ml-2"></i>
+                    </span>
 
-        <span v-if="isLoading" class="text-primary" style="font-size:24px">
-          <i class="fas fa-cog fa-spin ml-2"></i>
-        </span>
+                    <span v-if="isLoading" class="text-primary" style="font-size:24px">
+                    <i class="fas fa-robot fa-spin ml-2"></i>
+                    </span>
+            </div>
+            <div class="col" align="right">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sensitivity: {{thresholdType}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <span class="dropdown-item" @click="setThreshold('strict')">Strict</span>
+                        <span class="dropdown-item" @click="setThreshold('medium')">Medium</span>
+                        <span class="dropdown-item" @click="setThreshold('loose')">Loose</span>
+                    </div>
+                </div>
+                </div>
+        </div>
 
-        <span v-if="isLoading" class="text-primary" style="font-size:24px">
-          <i class="fas fa-robot fa-spin ml-2"></i>
-        </span>
+
+
+
+
 
         <p v-if="error" class='text-danger mt-3'>{{error}}</p>
+    </div>
 
+    <div class="jumbotron mt-4">
         <div v-if="pages" class="pt-0 mt-0 text-generated">
-            <pre>{{pages}}</pre>
+
+            <ul class="list-unstyled" v-for="page in pages" :key="page.id">
+                <li class="media">
+                    
+                    <a :href="page.url" target="_blank">
+                    <img :src="getImage(page)" class="mr-3" alt="page image" style="height:100px">
+                    </a>
+
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><span class="badge badge-primary">Score: {{page.score | number(2)}}</span> {{page.title}}</h5>
+                        
+                        {{page.extract}}
+
+                        <div v-if="nlpInfo" class="mb-4">
+                            <div class="">
+                                <span v-for="(topic, index) in page.matchedTopics" :key="index" class="badge badge-primary mr-1">{{topic}}</span>
+                            </div>
+                            <div class="">
+                                <span v-for="(cat, index) in page.matchedCategories" :key="index" class="badge badge-info mr-1">{{cat}}</span>
+                            </div>
+                            <div class="">
+                                <span v-for="(entity, index) in page.matchedEntities" :key="index" class="badge badge-success mr-1">{{entity}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    
+                </li>
+            </ul>
+
         </div>
 
     </div>
@@ -77,37 +127,94 @@ export default {
             error: null,
             isLoading: false,
             nlpInfo: null,
-            pages: null
+            pages: null,
+            thresholdType: 'medium',
+            thresholds: {}
         };
     },
 
     computed: {},
 
-    watch: {
-        account: function(newVal) {}
+    mounted(){
+        this.setThreshold(this.thresholdType)
     },
 
     methods: {
+
+        setThreshold(val){
+
+            this.thresholdType = val
+
+            if (val == 'strict'){
+                this.thresholds = {
+                    topics: 0.6,
+                    category: 0.6,
+                    entities: 0.5                
+                }
+            }
+            else if (val == 'medium'){
+                this.thresholds = {
+                    topics: 0.25,
+                    category: 0.25,
+                    entities: 0.3             
+                }
+            }
+            else if (val == 'loose'){
+                this.thresholds = {
+                    topics: 0.01,
+                    category: 0.01,
+                    entities: 0.01                
+                }
+            }
+            
+            this.$log('thresholds = ', this.thresholds)
+        },
+
+        getImage(page){
+            return (page && page.image) ? page.image : "http://via.placeholder.com/178x100"
+            // "http://placeimg.com/178/100/nature"
+        },
+
         onSubmit(){
             
             this.isLoading = true
-
+            this.page = null
+            this.nlpInfo = null
+            this.setThreshold(this.thresholdType)
+            
             var path = 'http://127.0.0.1:5001/nlp/similar'
 
             if (window.location.hostname.search('localhost') == -1) {
                 path = 'nlp/similar'
             }
 
-            let body = {text: this.seedText}
+            let body = {
+                text: this.seedText,
+                tc: this.thresholds.category,
+                tt: this.thresholds.topics,
+                te: this.thresholds.entities
+            }
+
             path = path + '?' + $.param(body);
+
+            this.$log('path = ', path)
 
             let successCallback = (response)=>{
                 this.isLoading = false
                 this.$log(response)
                 
                 try {
-                    this.similar = response.body.similar
+                    //this.pages = response.body.similar
+
                     this.nlpInfo = response.body.nlp
+                    this.pages = []
+
+                    for (let i=0; i<response.body.similar.length; i+=1){
+                        let page = response.body.similar[i]
+                        if (page.score > 0 && page.image){
+                            this.pages.push(page)
+                        }
+                    }
                 }
                 catch(err){
                     this.error = err.toString()
@@ -117,7 +224,12 @@ export default {
 
             let errorCallback = (response) => {
                 this.isLoading = false
-                this.error = response.body
+                if (response.body && response.body.message){
+                    this.error = response.body.message
+                }
+                else {
+                    this.error = response.body
+                }
             }
 
             Vue.http.get(path, body).then(successCallback, errorCallback); 
@@ -130,9 +242,30 @@ export default {
 
 
 <style lang="scss">
-.text-generated {
-    font-size:18px;
-    color: #A8B2CD;
-    font-weight: 500;
+
+#SimilarPages {
+
+    .text-generated {
+        font-size:18px;
+        color: #A8B2CD;
+        font-weight: 500;
+    }
+
+    .badge {
+        font-size:12px;
+    }
+
+    .badge-primary {
+        color: #ccc;
+    }
+
+    .badge-info {
+        color: #F3F5F9;
+    }
+
+    .badge-primary {
+        color: #A8B2CD;
+    }
+
 }
 </style>

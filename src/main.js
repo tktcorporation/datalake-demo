@@ -6,6 +6,7 @@ import App from './App'
 import router from './router'
 import Logger from './utils/Logger'
 import Resource from 'vue-resource'
+import filters from './filters'
 
 Vue.use(Logger, { level: 'debug' })
 Vue.use(Resource)
