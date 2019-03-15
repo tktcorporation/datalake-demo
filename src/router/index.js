@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../components/pages/Home'
+//import Home from '../components/pages/Home'
+import SocialDashboard from '../components/pages/SocialDashboard'
 import SimilarPages from '../components/pages/SimilarPages'
 import NotFound from '../components/pages/NotFound'
 
@@ -14,7 +15,7 @@ var router = new Router({
     mode: useMode,
     linkActiveClass: 'active',
     routes: [
-        { path: '/home', name: 'home', component: Home },
+        { path: '/social', name: 'social-dashboard', component: SocialDashboard },
         { path: '/nlp', name: 'similar', component: SimilarPages },
         { path: '*', name: 'not-found', component: NotFound } // 404 page
     ],

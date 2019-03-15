@@ -224,12 +224,6 @@ export default {
 
             let errorCallback = (response) => {
                 this.isLoading = false
-                if (response.body && response.body.message){
-                    this.error = response.body.message
-                }
-                else {
-                    this.error = response.body
-                }
             }
 
             Vue.http.get(path, body).then(successCallback, errorCallback); 

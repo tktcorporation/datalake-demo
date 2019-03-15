@@ -17,7 +17,7 @@
                 <ul class="navbar-nav ml-auto w-100 d-lg-none mobile-menu">
 
                     <li class="nav-item" >
-                        <router-link class="nav-link" :to="{name:'home'}" data-toggle="collapse" data-target="#navbarSupportedContent">Content Demo</router-link>
+                        <router-link class="nav-link" :to="{name:'social-dashboard'}" data-toggle="collapse" data-target="#navbarSupportedContent">Social</router-link>
                     </li>
 
                     <li class="nav-item" >
@@ -29,7 +29,7 @@
                 <ul class="navbar-nav ml-auto d-none d-lg-flex">
 
                     <li class="nav-item">
-                        <router-link class="nav-link" :to="{name:'home'}">Content Demo</router-link>
+                        <router-link class="nav-link" :to="{name:'social-dashboard'}">Social</router-link>
                     </li>
 
                     <li class="nav-item">
