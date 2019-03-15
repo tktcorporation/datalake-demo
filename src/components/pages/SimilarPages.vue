@@ -182,10 +182,10 @@ export default {
             this.nlpInfo = null
             this.setThreshold(this.thresholdType)
             
-            var path = 'http://127.0.0.1:5001/nlp/similar'
+            var path = 'http://127.0.0.1:5001/lang/similar'
 
             if (window.location.hostname.search('localhost') == -1) {
-                path = 'nlp/similar'
+                path = 'lang/similar'
             }
 
             let body = {
