@@ -1,5 +1,5 @@
 <template>
-    <nav id="Navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav id="Navbar" class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
 
         <div class="container">
 

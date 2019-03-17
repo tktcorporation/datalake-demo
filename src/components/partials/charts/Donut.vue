@@ -1,7 +1,16 @@
 <template>
-    <div style="height:250px; width: 250px">
-        <canvas ref="canvas" width="100%" height="100%"></canvas>
+
+    <div class="card pb-4" style="height:250px; width: 250px">
+        <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">
+                <i :class="'fab fa-'+network"></i> Interactions per post
+            </h6>
+            <div class="p-1 w-100 h-100">
+                <canvas ref="canvas" width="100%" height="100%"></canvas>
+            </div>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -12,6 +21,11 @@
 // https://www.chartjs.org/docs/latest/charts/doughnut.html
 
 import { Doughnut } from "vue-chartjs";
+import Chart from 'chart.js'
+import PleaseJS from '../../../utils/PleaseJS.js'
+import _ from "lodash";
+var tinycolor = require("tinycolor2");
+import API from '../../../api'
 
 export default {
     
@@ -19,44 +33,95 @@ export default {
 
     extends: Doughnut,
 
+    props: ['target', 'network', 'options', 'lastRefresh'],
+
     components: {
         
     },
 
     data() {
         return {
-            sections: [{ value: 25 }, { value: 25 }, { value: 25 }, { value: 25 }]
+            networks: {
+                'twitter': {color: '#1DA1F2'},
+                'youtube': {color: '#c4302b'},
+                'facebook': {color: '#3b5998'},
+                'instagram': {color: '#405DE6'},
+                'pinterest': {color: '#c8232c'}
+            },
+            labels: ['Interactions', 'Delta']
+            //data: [40, 20, 80, 10]
         };
     },
 
     computed: {},
 
+    watch: {
+        lastRefresh(val){
+            this.update()
+        }    
+    }, 
+
     mounted() {
+        this.init()
         this.render()
     },
 
     methods: {
 
-        render() {
+        init(){
+
+            var draw = Chart.controllers.doughnut.prototype.draw;
+            Chart.controllers.doughnut = Chart.controllers.doughnut.extend({
+            draw: function() {
+                draw.apply(this, arguments);
+                let ctx = this.chart.chart.ctx;
+                let _fill = ctx.fill;
+                ctx.fill = function() {
+                    ctx.save();
+                    ctx.shadowColor = 'gray';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                    _fill.apply(this, arguments)
+                    ctx.restore();
+                }
+            }
+            });
+
+        },
+
+        async update() {
+
+            this.$log('UPDATED!!!!')
+
+            let data = await API.getSocialProfileInteractionsByNetwork(this.network, this.options)
+
+            let ineteractionsPerPost = data.interactions / data.posts
+
+            this.$log(data, ineteractionsPerPost)
+
+            var delta = this.target - ineteractionsPerPost
             
-            let colors = {
-                'yellow': '#ffce56',
-                'green': '#77dd77',
-                'blue': '#36a2eb',
-                'red': '#ff6384',
-                'purple': '#cc65fe',
-                'lightGray': '#eeeeee',
-                'midGray': '#ababd5d5d5b',
-                'gray': '#585858',
+            if (delta < 0){
+                delta = 0
             }
 
+            this.$data._chart.data.datasets[0].data = [ineteractionsPerPost, delta]
+            this.$data._chart.update()
+        
+        },
+
+        render() {
+            
+            var color = this.networks[this.network].color
+
             let data = {
-                labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
+                labels: this.labels,
                 datasets: [
                     {
-                        borderColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-                        data: [40, 20, 80, 10],
-                        backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+                        backgroundColor: [color, '#000000'],
+                        borderColor: [tinycolor(color).darken(10).toString(), '#444444'],
+                        data: [0,this.target],
                     }
                 ],
             }
@@ -65,7 +130,14 @@ export default {
                 legend: {
                     display: false
                 },                
-                
+                //layout: {
+                //    padding: {
+                //        left: 3,
+                //        right: 3,
+                //        top: 3,
+                //        bottom: 3
+                //    }
+                //},                
                 cutoutPercentage: 65, 
                 fill: false, 
                 responsive: true, 
