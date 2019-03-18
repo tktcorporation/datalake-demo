@@ -1,6 +1,6 @@
 <template>
 
-    <div class="card w-100" style="height:250px;">
+    <div class="card" style="height:250px;">
         <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted">
                 <i :class="'fab fa-'+network"></i> Interactions per post

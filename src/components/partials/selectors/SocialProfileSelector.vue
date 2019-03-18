@@ -5,7 +5,7 @@
         <div class="col">
             
         <multiselect             
-            v-model="selectedProfile" 
+            v-model="selectedProfiles" 
             label="name"
             class="social-profile-selector"
             deselect-label="Can't unselect social profile" 
@@ -100,7 +100,7 @@ export default {
 		return {
             profiles: [],
             profileLabels: [],
-            selectedProfile: null,
+            selectedProfiles: null,
             selectedProfileLabels: null,
             selectNetworks: null
 		};
@@ -130,13 +130,26 @@ export default {
         },
 
         onSelectLabel(){
+
+            //this.$log('onSelectLabel', this.profiles)
+
+            let newProfiles = []
+            for (let i=0; i<this.profiles.length; i+=1){
+                let matches = _.intersection(this.profiles[i].profile_labels, this.selectedProfileLabels)
+                if (matches.length > 0){
+                    //this.$log(matches)
+                    newProfiles.push(this.profiles[i])
+                }
+            }
+            this.selectedProfiles = newProfiles
             this.$emit('onSelectProfileLabel', this.selectedProfileLabels)
+            this.$emit('onSelectProfile', this.selectedProfiles)
         },
 
-        onSelectProfile(profile){
-            this.$log('Selected ', profile)
+        onSelectProfile(){
+            this.$log('onSelectProfile')
             //this.selectedState = game
-            this.$emit('onSelectProfile', this.selectedProfile)
+            this.$emit('onSelectProfile', this.selectedProfiles)
         },
 
 

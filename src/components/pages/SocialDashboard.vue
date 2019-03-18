@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col">
-                <social-profile-selector @onSelectProfileLabel="onSelectProfileLabel"></social-profile-selector>
+                <social-profile-selector @onSelectProfile="onSelectedProfiles"></social-profile-selector>
             </div>
         </div>
 
@@ -12,11 +12,9 @@
             <div class="col" v-if="queryOptions" >
                 <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
-            <!--
-            <div class="col" v-if="networks.youtube.data">
+            <div class="col" v-if="queryOptions">
                 <donut network='youtube' :target="networks.youtube.target" :last-refresh="queryOptions"></donut>
             </div>
-            -->
             <div class="col" v-if="queryOptions">
                 <donut network='facebook' :target="networks.facebook.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
@@ -86,12 +84,13 @@ export default {
 
         },
 
-        async onSelectProfileLabel(labels){
+        async onSelectedProfiles(profiles){
             
             this.queryOptions = {
                 //start: moment().subtract(30,'days').startOf('day'),
                 //end: moment().endOf('day'),
-                profileLabels: labels.join(',')
+                //profileLabels: labels.join(',')
+                profileIds: _.map(profiles, 'id').join(','),
             }
 
             //await Promise.all([bar(), bam(), bat()].map(handleRejection));
@@ -101,7 +100,12 @@ export default {
                 let network = this.networks[name]
                 network.data = null
 
-                let res = await API.getSocialProfileMetricsByNetwork(network.name, {profileLabels: labels.join(','), proj: network.proj})
+                let opts = _.clone(this.queryOptions)
+                opts.proj = network.proj
+
+                // {profileLabels: labels.join(','), proj: network.proj}
+
+                let res = await API.getSocialProfileMetricsByNetwork(network.name, opts)
                 
                 //for (let k=0; k<res.results.length; k+=1){
 
