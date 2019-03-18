@@ -7,8 +7,8 @@ import _ from 'lodash'
 const API = {
 
     rootUrls: {
-        social: {url: '/social/', port:5003},
-        content: {url: '/content/', port:5001}
+        social: {url: '/api/social/', port:5003},
+        nlp: {url: '/api/nlp/', port:5001}
     },
     
     user: {
