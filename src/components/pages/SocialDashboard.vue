@@ -13,7 +13,7 @@
                 <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
             <div class="col" v-if="queryOptions">
-                <donut network='youtube' :target="networks.youtube.target" :last-refresh="queryOptions"></donut>
+                <donut network='youtube' :target="networks.youtube.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
             <div class="col" v-if="queryOptions">
                 <donut network='facebook' :target="networks.facebook.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
@@ -66,7 +66,7 @@ export default {
             networks: {
                 'facebook': {name: 'facebook', proj: 'interactions, date, page_posts', data: null, target: 700},
                 'twitter': {name: 'twitter', proj: 'interactions, date, profile_activities', data: null, target: 45},
-                'youtube': {name: 'youtube', proj: 'interactions_change, date', data: null, target: 35},
+                'youtube': {name: 'youtube', proj: 'interaction_change, date', data: null, target: 35},
                 'instagram': {name: 'instagram', proj: 'interactions, date', data: null, target: 400}
             }            
         };

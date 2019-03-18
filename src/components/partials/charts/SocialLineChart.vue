@@ -163,7 +163,7 @@ export default {
 						display: true,
 						scaleLabel: {
 							display: true,
-							labelString: 'value'
+							labelString: 'Interactions'
 						}
 					}]
 				}
