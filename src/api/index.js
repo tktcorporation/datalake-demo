@@ -7,8 +7,8 @@ import _ from 'lodash'
 const API = {
 
     rootUrls: {
-        social: {url: '/api/social/', port:5003},
-        nlp: {url: '/api/nlp/', port:5001}
+        social: {url: '/social/', port:5003},
+        nlp: {url: '/nlp/', port:5001}
     },
     
     user: {
@@ -30,7 +30,7 @@ const API = {
         
         for (let key in API.rootUrls){       
             if (rootUrl.search('localhost') !== -1){
-                API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + API.rootUrls[key].url
+                API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + '/api' + API.rootUrls[key].url
             }
             else {
                 API.rootUrls[key].url = rootUrl + API.rootUrls[key].url                    
