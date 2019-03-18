@@ -1,11 +1,11 @@
 <template>
 
-    <div class="card pb-4" style="height:250px; width: 250px">
+    <div class="card w-100" style="height:250px;">
         <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted">
                 <i :class="'fab fa-'+network"></i> Interactions per post
             </h6>
-            <div class="p-1 w-100 h-100">
+            <div class="p-1 pb-4 w-100 h-100">
                 <canvas ref="canvas" width="100%" height="100%"></canvas>
             </div>
         </div>
@@ -97,6 +97,10 @@ export default {
             let data = await API.getSocialProfileInteractionsByNetwork(this.network, this.options)
 
             let ineteractionsPerPost = data.interactions / data.posts
+
+            if (_.isNaN(ineteractionsPerPost)){
+                ineteractionsPerPost = 0
+            }
 
             this.$log(data, ineteractionsPerPost)
 
