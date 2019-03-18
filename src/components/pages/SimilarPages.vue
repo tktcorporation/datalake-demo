@@ -239,6 +239,8 @@ export default {
 
 #SimilarPages {
 
+    color: black;
+
     .text-generated {
         font-size:18px;
         color: #A8B2CD;
@@ -250,15 +252,12 @@ export default {
     }
 
     .badge-primary {
-        color: #ccc;
     }
 
     .badge-info {
-        color: #F3F5F9;
     }
 
     .badge-primary {
-        color: #A8B2CD;
     }
 
 }
