@@ -9,3 +9,10 @@ Vue.filter('number', function (number) {
     }
     return parseFloat(number).toFixed(2)
 });
+
+Vue.filter('percent', function (number) {
+    if (!number) {
+        return '0%';
+    }
+    return Math.round(number*100)+'%'
+});

@@ -53,6 +53,10 @@ const API = {
     },
     
     // ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Social
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
 
     async getSocialProfiles(){
         return await this.__send('get', 'social', 'profiles', null);
@@ -111,6 +115,24 @@ const API = {
     },    
 
     // ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // NLP
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async processText(opts){
+        return await this.__send('post', 'nlp', 'process-text', opts);
+    },   
+
+    async getSimilarPages(opts){
+        return await this.__send('post', 'nlp', 'similar', opts);
+    },   
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
 
     async __send(verb, service, path, opts) {
 
@@ -121,8 +143,8 @@ const API = {
 
         let body = {}
 
-        if (opts && opts.params){
-            body = opts.params
+        if (opts){
+            body = opts
         }
 
         var finalUrl = this.rootUrls[service].url + path
