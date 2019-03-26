@@ -21,6 +21,10 @@
           </div>
 
           <div v-if="nlpInfo" class="mb-4">
+              <div class="mt-1">
+                    <h6 class="m-0">Sentiment</h6>
+                    <span class="badge mr-1" :class="{'badge-danger':(nlpInfo.sentiment < 0), 'badge-success':(nlpInfo.sentiment > 0), 'badge-default':(nlpInfo.sentiment == 0)}">{{nlpInfo.sentiment}}</span>
+              </div>
               <div class="mt-1" v-if="nlpInfo.topics.length > 0">
                   <h6 class="m-0">Topics</h6>
                 <span v-for="(topic, index) in nlpInfo.topics" :key="index" class="badge badge-primary mr-1">{{topic.name}} <span class='text-percent'>({{topic.score | percent}})</span></span>
@@ -62,11 +66,6 @@
                 </div>
                 </div>
         </div>
-
-
-
-
-
 
         <p v-if="error" class='text-danger mt-3'>{{error}}</p>
     </div>
