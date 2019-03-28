@@ -24,6 +24,10 @@
                         <router-link class="nav-link" :to="{name:'similar'}" data-toggle="collapse" data-target="#navbarSupportedContent">NLP Demo</router-link>
                     </li>
 
+                    <li class="nav-item" >
+                        <router-link class="nav-link" :to="{name:'networkmaps'}" data-toggle="collapse" data-target="#navbarSupportedContent">Network Maps</router-link>
+                    </li>
+
                 </ul>
 
                 <ul class="navbar-nav ml-auto d-none d-lg-flex">
@@ -34,6 +38,9 @@
 
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{name:'similar'}">NLP Demo</router-link>
+                    </li>
+                     <li class="nav-item">
+                        <router-link class="nav-link" :to="{name:'networkmaps'}">Network maps</router-link>
                     </li>
 
                 </ul>
