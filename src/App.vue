@@ -11,7 +11,8 @@
 
 import Vue from "vue";
 import moment from "moment";
-import NavBar from "./components/layout/NavBar";
+import NavBar from "./components/layout/NavBar"
+import API from "./api"
 
 export default {
     name: "app",
@@ -20,6 +21,15 @@ export default {
     },
     computed: {},
     mounted() {
+        API.getUser()
+            .then((user)=>{
+                this.$log('User = ', user)
+                this.$store.commit('setUser', user)                
+            })
+            .catch((err)=>{
+                this.$store.commit('setUser', null)               
+            })
+
     }
 };
 </script>

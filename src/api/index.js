@@ -1,16 +1,13 @@
 import Vue from 'vue'
-import notify from '../components/partials/utils/Notifications'
-import router from '../router'
 import Resource from 'vue-resource'
-import _ from 'lodash'
-const uuidv4 = require('uuid/v4');
 const uuidv5 = require('uuid/v5');
 
 const API = {
 
     rootUrls: {
-        social: {url: '/social/', port:5003},
-        nlp: {url: '/nlp/', port:5001}
+        user: {url: '/user/', port:5000},
+        nlp: {url: '/nlp/', port:5001},
+        social: {url: '/social/', port:5003}
     },
     
     user: {
@@ -44,18 +41,23 @@ const API = {
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
+    async getUser(){
+        return await this.__send('get', 'user', '', null);
+    },
+
     /**
+     * Redirect user to the login.gov login page, which then redirects back
+     * to the authentication page.
      * @see https://developers.login.gov/oidc/
      */
     login(){
 
-        function randomString(length) {
-            // source: https://github.com/18F/fs-permit-platform/blob/c613a73ae320980e226d301d0b34881f9d954758/server/src/util.es6#L232-L237
-            return crypto.randomBytes(length).toString('hex'); 
-        }
+        // Clear tokens
+        this.setPreference('token', '')
+        this.setPreference('id_token', '')
 
         let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics'
-        let REDIRECT_URI = 'http://localhost:8080/auth/result'
+        let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`
 
         // A unique value at least 32 characters in length used for maintaining state between the request and the callback. 
         // This value will be returned to the client on a successful authorization.
@@ -82,6 +84,41 @@ const API = {
 
         window.location = url
     },
+
+    /**
+     * Take a code given by the login.gov authentication page and exchange for a access token
+     * which is used for hits to our API
+     * @param {*} code 
+     */
+    async register(code){
+        
+        let results = await this.__send('post', 'user', '', {code: code});
+        
+        console.log('REGISTERED', results)
+        
+        if (!results.token.access_token){
+            return
+        }
+
+        this.setPreference('token', results.token.access_token)
+        this.setPreference('id_token', results.token.id_token)
+
+        if (results.user && results.user.email){
+            this.user = results.user
+            this.user.authenticated = true
+        }
+
+        return results
+    },
+
+    async logout(){        
+        var opts = {
+            idToken: this.getPreference('id_token'),
+            redirect: `${window.location.protocol}//${window.location.host}`
+        }
+        await this.__send('delete', 'user', `?${$.param(opts)}`, null);
+    },
+
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -181,9 +218,10 @@ const API = {
 
         let headers = {
         //    'x-opr-uid': localStorage.getItem('opr-uid'),
-        //    'Authorization': 'Bearer ' + localStorage.getItem('opr-token')            
+            'Authorization': 'Bearer ' + this.getPreference('token')          
         }
 
+        console.log(headers)
         let body = {}
 
         if (opts){

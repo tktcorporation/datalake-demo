@@ -1,6 +1,6 @@
 @import "~bootswatch/dist/sandstone/_variables.scss";
 @import '~bootstrap/scss/bootstrap.scss';
-@import "~bootswatch/dist/sandstone/_bootswatch.scss";
+@import "~bootswatch/dist/simplex/_bootswatch.scss";
 
 @import './vars.scss';
 
@@ -9,7 +9,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: white;
 }
 
 // Helpers

@@ -7,6 +7,7 @@ import router from './router'
 import Logger from './utils/Logger'
 import Resource from 'vue-resource'
 import filters from './filters'
+import store from './store' // Veux store
 
 Vue.use(Logger, { level: 'debug' })
 Vue.use(Resource)
@@ -18,5 +19,6 @@ new Vue({
     el: '#app',
     router,
     template: '<App/>',
-    components: { App }
+    components: { App },
+    store
 })

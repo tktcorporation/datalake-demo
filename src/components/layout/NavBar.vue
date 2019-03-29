@@ -28,19 +28,25 @@
 
                 <ul class="navbar-nav ml-auto d-none d-lg-flex">
 
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="user.authenticated">
                         <router-link class="nav-link" :to="{name:'social-dashboard'}">Social</router-link>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="user.authenticated">
                         <router-link class="nav-link" :to="{name:'similar'}">NLP Demo</router-link>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="!user.authenticated">
                         <span class="nav-link" @click="doLogin()">Login</span>
                     </li>
 
+                    <li class="nav-item" v-if="user.authenticated">
+                        <span class="nav-link" @click="doLogout()">Logout</span>
+                    </li>
+
                 </ul>
+
+                <avatar v-if="user.authenticated" :username="user.email" :size="30"></avatar>
 
             </div>
         </div>
@@ -51,12 +57,14 @@
 <script>
 
 import API from '../../api'
+import Avatar from 'vue-avatar';
 
 export default {
 
     name: 'nav-bar',
 
     components: {
+        Avatar
     },
 
     data() {
@@ -65,12 +73,28 @@ export default {
         }
     },
 
+    computed: {
+        user() {
+            return this.$store.state.user
+        }
+    },
+
     mounted() {
+        this.init()
     },
 
     methods: {
+
+        async init(){
+            //let info = await API.getUser()
+        },
+
         doLogin(){
-            API.login()
+            API.login()        
+        },
+
+        doLogout(){
+            API.logout()
         }
     }
 }
