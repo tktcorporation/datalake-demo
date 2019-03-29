@@ -5,6 +5,7 @@ import SocialDashboard from '../components/pages/SocialDashboard'
 import SimilarPages from '../components/pages/SimilarPages'
 import NotFound from '../components/pages/NotFound'
 import Authenticate from '../components/pages/Authenticate'
+import store from '../store'
 
 Vue.use(Router)
 
@@ -31,15 +32,19 @@ var router = new Router({
     }
 })
 
+// Guard the routes that require authentication
 router.beforeEach((to, from, next) => {
 	
     //let currentUser = firebase.auth().currentUser;
 	let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-    if (requiresAuth && !currentUser) {
-        next('login')
+    if (requiresAuth) {
+        let user = store.state.user
+        if (!store.state.user.authenticated){
+            next('login')
+            return
+        }
     }
-	//else if (!requiresAuth && currentUser) next('home')
 
     next()
 })

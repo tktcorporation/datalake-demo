@@ -16,7 +16,7 @@ export default new Vuex.Store({
         // Store the value of a search query in the navbar
         setUser(state, info) {
 
-            const roles = {'user':10, 'admin':20, 'super':30}
+            const levels = {'user':10, 'admin':20, 'super':30}
 
             state.user = info
 
@@ -27,8 +27,8 @@ export default new Vuex.Store({
             }
             
             function isLevel(role){
-                let requiredLevel = roles[role]
-                let userLevel = roles[state.user.role]
+                let requiredLevel = levels[role]
+                let userLevel = levels[state.user.level]
                 if (userLevel >= requiredLevel){
                     return true
                 }
@@ -37,7 +37,7 @@ export default new Vuex.Store({
 
             state.user.isAdmin = isLevel('admin')
             state.user.isSuper = isLevel('super')
-            state.user.authenticated = true
+            state.user.authenticated = isLevel('user')
         },
 
 

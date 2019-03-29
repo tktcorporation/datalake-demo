@@ -42,7 +42,12 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     async getUser(){
-        return await this.__send('get', 'user', '', null);
+        try {
+            return await this.__send('get', 'user', '', null);
+        }
+        catch(err){
+            return null
+        }
     },
 
     /**
@@ -54,7 +59,6 @@ const API = {
 
         // Clear tokens
         this.setPreference('token', '')
-        this.setPreference('id_token', '')
 
         let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics'
         let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`
@@ -91,17 +95,17 @@ const API = {
      * @param {*} code 
      */
     async register(code){
-        
+
+        // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes         
         let results = await this.__send('post', 'user', '', {code: code});
-        
-        console.log('REGISTERED', results)
-        
-        if (!results.token.access_token){
+                
+        console.log('REGISTER', results)
+
+        if (!results.token){
             return
         }
 
-        this.setPreference('token', results.token.access_token)
-        this.setPreference('id_token', results.token.id_token)
+        this.setPreference('token', results.token)
 
         if (results.user && results.user.email){
             this.user = results.user
@@ -113,7 +117,7 @@ const API = {
 
     async logout(){        
         var opts = {
-            idToken: this.getPreference('id_token'),
+            token: this.getPreference('token'),
             redirect: `${window.location.protocol}//${window.location.host}`
         }
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);

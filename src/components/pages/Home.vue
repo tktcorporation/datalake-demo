@@ -1,6 +1,8 @@
 <template>
     <div class="container" align="left">
         <h2>Home</h2>
+
+        <pre>{{user}}</pre>
     </div>
 </template>
 
@@ -23,7 +25,11 @@ export default {
         };
     },
 
-    computed: {},
+    computed: {
+        user() {
+            return this.$store.state.user
+        }
+    },
 
     mounted() {},
 
