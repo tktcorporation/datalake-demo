@@ -18,6 +18,7 @@
         "core-js": "^2.6.0",
         "moment": "^2.20.1",
         "tinycolor2": "^1.4.1",
+        "uuid": "^3.3.2",
         "vue": "^2.5.2",
         "vue-chartjs": "^3.4.0",
         "vue-easy-toast": "^1.0.5",

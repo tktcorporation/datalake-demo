@@ -3,6 +3,8 @@ import notify from '../components/partials/utils/Notifications'
 import router from '../router'
 import Resource from 'vue-resource'
 import _ from 'lodash'
+const uuidv4 = require('uuid/v4');
+const uuidv5 = require('uuid/v5');
 
 const API = {
 
@@ -38,6 +40,47 @@ const API = {
         }
 
         console.log('API.rootUrls = ', API.rootUrls)
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @see https://developers.login.gov/oidc/
+     */
+    login(){
+
+        function randomString(length) {
+            // source: https://github.com/18F/fs-permit-platform/blob/c613a73ae320980e226d301d0b34881f9d954758/server/src/util.es6#L232-L237
+            return crypto.randomBytes(length).toString('hex'); 
+        }
+
+        let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics'
+        let REDIRECT_URI = 'http://localhost:8080/auth/result'
+
+        // A unique value at least 32 characters in length used for maintaining state between the request and the callback. 
+        // This value will be returned to the client on a successful authorization.
+        var state = uuidv5('https://data.usagm.com', uuidv5.URL)
+
+        // A unique value at least 32 characters in length used to verify the integrity of the id_token and mitigate 
+        // replay attacks. This value should include per-session state and be unguessable by attackers. This value 
+        // will be present in the id_token of the token endpoint response, where clients will verify that the nonce 
+        // claim value is equal to the value of the nonce parameter sent in the authentication request. Read more 
+        // about nonce implementation in the spec.
+        var nonce = uuidv5('https://data.usagm.com', uuidv5.URL)
+
+        let opts = {
+            acr_values: 'http://idmanagement.gov/ns/assurance/loa/1',
+            client_id: CLIENT_ID,
+            nonce: nonce,
+            response_type: 'code',
+            redirect_uri: REDIRECT_URI,
+            scope: 'openid email profile:name',
+            state: state
+        }
+
+        let url = `https://idp.int.identitysandbox.gov/openid_connect/authorize?${$.param(opts)}`
+
+        window.location = url
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////

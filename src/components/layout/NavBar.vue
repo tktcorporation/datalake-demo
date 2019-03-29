@@ -36,6 +36,10 @@
                         <router-link class="nav-link" :to="{name:'similar'}">NLP Demo</router-link>
                     </li>
 
+                    <li class="nav-item">
+                        <span class="nav-link" @click="doLogin()">Login</span>
+                    </li>
+
                 </ul>
 
             </div>
@@ -45,6 +49,8 @@
 </template>
 
 <script>
+
+import API from '../../api'
 
 export default {
 
@@ -63,6 +69,9 @@ export default {
     },
 
     methods: {
+        doLogin(){
+            API.login()
+        }
     }
 }
 </script>
