@@ -1,11 +1,14 @@
 <template>
-    <nav id="Navbar" class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+    <nav id="Navbar" class="navbar navbar-expand-lg navbar-light mb-3">
 
         <div class="container">
 
             <a class="navbar-brand" href="/">
+                <img src="/imgs/logo.png" alt="" style="height:50px; width: auto">
+                <!--
                 <span class="">USAGM Demo</span>
                 <span class="text-info small ml-1 mr-1">{{version}}</span>
+                -->
             </a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,6 +108,9 @@ export default {
 @import '../../styles/vars.scss';
 
 #Navbar {
+    .navbar {
+        
+    }
     .nav-link.active {
         font-weight:bold;
     }
