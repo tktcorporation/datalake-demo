@@ -116,10 +116,14 @@ const API = {
     },
 
     async logout(){        
+        
         var opts = {
             token: this.getPreference('token'),
             redirect: `${window.location.protocol}//${window.location.host}`
         }
+        
+        this.setPreference('token', null)
+
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
     },
 
