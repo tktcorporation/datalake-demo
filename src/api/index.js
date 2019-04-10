@@ -7,7 +7,9 @@ const API = {
     rootUrls: {
         user: {url: '/user/', port:5000},
         nlp: {url: '/nlp/', port:5001},
-        social: {url: '/social/', port:5003}
+        audience: {url: '/audience/', port:5003},
+        web: {url: '/web/', port:5002},
+        social: {url: '/social/', port:5004}
     },
     
     user: {
