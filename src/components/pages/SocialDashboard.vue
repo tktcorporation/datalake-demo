@@ -9,6 +9,25 @@
         </div>
 
         <div class="row mt-3">
+            <div class="col" style="height:450px">
+                <tag-performance-bar :profile-ids="selectedProfileIds" type='topics'></tag-performance-bar>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col" style="height:450px">
+                <tag-performance-bar :profile-ids="selectedProfileIds" type='categories'></tag-performance-bar>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col" style="height:450px">
+                <tag-performance-bar :profile-ids="selectedProfileIds" type='entities'></tag-performance-bar>
+            </div>
+        </div>
+
+        <!--
+        <div class="row mt-3">
             <div class="col" v-if="queryOptions" >
                 <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
@@ -28,6 +47,7 @@
                 <social-line-chart :network-data="networks" :last-refresh="lastRefreshDate" class="h-100"></social-line-chart>
             </div>
         </div>
+        -->
 
     </div>
     
@@ -42,6 +62,7 @@ import PolarArea from '../partials/charts/PolarArea'
 import SocialLineChart from '../partials/charts/SocialLineChart'
 import SocialProfileSelector from '../partials/selectors/SocialProfileSelector'
 import Promise from 'bluebird'
+import TagPerformanceBar from '../partials/charts/TagPerformanceBar'
 
 export default {
     
@@ -55,11 +76,13 @@ export default {
         Donut,
         PolarArea,
         SocialProfileSelector,
+        TagPerformanceBar,
         SocialLineChart
     },
 
     data() {
         return {
+            selectedProfileIds: [],
             selectedProfile: null,
             lastRefreshDate: null,
             queryOptions: null,
@@ -86,15 +109,18 @@ export default {
 
         async onSelectedProfiles(profiles){
             
+            this.selectedProfileIds = _.map(profiles, 'id').join(',')
+
             this.queryOptions = {
                 //start: moment().subtract(30,'days').startOf('day'),
                 //end: moment().endOf('day'),
                 //profileLabels: labels.join(',')
-                profileIds: _.map(profiles, 'id').join(','),
+                profileIds: this.selectedProfileIds,
             }
 
             //await Promise.all([bar(), bam(), bat()].map(handleRejection));
 
+            /*
             await Promise.map(Object.keys(this.networks), async (name)=>{
                 
                 let network = this.networks[name]
@@ -152,6 +178,7 @@ export default {
             })
 
             this.lastRefreshDate = new Date()
+            */
 
         }
     },

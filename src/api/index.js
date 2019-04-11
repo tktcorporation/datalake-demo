@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Resource from 'vue-resource'
+import _ from 'lodash'
 const uuidv5 = require('uuid/v5');
 
 const API = {
@@ -7,9 +8,9 @@ const API = {
     rootUrls: {
         user: {url: '/user/', port:5000},
         nlp: {url: '/nlp/', port:5001},
-        audience: {url: '/audience', port:5003},
-        web: {url: '/web', port:5002},
-        social: {url: '/social', port:5004}
+        audience: {url: '/audience/', port:5003},
+        web: {url: '/web/', port:5002},
+        social: {url: '/social/', port:5004}
     },
     
     user: {
@@ -141,7 +142,23 @@ const API = {
     setPreference(name, value){
         localStorage.setItem(`opr-pref-${name}`, value)
     },
-    
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Audience (analysis)
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async getTopTags(profileIdList, opts){
+        var merged = _.defaults(opts, {
+            limit: 10,
+            //type: 'topics',
+            //range: 'last7days',
+            profileIds: profileIdList
+        })
+        return await this.__send('get', 'audience', `tag-performance?${$.param(merged)}`, null);
+    },
+
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Social

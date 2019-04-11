@@ -13,8 +13,10 @@
             :multiple="true"
             placeholder="Select a social profile" 
             :options="profiles" 
+            :loading="isLoadingProfiles"
             @input="onSelectProfile"
             :searchable="true" 
+            :limit="3"
             @search-change="getProfiles"
             :allow-empty="true">
 
@@ -62,6 +64,7 @@
                 :multiple="true"
                 placeholder="Select a label" 
                 :options="profileLabels" 
+                :loading="isLoadingLabels"
                 @input="onSelectLabel"
                 :searchable="true" 
                 :allow-empty="true">
@@ -102,7 +105,9 @@ export default {
             profileLabels: [],
             selectedProfiles: null,
             selectedProfileLabels: null,
-            selectNetworks: null
+            selectNetworks: null,
+            isLoadingProfiles: false,
+            isLoadingLabels: false
 		};
 	},
 
@@ -120,9 +125,21 @@ export default {
 
 	methods: {
 
-        async getProfiles(query){
-            this.profiles = await API.getSocialProfiles()
-            this.profileLabels = await API.getSocialProfileLabels()
+        getProfiles(query){
+
+            this.isLoadingProfiles = true
+            this.isLoadingLabels = true
+            
+            API.getSocialProfiles().then((profiles)=>{
+                this.profiles = profiles
+                this.isLoadingProfiles = false
+            })
+
+            API.getSocialProfileLabels().then((labels)=>{
+                this.profileLabels = labels
+                this.isLoadingLabels = false
+            })
+
         },
 
         onSelectNetwork(network){
@@ -192,6 +209,9 @@ export default {
             background-color: lightblue;
         }    
 
+
     }
+
+    
     
 </style>
