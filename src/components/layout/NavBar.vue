@@ -27,6 +27,15 @@
                         <router-link class="nav-link" :to="{name:'similar'}" data-toggle="collapse" data-target="#navbarSupportedContent">NLP Demo</router-link>
                     </li>
 
+                    <li class="nav-item" v-if="!user.authenticated" data-toggle="collapse" data-target="#navbarSupportedContent">
+                        <span class="nav-link" @click="doLogin()">Login</span>
+                    </li>
+
+                    <li class="nav-item" v-if="user.authenticated" data-toggle="collapse" data-target="#navbarSupportedContent">
+                        <span class="nav-link" @click="doLogout()">Logout</span>
+                    </li>
+                    
+
                 </ul>
 
                 <ul class="navbar-nav ml-auto d-none d-lg-flex">
