@@ -1,4 +1,4 @@
-@import "~bootswatch/dist/sandstone/_variables.scss";
+//@import "~bootswatch/dist/sandstone/_variables.scss";
 @import '~bootstrap/scss/bootstrap.scss';
 //@import "~bootswatch/dist/simplex/_bootswatch.scss";
 
@@ -20,3 +20,9 @@
 .uppercase {
   text-transform: uppercase;;
 }
+
+.bg-twitter {background-color: #1DA1F2 !important;}
+.bg-youtube {background-color: #c4302b !important;}
+.bg-facebook {background-color: #3b5998 !important;}
+.bg-pinterest {background-color: #c8232c !important;}
+.bg-instagram {background-color: #405DE6 !important;}
