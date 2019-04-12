@@ -45,6 +45,10 @@
                     </li>
 
                     <li class="nav-item" v-if="user.authenticated">
+                        <router-link class="nav-link" :to="{name:'content'}">Content</router-link>
+                    </li>
+
+                    <li class="nav-item" v-if="user.authenticated">
                         <router-link class="nav-link" :to="{name:'similar'}">NLP Demo</router-link>
                     </li>
 

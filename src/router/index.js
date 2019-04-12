@@ -5,6 +5,7 @@ import SocialDashboard from '../components/pages/SocialDashboard'
 import SimilarPages from '../components/pages/SimilarPages'
 import NotFound from '../components/pages/NotFound'
 import Authenticate from '../components/pages/Authenticate'
+import ContentSearch from '../components/pages/ContentSearch'
 import store from '../store'
 
 Vue.use(Router)
@@ -21,6 +22,7 @@ var router = new Router({
         { path: '/social', name: 'social-dashboard', component: SocialDashboard, meta: {requiresAuth: true} },
         { path: '/nlp', name: 'similar', component: SimilarPages, meta: {requiresAuth: true} },
         { path: '/authenticate', name: 'authenticate', component: Authenticate },
+        { path: '/content', name: 'content', component: ContentSearch, meta: {requiresAuth: true}, props: (route) => ({ tags: route.query.tags })   },
         { path: '*', name: 'not-found', component: NotFound } // 404 page
     ],
     scrollBehavior(to, from, savedPosition) {

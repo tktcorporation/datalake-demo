@@ -159,6 +159,15 @@ const API = {
         return await this.__send('get', 'audience', `tag-performance?${$.param(merged)}`, null);
     },
 
+    async getContent(opts){
+        var merged = _.defaults(opts, {
+            limit: 10,
+            //type: 'topics',
+            //range: 'last7days',
+        })
+        return await this.__send('get', 'audience', `content?${$.param(merged)}`, null);
+    },
+
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Social
