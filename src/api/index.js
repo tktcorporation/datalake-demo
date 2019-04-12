@@ -219,7 +219,32 @@ const API = {
 
     async getSocialProfileInteractionsByNetwork(network, opts){
         return await this.__send('get', 'social', `network/${network}/profiles/interactions?${$.param(opts)}`, null);
-    },    
+    },
+    
+    // ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // WebTraffic
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Get no of visits per network basis. 
+     * @param {object} opts The options, including; 
+     *     networkLabels: list of network labels
+     *     start: Start date
+     *     end: End date
+     */
+    async getNoOfVisits(opts){
+        return await this.__send('get', 'web', 'getNoOfVisits', opts);
+    },   
+
+    async getNoOfVisitors(opts){
+        return await this.__send('get', 'web', 'getNoOfVisitors', opts);
+    },
+
+    async getMedium(opts){
+        return await this.__send('get', 'web', 'getMedium', opts);
+    },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
