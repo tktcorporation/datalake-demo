@@ -22,19 +22,19 @@
                             </a>
 
                             <div class="media-body">
-                                <h5 class="mt-0 mb-1"><span class="badge badge-primary">Score: {{page.score | number(2)}}</span> {{page.title}}</h5>
+                                <h5 class="mt-0 mb-1"><span class="badge badge-primary">Score: {{page.nlpSentiment}}</span> {{page.title}}</h5>
                                 
                                 {{page.extract}}
 
-                                <div v-if="nlpInfo" class="mb-4">
+                                <div class="mb-4">
                                     <div class="">
-                                        <span v-for="(topic, index) in page.matchedTopics" :key="index" class="badge badge-primary mr-1">{{topic}}</span>
+                                        <span v-for="(tag, index) in page.nlpTopics" :key="index" class="badge badge-primary mr-1">{{tag.name}}</span>
                                     </div>
                                     <div class="">
-                                        <span v-for="(cat, index) in page.matchedCategories" :key="index" class="badge badge-info mr-1">{{cat}}</span>
+                                        <span v-for="(tag, index) in page.nlpCategories" :key="index" class="badge badge-info mr-1">{{tag.name}}</span>
                                     </div>
                                     <div class="">
-                                        <span v-for="(entity, index) in page.matchedEntities" :key="index" class="badge badge-success mr-1">{{entity}}</span>
+                                        <span v-for="(tag, index) in page.nlpEntities" :key="index" class="badge badge-success mr-1">{{tag.name}}</span>
                                     </div>
                                 </div>
 
@@ -66,6 +66,8 @@ export default {
     
     name: "content",
 
+    props: ['tag','type'],
+
     metaInfo: {
         title: "content-search"
     },
@@ -88,10 +90,33 @@ export default {
 
     methods: {
 
-        init(){
+        async init(){
 
+            var opts = {}
+            if (this.type == 'topics'){
+                opts.topics = [this.tag]
+            }
+            else if (this.type == 'categories'){
+                opts.categories = [this.tag]
+            }
+            else if (this.type == 'entities'){
+                opts.entities = [this.tag]
+            }
+
+            this.pages = await API.getContent({tag: this.tag, type: this.type})
+
+        },
+
+        getImage(page) {
+            return page && page.image
+                ? page.image
+                : "http://via.placeholder.com/178x100";
+            // "http://placeimg.com/178/100/nature"
+        },
+
+        search(){
+            //API.getTags({query: this.query, type: this.type})
         }
-
     },
 
 };

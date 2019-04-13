@@ -12,7 +12,9 @@
                 <div class="row" v-for="tag in tagData" :key="tag.name">
 
                     <div class="col-md-2 bar-label">
-                        <div class="" :title="`facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`">{{tag.name}}</div>
+                        <div class="" :title="`facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`">
+                            <router-link class="nav-link" :to="{name:'content', query: { tag: tag.name, type: type }}">{{tag.name}}</router-link>
+                        </div>
                     </div>
 
                     <div class="col-md-10">

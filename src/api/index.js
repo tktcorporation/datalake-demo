@@ -168,6 +168,16 @@ const API = {
         return await this.__send('get', 'audience', `content?${$.param(merged)}`, null);
     },
 
+    async getTags(opts){
+        var merged = _.defaults(opts, {
+            limit: 10,
+            type: 'topics',
+            //range: 'last7days',
+        })
+        return await this.__send('get', 'audience', `tags?${$.param(merged)}`, null);
+    },
+
+
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
     // Social

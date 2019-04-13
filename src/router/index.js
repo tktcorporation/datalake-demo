@@ -12,6 +12,10 @@ Vue.use(Router)
 
 var useMode = 'history';
 
+if (window.location.host.search('localhost') !== -1){
+    useMode = 'hash'
+}
+
 var router = new Router({
     //hash: useHash,
     //history: true,
@@ -22,7 +26,7 @@ var router = new Router({
         { path: '/social', name: 'social-dashboard', component: SocialDashboard, meta: {requiresAuth: true} },
         { path: '/nlp', name: 'similar', component: SimilarPages, meta: {requiresAuth: true} },
         { path: '/authenticate', name: 'authenticate', component: Authenticate },
-        { path: '/content', name: 'content', component: ContentSearch, meta: {requiresAuth: true}, props: (route) => ({ tags: route.query.tags })   },
+        { path: '/content', name: 'content', component: ContentSearch, meta: {requiresAuth: true}, props: (route) => ({ tag: route.query.tag, type: route.query.type })   },
         { path: '*', name: 'not-found', component: NotFound } // 404 page
     ],
     scrollBehavior(to, from, savedPosition) {
@@ -39,7 +43,7 @@ router.beforeEach((to, from, next) => {
 	
     //let currentUser = firebase.auth().currentUser;
 	let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
+/*
     if (requiresAuth) {
         let user = store.state.user
         if (!store.state.user.authenticated){
@@ -47,7 +51,7 @@ router.beforeEach((to, from, next) => {
             return
         }
     }
-
+*/
     next()
 })
 
