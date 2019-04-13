@@ -92,6 +92,8 @@ const API = {
         window.location = url
     },
 
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Take a code given by the login.gov authentication page and exchange for a access token
      * which is used for hits to our API
@@ -117,6 +119,8 @@ const API = {
 
         return results
     },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
 
     async logout(){        
         

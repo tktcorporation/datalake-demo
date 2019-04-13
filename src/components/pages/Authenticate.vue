@@ -5,6 +5,7 @@
         <div class="jumbotron mt-4">
 
             <h4 class="display-4">
+
                 Authenticating
 
                 <span class="text-primary" style="font-size:24px">
@@ -17,9 +18,7 @@
 
             </h4>            
 
-            <!--
             <pre>{{user}}</pre>
-            -->
             
         </div>
 
@@ -52,15 +51,19 @@ export default {
     },
 
     mounted() {
+        this.$log('MOUNT')
         this.getToken()
     },
 
     methods: {
 
         async getToken(){
+            this.$log('Getting token...')
             let res = await API.register(this.$route.query.code)
+            this.$log('Register, res = ', res)
+
             this.$store.commit('setUser', API.user)
-            this.$router.replace({name:'home'})
+            //this.$router.replace({name:'home'})
         }
     }
 

@@ -7,19 +7,12 @@ import NotFound from '../components/pages/NotFound'
 import Authenticate from '../components/pages/Authenticate'
 import ContentSearch from '../components/pages/ContentSearch'
 import store from '../store'
+import API from '../api'
 
 Vue.use(Router)
 
-var useMode = 'history';
-
-if (window.location.host.search('localhost') !== -1){
-    useMode = 'hash'
-}
-
 var router = new Router({
-    //hash: useHash,
-    //history: true,
-    mode: useMode,
+    mode: 'history',
     linkActiveClass: 'active',
     routes: [
         { path: '/', name: 'home', component: Home },
@@ -39,19 +32,28 @@ var router = new Router({
 })
 
 // Guard the routes that require authentication
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
 	
     //let currentUser = firebase.auth().currentUser;
 	let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-/*
+
     if (requiresAuth) {
-        let user = store.state.user
-        if (!store.state.user.authenticated){
-            next('login')
-            return
+        
+        //let user = store.state.user
+        if (store.state.user && !store.state.user.authenticated){
+
+            // Don't have the user in the store, double check by hitting the API
+            let user = await API.getUser()
+
+            if (!user){
+                next('home')
+                return
+            }
+
+
         }
     }
-*/
+
     next()
 })
 
