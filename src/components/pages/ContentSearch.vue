@@ -3,11 +3,27 @@
     <div class="container" align="left">
 
         <div class="row">
-            <div class="col-md-6">
-                {{tag}}
+            <div class="col-md-4">
+                <topic-selector type="topics" @onTagSelected="onSelectedTopic"></topic-selector>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+                <topic-selector type="categories" @onTagSelected="onSelectedCategory"></topic-selector>
             </div>
+            <div class="col-md-4">
+                <topic-selector type="entities" @onTagSelected="onSelectedEntity"></topic-selector>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <social-profile-selector @onSelectProfile="onSelectedProfiles"></social-profile-selector>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            {{searchOtions.topics}}
+            {{searchOtions.entities}}
+            {{searchOtions.categories}}
         </div>
 
         <div class="row">
@@ -26,20 +42,20 @@
 
                                 <h5 class="mt-0 mb-1">
                                     <span :class="`bg-${page.network}`" class="badge mr-1 text-white"><i :class="`fab fa-${page.network}`"></i></span>
-                                    <span class="badge badge-primary">Sentiment: {{page.nlpSentiment}}</span> {{page.title}}
+                                    <span class="badge badge-primary">Sentiment: {{page.nlp_sentiment}}</span> {{page.title}}
                                 </h5>
                                 
-                                {{page.extractEn}}
+                                {{page.extract_en}}
 
                                 <div class="mb-4">
                                     <div class="">
-                                        <span v-for="(cat, index) in page.nlpTopics" :key="index" class="badge mr-1" :class="{'badge-danger':cat.name==tag, 'badge-primary':cat.name!=tag}">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
+                                        <span v-for="(cat, index) in page.nlp_topics" :key="index" class="badge mr-1" :class="{'badge-danger':cat.name==tag, 'badge-primary':cat.name!=tag}">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
                                     </div>
                                     <div class="">
-                                        <span v-for="(cat, index) in page.nlpCategories" :key="index" class="badge badge-info mr-1">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
+                                        <span v-for="(cat, index) in page.nlp_categories" :key="index" class="badge badge-info mr-1">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
                                     </div>
                                     <div class="">
-                                        <span v-for="(cat, index) in page.nlpEntities" :key="index" class="badge badge-success mr-1">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
+                                        <span v-for="(cat, index) in page.nlp_entities" :key="index" class="badge badge-success mr-1">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
                                     </div>
                                 </div>
 
@@ -63,13 +79,15 @@
 
 
 import API from '../../api'
-import Donut from '../partials/charts/Donut'
+import TopicSelector from '../partials/selectors/TopicSelector.vue'
+import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector.vue'
+import SocialProfileSelector from '../partials/selectors/SocialProfileSelector'
 import Promise from 'bluebird'
 
 
 export default {
     
-    name: "content",
+    name: "content-search",
 
     props: ['tag','type'],
 
@@ -78,77 +96,73 @@ export default {
     },
 
     components: {
-
+        TopicSelector,
+        SocialNetworkSelector,
+        SocialProfileSelector
     },
 
     data() {
         return {    
             pages: null,      
-            pagesMeta: null
+            pagesMeta: null,
+            searchOtions: {
+                type:'post',
+                proj: [
+                    'title', 'title_en', 'url', 'image', 'thumbnail', 'host', 'network', 'type', 'author', 'profile_id', 
+                    'extract', 'extract_en', 'body', 'body_en', 'language', 'nlp_categories', 'nlp_topics', 'nlp_entities', 'nlp_sentiment']
+            }
         };
     },
 
     computed: {},
 
     mounted() {
-        this.init()
+        // Process props
+        if (this.type == 'topics'){
+            this.searchOtions.topics = this.tag
+        }
+        else if (this.type == 'categories'){
+            this.searchOtions.categories = this.tag
+        }
+        else if (this.type == 'entities'){
+            this.searchOtions.entities = this.tag
+        }        
     },
 
     methods: {
 
-        async init(){
-
-            var opts = {}
-            if (this.type == 'topics'){
-                opts.topics = this.tag
-            }
-            else if (this.type == 'categories'){
-                opts.categories = this.tag
-            }
-            else if (this.type == 'entities'){
-                opts.entities = this.tag
-            }
-
-            opts.type = 'post'
-
-            // {tag: this.tag, type: 'post', projection: proj}
-
-            opts.projection = {
-                title: true,
-                titleEn: true,
-                url: true,
-                image: true,
-                thumbnail: true,
-                host: true,
-                network: true,
-                type: true,
-                author: true,
-                profileId: true,
-                extract: true,
-                extractEn: true,
-                body: true,
-                bodyEn: true,
-                language: true,
-                nlpCategories: true,
-                nlpTopics: true,
-                nlpEntities: true,
-                nlpSentiment: true
-            }
-
-            
-            var info = await API.getContent(opts)
-
+        async doSearch(){        
+            this.$log(this.searchOtions)
+            var info = await API.getContent(this.searchOtions)
+            this.$log(info)
             this.pages = info.results
             this.pagesMeta = info.meta
-
         },
 
         getImage(page) {
             return page && page.image ? page.image : "http://via.placeholder.com/178x100";
         },
 
-        search(){
-            //API.getTags({query: this.query, type: this.type})
+
+        onSelectedProfiles(profileIds){
+            this.$log(profileIds)
+            this.searchOtions.profileIds = profileIds.join(',')
+            this.doSearch()
+        },
+
+        onSelectedTopic(tags){
+            this.searchOtions.topics = tags.join(',')
+            this.doSearch()
+        },
+
+        onSelectedCategory(tags){
+            this.searchOtions.categories = tags.join(',')
+            this.doSearch()
+        },
+
+        onSelectedEntity(tags){
+            this.searchOtions.entities = tags.join(',')
+            this.doSearch()
         }
     },
 
