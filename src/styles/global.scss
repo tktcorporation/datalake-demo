@@ -1,6 +1,6 @@
 @import "~bootswatch/dist/sandstone/_variables.scss";
 @import '~bootstrap/scss/bootstrap.scss';
-//@import "~bootswatch/dist/simplex/_bootswatch.scss";
+@import "~bootswatch/dist/simplex/_bootswatch.scss";
 
 @import './vars.scss';
 
@@ -19,4 +19,52 @@
 
 .uppercase {
   text-transform: uppercase;;
+}
+.content {
+  background: color(ghost-white);
+  min-height: calc(100vh - 180px);
+}
+.title {
+  text-align: center;
+  color: color(fjord);
+}
+//.container {
+  //@include container();
+//}
+.error-message {
+  text-align: center;
+  color: color(robin-egg-blue);
+}
+.Search {
+  // @include has(settings) {
+    max-width: rem(640);
+    margin: 0 auto;
+    padding: rem(20) 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+      .vdp-datepicker + .vdp-datepicker {
+        margin-left: 1.25rem;
+        flex: 1;
+      }
+  //}
+}
+.Chart__container {
+  //border-radius: $base-border-radius;
+  background-color: #fff;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.30);
+  padding: rem(20) rem(40);
+  margin: rem(50) 0;
+}
+.Chart__title {
+  color: color(fjord);
+  margin-bottom: rem(40);
+  font-weight: 600;
+  font-size: rem(16);
+  > span {
+    font-weight: 400;
+    color: color(robin-egg-blue);
+    font-size: rem(16);
+    margin-left: rem(25);
+  }
 }

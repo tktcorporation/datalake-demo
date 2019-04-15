@@ -32,15 +32,22 @@ export default {
     data(){
         return {
             networks: {
-                'VOA': {name: 'voa', color: '#1DA1F2', index:0},
-                'OCB': {name: 'ocb', color: '#c4302b', index:1},
-                'RFE/RL': {name: 'rfe', color: '#3b5998', index:2},
-                'RFA': {name: 'rfa', color: '#405DE6', index:3},
-                'MBN': {name: 'mbn', color: '#c8232c', index:4}
+                'VOA': {name: 'twitter', color: '#1DA1F2', index:0},
+                'MBN': {name: 'youtube', color: '#c4302b', index:1},
+                'RFE/RL': {name: 'facebook', color: '#3b5998', index:2},
+                'RFA': {name: 'instagram', color: '#405DE6', index:3},
+                'OCB': {name: 'pinterest', color: '#c8232c', index:4}
             },
             maxVal: -99999
         }
     },
+
+    //computed: {
+    //    chartData: function() {
+    //        return this.votes;
+    //    }
+    //},
+
     watch: {
         lastRefresh(val){
             this.update()
@@ -79,17 +86,8 @@ export default {
                     for (var k=0; k<data.length; k+=1){
 
                         let val =0 
-
-                        //if (network.name == 'youtube'){
-                        //    val = data[k].interactions_per_1000_subscribers
-                        //}
-                        //else if (network.name == 'facebook'){
-                        //    val = data[k].interactions_per_1000_fans
-                        //}
-                        //else {
-                            val = data[k].visits
-                        //}
-
+                            val = data[k].interactions
+                    
                         if (!val) {
                             val = 0
                         }
@@ -131,7 +129,7 @@ export default {
                 chartData[network.index] = {
                     type: 'line',
                     label: networkNames[i],
-                    backgroundColor: tinycolor(network.color).darken(5).toString(),
+                    backgroundColor: tinycolor(network.color).darken(10).toString(),
                     borderColor: network.color,
                     fill: false,
                     data: []
