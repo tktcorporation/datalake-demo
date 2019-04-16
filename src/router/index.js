@@ -19,7 +19,7 @@ var router = new Router({
         { path: '/social', name: 'social-dashboard', component: SocialDashboard, meta: {requiresAuth: true} },
         { path: '/nlp', name: 'similar', component: SimilarPages, meta: {requiresAuth: true} },
         { path: '/authenticate', name: 'authenticate', component: Authenticate },
-        { path: '/content', name: 'content', component: ContentSearch, meta: {requiresAuth: true}, props: (route) => ({ tag: route.query.tag, type: route.query.type })   },
+        { path: '/content', name: 'content', component: ContentSearch, meta: {requiresAuth: true}, props: (route) => ({ tag: route.query.tag, type: route.query.type, profileIds: route.query.profileIds })   },
         { path: '*', name: 'not-found', component: NotFound } // 404 page
     ],
     scrollBehavior(to, from, savedPosition) {

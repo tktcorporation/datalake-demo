@@ -63,7 +63,7 @@ export default {
             this.$log('Register, res = ', res)
 
             this.$store.commit('setUser', API.user)
-            //this.$router.replace({name:'home'})
+            this.$router.replace({name:'social'})
         }
     }
 

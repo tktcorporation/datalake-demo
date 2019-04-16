@@ -84,6 +84,7 @@ import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector.v
 import SocialProfileSelector from '../partials/selectors/SocialProfileSelector'
 import Promise from 'bluebird'
 
+// http://localhost:8080/content?tag=Government%20reports&type=topics&profileIds=2205968431,UCBQ58amRJh3anfDtob6sBSQ,20803965,21316293,UCKyTokYo0nK2OA-az-sDijA,103481483020802,38452569122
 
 export default {
     
@@ -114,7 +115,9 @@ export default {
         };
     },
 
-    computed: {},
+    computed: {
+
+    },
 
     mounted() {
         // Process props
@@ -127,14 +130,16 @@ export default {
         else if (this.type == 'entities'){
             this.searchOtions.entities = this.tag
         }        
+        this.doSearch()
     },
 
     methods: {
 
         async doSearch(){        
-            this.$log(this.searchOtions)
+            if (this.profileIds){
+                this.searchOtions.profileIds = this.profileIds
+            }
             var info = await API.getContent(this.searchOtions)
-            this.$log(info)
             this.pages = info.results
             this.pagesMeta = info.meta
         },

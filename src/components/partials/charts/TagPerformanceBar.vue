@@ -11,9 +11,9 @@
                     
                 <div class="row" v-for="tag in tagData" :key="tag.name">
 
-                    <div class="col-md-2 bar-label">
-                        <div class="" :title="`facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`">
-                            <router-link class="nav-link" :to="{name:'content', query: { tag: tag.name, type: type }}">{{tag.name}}</router-link>
+                    <div class="col-md-2 ">
+                        <div class="tag-label" :title="`${tag.name}: facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`">
+                            <router-link class="tag-link" :to="{name:'content', query: { tag: tag.name, type: type, profileIds: profileIds }}">{{tag.name}}</router-link>
                         </div>
                     </div>
 
@@ -156,11 +156,17 @@ export default {
 
 .tag-performance-bar-chart {
 
-    .bar-label {
+    .tag-label {
+    }
+
+    .tag-link {
+        display: inline-block;
         font-size:12px;
         overflow: hidden;
-        max-height: 100%;
+        white-space: nowrap; 
+        padding: 0px;
         max-width: 100%;
+        text-overflow: ellipsis;
     }
 
 
