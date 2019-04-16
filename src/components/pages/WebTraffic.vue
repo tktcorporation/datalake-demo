@@ -13,9 +13,12 @@
                 <usagm-network-selector @onSelectUsagmNetwork="onSelectNetwork"></usagm-network-selector>
 
             </div>
-            <div class="Search__settings" v-if="showSettings" >
+           <div class="Search__settings" v-if="showSettings" >
+
                <datepicker input-class="Search__input" placeholder="Start Date" v-model="periodStart" name="start-date"></datepicker>
+
                <datepicker input-class="Search__input" placeholder="End Date" v-model="periodEnd" name="end-date"></datepicker>
+
             </div>
 
         </div>
@@ -102,7 +105,7 @@ export default {
             queryOptions: null,
             showSettings: true,
             periodStart: '',
-            periodEnd: new Date(),
+            periodEnd: '',
 
             networks: {
 

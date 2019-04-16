@@ -37,21 +37,21 @@
 }
 .Search {
   // @include has(settings) {
-    max-width: rem(640);
+    max-width: rem(840);
     margin: 0 auto;
     padding: rem(20) 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
       .vdp-datepicker + .vdp-datepicker {
-        margin-left: 1.25rem;
+        margin-left: 2.25rem;
         flex: 1;
       }
   //}
 }
 .Chart__container {
   //border-radius: $base-border-radius;
-  background-color: #fff;
+  background-color:#fff;
   box-shadow: 0 2px 16px 0 rgba(0,0,0,0.30);
   padding: rem(20) rem(40);
   margin: rem(50) 0;
