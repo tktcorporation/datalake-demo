@@ -1,4 +1,4 @@
-@import "~bootswatch/dist/sandstone/_variables.scss";
+//@import "~bootswatch/dist/sandstone/_variables.scss";
 @import '~bootstrap/scss/bootstrap.scss';
 @import "~bootswatch/dist/simplex/_bootswatch.scss";
 
@@ -13,6 +13,10 @@
 
 // Helpers
 
+.nav-item {
+    cursor: pointer;
+}
+
 .capitalize {
   text-transform: capitalize;
 }
@@ -20,51 +24,9 @@
 .uppercase {
   text-transform: uppercase;;
 }
-.content {
-  background: color(ghost-white);
-  min-height: calc(100vh - 180px);
-}
-.title {
-  text-align: center;
-  color: color(fjord);
-}
-//.container {
-  //@include container();
-//}
-.error-message {
-  text-align: center;
-  color: color(robin-egg-blue);
-}
-.Search {
-  // @include has(settings) {
-    max-width: rem(840);
-    margin: 0 auto;
-    padding: rem(20) 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-      .vdp-datepicker + .vdp-datepicker {
-        margin-left: 2.25rem;
-        flex: 1;
-      }
-  //}
-}
-.Chart__container {
-  //border-radius: $base-border-radius;
-  background-color:#fff;
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.30);
-  padding: rem(20) rem(40);
-  margin: rem(50) 0;
-}
-.Chart__title {
-  color: color(fjord);
-  margin-bottom: rem(40);
-  font-weight: 600;
-  font-size: rem(16);
-  > span {
-    font-weight: 400;
-    color: color(robin-egg-blue);
-    font-size: rem(16);
-    margin-left: rem(25);
-  }
-}
+
+.bg-twitter {background-color: #1DA1F2 !important;}
+.bg-youtube {background-color: #c4302b !important;}
+.bg-facebook {background-color: #3b5998 !important;}
+.bg-pinterest {background-color: #c8232c !important;}
+.bg-instagram {background-color: #405DE6 !important;}

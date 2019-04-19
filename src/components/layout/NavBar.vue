@@ -50,7 +50,8 @@
                     </li>
 
                     <li class="nav-item" v-if="user.authenticated">
-                        <router-link class="nav-link" :to="{name:'webtraffic-dashboard'}">Web</router-link>
+
+                        <router-link class="nav-link" :to="{name:'content'}">Content</router-link>
                     </li>
 
                     <li class="nav-item" v-if="user.authenticated">

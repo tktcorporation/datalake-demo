@@ -3,26 +3,27 @@
     <div class="container" align="left">
 
         <div class="row">
-            <div class="col">
+            <div class="col-md-6">
                 <social-profile-selector @onSelectProfile="onSelectedProfiles"></social-profile-selector>
             </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col" style="height:450px">
-                <tag-performance-bar :profile-ids="selectedProfileIds" type='topics'></tag-performance-bar>
+            <div class="col-md-3">
+                <social-network-selector @onSelectNetworks="onSelectedNetworks"></social-network-selector>
+            </div>
+            <div class="col-md-3">
+                {{selectedNetwork}}
             </div>
         </div>
 
-        <div class="row mt-3">
-            <div class="col" style="height:450px">
-                <tag-performance-bar :profile-ids="selectedProfileIds" type='categories'></tag-performance-bar>
-            </div>
-        </div>
 
-        <div class="row mt-3">
-            <div class="col" style="height:450px">
-                <tag-performance-bar :profile-ids="selectedProfileIds" type='entities'></tag-performance-bar>
+        <ul class="nav nav-tabs mt-3 mb-3">
+            <li class="nav-item" v-for="(type, index) in nlpTypes" :key="index">
+                <span class="nav-link capitalize" :class="{'active':selectedNlpType == type}" @click="selectedNlpType = type">{{type}}</span>
+            </li>
+        </ul>
+
+        <div class="row" v-for="(type, index) in nlpTypes" :key="index">
+            <div class="col" v-show="selectedNlpType == type">
+                <tag-performance-bar :profile-ids="selectedProfileIds" :network="selectedNetwork" :type="type"></tag-performance-bar>
             </div>
         </div>
 
@@ -61,6 +62,7 @@ import Donut from '../partials/charts/Donut'
 import PolarArea from '../partials/charts/PolarArea'
 import SocialLineChart from '../partials/charts/SocialLineChart'
 import SocialProfileSelector from '../partials/selectors/SocialProfileSelector'
+import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector'
 import Promise from 'bluebird'
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar'
 
@@ -77,15 +79,19 @@ export default {
         PolarArea,
         SocialProfileSelector,
         TagPerformanceBar,
-        SocialLineChart
+        SocialLineChart,
+        SocialNetworkSelector
     },
 
     data() {
         return {
             selectedProfileIds: [],
+            selectedNetwork: null,
             selectedProfile: null,
             lastRefreshDate: null,
             queryOptions: null,
+            selectedNlpType: 'topics',
+            nlpTypes: ['topics', 'entities', 'categories'],
             networks: {
                 'facebook': {name: 'facebook', proj: 'interactions, date, page_posts', data: null, target: 700},
                 'twitter': {name: 'twitter', proj: 'interactions, date, profile_activities', data: null, target: 45},
@@ -107,6 +113,10 @@ export default {
 
         },
 
+        onSelectedNetworks(network){
+            this.selectedNetwork = network
+        },
+
         async onSelectedProfiles(profiles){
             
             this.selectedProfileIds = _.map(profiles, 'id').join(',')
@@ -116,6 +126,10 @@ export default {
                 //end: moment().endOf('day'),
                 //profileLabels: labels.join(',')
                 profileIds: this.selectedProfileIds,
+            }
+
+            if (this.selectedNetwork){
+                this.queryOptions.network = this.selectedNetwork
             }
 
             //await Promise.all([bar(), bam(), bat()].map(handleRejection));

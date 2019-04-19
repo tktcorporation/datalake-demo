@@ -9,6 +9,7 @@
         placeholder="Select a network" 
         :options="networks" 
         @input="onSelectNetwork"
+        :multiple="true"
         :searchable="false" 
         :allow-empty="true">
 
@@ -60,7 +61,16 @@ export default {
 	methods: {
 
         onSelectNetwork(){
-            this.$emit('onSelectNetworks', _.map(this.selectedNetworks, 'name'))
+            
+            if (!this.selectedNetworks.length || this.selectedNetworks.length == 0){
+                this.$emit('onSelectNetworks', null)
+            }
+            else {
+                this.$emit('onSelectNetworks', this.selectedNetworks[0].name)
+            }
+            
+            //this.$emit('onSelectNetworks', _.map(this.selectedNetworks, 'name'))
+            
         }
 	}
 

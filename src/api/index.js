@@ -92,6 +92,8 @@ const API = {
         window.location = url
     },
 
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Take a code given by the login.gov authentication page and exchange for a access token
      * which is used for hits to our API
@@ -117,6 +119,8 @@ const API = {
 
         return results
     },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
 
     async logout(){        
         
@@ -158,6 +162,25 @@ const API = {
         })
         return await this.__send('get', 'audience', `tag/rankings?${$.param(merged)}`, null);
     },
+
+    async getContent(opts){
+        var merged = _.defaults(opts, {
+            limit: 10,
+            //type: 'topics',
+            //range: 'last7days',
+        })
+        return await this.__send('get', 'audience', `content?${$.param(merged)}`, null);
+    },
+
+    async getTags(opts){
+        var merged = _.defaults(opts, {
+            limit: 10,
+            type: 'topics',
+            //range: 'last7days',
+        })
+        return await this.__send('get', 'audience', `tags?${$.param(merged)}`, null);
+    },
+
 
     // ///////////////////////////////////////////////////////////////////////////////////////
     //

@@ -1,6 +1,6 @@
 <template>
 
-    <div class="card w-100 h-100">
+    <div class="tag-performance-bar-chart card w-100 h-100">
         <div class="card-body">
 
             <span class="text-primary" style="font-size:24px" v-if="isLoading">
@@ -8,7 +8,49 @@
             </span>
 
             <div class="p-1 w-100 h-100" v-if="!isLoading">
-                <canvas ref="canvas" width="100%" height="100%"></canvas>
+                    
+                <div class="row" v-for="tag in tagData" :key="tag.name">
+
+                    <div class="col-md-2 ">
+                        <div class="tag-label" :title="`${tag.name}: facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`">
+                            <router-link class="tag-link" :to="{name:'content', query: { tag: tag.name, type: type, profileIds: profileIds }}">{{tag.name}}</router-link>
+                        </div>
+                    </div>
+
+                    <div class="col-md-10">
+
+                        <div class="progress mt-1">
+
+                            <div v-if="!network || network=='facebook'" class="progress-bar bg-facebook" role="progressbar" :style="`width: ${tag.facebook_normalized}%`" :aria-valuenow="tag.facebook_normalized" aria-valuemin="0" aria-valuemax="100">
+                                <i class='fab fa-facebook' v-if="tag.facebook_normalized">
+                                    <span class="ml-1">{{tag.facebook_interactions | humanNumber}}</span>
+                                </i> 
+                            </div>
+
+                            <div v-if="!network || network=='twitter'" class="progress-bar bg-twitter" role="progressbar" :style="`width: ${tag.twitter_normalized}%`" :aria-valuenow="tag.twitter_normalized" aria-valuemin="0" aria-valuemax="100">
+                                <i class='fab fa-twitter' v-if="tag.twitter_normalized">
+                                    <span class="ml-1">{{tag.twitter_interactions | humanNumber}}</span>
+                                </i> 
+                            </div>
+
+                            <div v-if="!network || network=='youtube'" class="progress-bar bg-youtube" role="progressbar" :style="`width: ${tag.youtube_normalized}%`" :aria-valuenow="tag.youtube_normalized" aria-valuemin="0" aria-valuemax="100">
+                                <i class='fab fa-youtube' v-if="tag.youtube_normalized">
+                                    <span class="ml-1">{{tag.youtube_interactions | humanNumber}}</span>
+                                </i> 
+                            </div>
+
+                            <div v-if="!network || network=='instagram'" class="progress-bar bg-instagram" role="progressbar" :style="`width: ${tag.instagram_normalized}%`" :aria-valuenow="tag.instagram_normalized" aria-valuemin="0" aria-valuemax="100">
+                                <i class='fab fa-instagram' v-if="tag.instagram_normalized">
+                                    <span class="ml-1">{{tag.instagram_interactions | humanNumber}}</span>
+                                </i> 
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -18,8 +60,6 @@
 <script>
 
 // @see https://github.com/apertureless/vue-chartjs
-//import VueCharts from "vue-chartjs";
-import { HorizontalBar } from "vue-chartjs";
 import _ from "lodash";
 import moment from "moment";
 import PleaseJS from '../../../utils/PleaseJS.js'
@@ -29,100 +69,106 @@ var tinycolor = require("tinycolor2");
 export default {
     
     name: "tag-performance-bar",
-
-    extends: HorizontalBar,
     
-    props: ['profileIds','type'],
+    props: ['profileIds', 'network', 'type'],
     
     data(){
         return {
-            isLoading: false
+            isLoading: false,
+            tagData: null
         }
     },
 
-    //computed: {
-    //    chartData: function() {
-    //        return this.votes;
-    //    }
-    //},
-
     watch: {
+
+        network(val){
+            this.update()
+        },
+
         profileIds(val){
-            this.getTagData().then(()=>{
-                this.render()
-            })
+            this.update()
         }    
     }, 
 
     mounted() {
-        //this.render()
     },
 
     methods: {
         
-        async getTagData(){
-            this.isLoading = true
-            this.tags = await API.getTopTags(this.profileIds, {type:this.type})
-            this.$log('tags = ', this.tags.length)
-            this.isLoading = false
-        },
-
         update(){
-
-            this.$log('CHART UPDATE', this.tags)
-            
-            var chartData = this.$data._chart.data.datasets[0].data
-            this.$data._chart.data.labels = []
-
-            //this.$data._chart.data.labels[i] = this.tags[i].name
-
-            for (var i=0; i<this.tags.length; i+=1){                                
-                var tag = this.tags[i]
-                //chartData.push(tag.interactions)                
-                chartData.push(Math.random()*100)                
-            }
-
-            this.$log('chartData = ', chartData)
-            this.$data._chart.update()
+            this.getTagData().then(()=>{
+                $(function () {
+                    $('[data-toggle="popover"]').popover()
+                })                
+            })            
         },
 
-        render() {
+        async getTagData(){
 
-            var colors = PleaseJS.make_color()
-            
-            var chartData = [{
-                type: 'horizontalBar',
-                label: `Top ${this.type}`,
-                backgroundColor: tinycolor(colors[0]).darken(10).toString(),
-                borderColor: colors[0],
-                borderWidth: 1,
-                //fill: true,
-                data: []
-                //data: [_.map(this.tags, (o)=>{return parseInt(o.interactions)})]
-                //data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt() ]
-            }]
+            function parseNumber(val){
+                var val = parseInt(val)
+                if (!_.isFinite(val)){
+                    return 0
+                }
+                return val
+            }   
+
+            this.isLoading = true
+            this.tags = await API.getTopTags(this.profileIds, {type: this.type, network: this.network})
+            this.isLoading = false
+
+            //var key = 'interactions'
+
+            var max = -9999999
+
+            // Now normalize data
+            for (let i=0; i<this.tags.length; i+=1){
+                var val = parseNumber(this.tags[i].interactions)
+                if (val > max){
+                    max = val
+                }    
+            }
+           
+            this.tagData = []
 
             for (let i=0; i<this.tags.length; i+=1){
-                this.$log(this.tags[i])
-                chartData[0].data.push(this.tags[i].interactions)
+                
+                this.tagData[i] = this.tags[i]
+
+                this.tagData[i].facebook_normalized = Math.round(100 * parseNumber(this.tags[i].facebook_interactions) / max)
+                this.tagData[i].twitter_normalized = Math.round(100 * parseNumber(this.tags[i].twitter_interactions) / max)
+                this.tagData[i].youtube_normalized = Math.round(100 * parseNumber(this.tags[i].youtube_interactions) / max)
+                this.tagData[i].instagram_normalized = Math.round(100 * parseNumber(this.tags[i].instagram_interactions) / max)
+
+                //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
+                //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)
+
             }
-
-            this.$log(`${this.type} DATA:`, chartData[0].data)
-
-            var opts = {
-                //fill: false, 
-                responsive: true, 
-                maintainAspectRatio: false
-            }
-
-            this.renderChart({labels: _.map(this.tags, 'name'), datasets: chartData}, opts);            
-            //this.update()
-        },
-
-        getRandomInt () {
-            return Math.floor(Math.random() * (50 - 5 + 1)) + 5
-        }        
+        }
+     
     }
     
 };
 </script>
+
+
+<style lang="scss">
+
+.tag-performance-bar-chart {
+
+    .tag-label {
+    }
+
+    .tag-link {
+        display: inline-block;
+        font-size:12px;
+        overflow: hidden;
+        white-space: nowrap; 
+        padding: 0px;
+        max-width: 100%;
+        text-overflow: ellipsis;
+    }
+
+
+}
+</style>
