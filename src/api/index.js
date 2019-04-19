@@ -156,7 +156,7 @@ const API = {
             //range: 'last7days',
             profileIds: profileIdList
         })
-        return await this.__send('get', 'audience', `tag-performance?${$.param(merged)}`, null);
+        return await this.__send('get', 'audience', `tag/rankings?${$.param(merged)}`, null);
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
