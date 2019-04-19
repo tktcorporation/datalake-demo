@@ -24,6 +24,11 @@
                     </li>
 
                     <li class="nav-item" >
+                        <router-link class="nav-link" :to="{name:'webtraffic-dashboard'}" data-toggle="collapse" data-target="#navbarSupportedContent">Web</router-link>
+                    </li>
+
+
+                    <li class="nav-item" >
                         <router-link class="nav-link" :to="{name:'similar'}" data-toggle="collapse" data-target="#navbarSupportedContent">NLP Demo</router-link>
                     </li>
 
@@ -45,6 +50,7 @@
                     </li>
 
                     <li class="nav-item" v-if="user.authenticated">
+
                         <router-link class="nav-link" :to="{name:'content'}">Content</router-link>
                     </li>
 

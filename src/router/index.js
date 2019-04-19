@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../components/pages/Home'
 import SocialDashboard from '../components/pages/SocialDashboard'
+import WebTraffic from '../components/pages/WebTraffic'
 import SimilarPages from '../components/pages/SimilarPages'
 import NotFound from '../components/pages/NotFound'
 import Authenticate from '../components/pages/Authenticate'
@@ -17,6 +18,7 @@ var router = new Router({
     routes: [
         { path: '/', name: 'home', component: Home },
         { path: '/social', name: 'social-dashboard', component: SocialDashboard, meta: {requiresAuth: true} },
+        { path: '/web', name: 'webtraffic-dashboard', component: WebTraffic, meta: {requiresAuth: true} },
         { path: '/nlp', name: 'similar', component: SimilarPages, meta: {requiresAuth: true} },
         { path: '/authenticate', name: 'authenticate', component: Authenticate },
         { path: '/content', name: 'content', component: ContentSearch, meta: {requiresAuth: true}, props: (route) => ({ tag: route.query.tag, type: route.query.type, profileIds: route.query.profileIds })   },

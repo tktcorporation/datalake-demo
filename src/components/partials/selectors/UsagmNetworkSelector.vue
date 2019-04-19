@@ -45,11 +45,11 @@ export default {
 		return {
             selectedUsagmNetworks: null,
             networks: [
-                {name: 'VOA', iconClass: 'fab fa-VOA'},
-                {name: 'MBN', iconClass: 'fab fa-MBN'},
-                {name: 'RFE/RL', iconClass: 'fab fa-RFE/RL'},
-                {name: 'RFA', iconClass: 'fab fa-RFA'},
-                {name: 'OCB', iconClass: 'fab fa-OCB'}
+                {name: 'VOA', iconClass: 'fab fa-voanews'},
+                {name: 'MBN', iconClass: 'fab fa-alhurra'},
+                {name: 'RFE/RL', iconClass: 'fab fa-rfe'},
+                {name: 'RFA', iconClass: 'fab fa-rfa'},
+                {name: 'OCB', iconClass: 'fab fa-radiotelevisionmarti'}
             ]
 		};
 	},
