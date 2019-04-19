@@ -9,7 +9,7 @@
         @search-change="asyncFind"
         :multiple="true"
         :deselect-label="`Can't unselect ${type}`"
-        :placeholder="`Select a ${type}`"
+        :placeholder="`Search for ${type}`"
         @select="onSelectTags"
         @remove="onSelectTags"
         :internal-search="false"
@@ -44,6 +44,7 @@ import Multiselect from "vue-multiselect";
 require("vue-multiselect/dist/vue-multiselect.min.css");
 
 export default {
+    
     name: "topic-selector",
 
     props: ["type"],
@@ -71,7 +72,10 @@ export default {
         //}, 500),
 
         onSelectTags(){
-            this.$emit("onSelectTag", this.selectedTags)
+            this.$nextTick(()=>{
+                //this.$log('Selected tags; ', this.selectedTags)
+                this.$emit("onSelectTag", this.selectedTags)
+            })
         },
 
         async asyncFind(query){

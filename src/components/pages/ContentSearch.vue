@@ -4,13 +4,13 @@
 
         <div class="row">
             <div class="col-md-4">
-                <topic-selector type="topics" @onTagSelected="onSelectedTopic"></topic-selector>
+                <topic-selector type="topics" @onSelectTag="onSelectedTopic"></topic-selector>
             </div>
             <div class="col-md-4">
-                <topic-selector type="categories" @onTagSelected="onSelectedCategory"></topic-selector>
+                <topic-selector type="categories" @onSelectTag="onSelectedCategory"></topic-selector>
             </div>
             <div class="col-md-4">
-                <topic-selector type="entities" @onTagSelected="onSelectedEntity"></topic-selector>
+                <topic-selector type="entities" @onSelectTag="onSelectedEntity"></topic-selector>
             </div>
         </div>
 
@@ -20,13 +20,15 @@
             </div>
         </div>
 
+        <!--
         <div class="row mt-3">
-            {{searchOtions.topics}}
-            {{searchOtions.entities}}
-            {{searchOtions.categories}}
+            <pre>{{searchOtions.topics}}</pre>
+            <pre>{{searchOtions.entities}}</pre>
+            <pre>{{searchOtions.categories}}</pre>
         </div>
+        -->
 
-        <div class="row">
+        <div class="row mt-3">
             <div class="col">
 
                 <div v-if="pages" class="pt-0 mt-0 text-generated">
@@ -49,13 +51,15 @@
 
                                 <div class="mb-4">
                                     <div class="">
-                                        <span v-for="(cat, index) in page.nlp_topics" :key="index" class="badge mr-1" :class="{'badge-danger':cat.name==tag, 'badge-primary':cat.name!=tag}">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
+                                        <span v-for="(cat, index) in page.nlp_topics" :key="index" class="badge mr-1" :class="{'badge-danger':cat.name==tag, 'badge-primary':cat.name!=tag}">
+                                            {{cat}} 
+                                        </span>
                                     </div>
                                     <div class="">
-                                        <span v-for="(cat, index) in page.nlp_categories" :key="index" class="badge badge-info mr-1">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
+                                        <span v-for="(cat, index) in page.nlp_categories" :key="index" class="badge badge-info mr-1">{{cat}}</span>
                                     </div>
                                     <div class="">
-                                        <span v-for="(cat, index) in page.nlp_entities" :key="index" class="badge badge-success mr-1">{{cat.name}} <span class='text-percent'>({{cat.score | percent}})</span></span>
+                                        <span v-for="(cat, index) in page.nlp_entities" :key="index" class="badge badge-success mr-1">{{cat}}</span>
                                     </div>
                                 </div>
 
@@ -107,10 +111,12 @@ export default {
             pages: null,      
             pagesMeta: null,
             searchOtions: {
-                type:'post',
+                //type:'post',
                 proj: [
                     'title', 'title_en', 'url', 'image', 'thumbnail', 'host', 'network', 'type', 'author', 'profile_id', 
-                    'extract', 'extract_en', 'body', 'body_en', 'language', 'nlp_categories', 'nlp_topics', 'nlp_entities', 'nlp_sentiment']
+                    'extract', 'extract_en', 'language', 'nlp_categories', 'nlp_topics', 'nlp_entities', 'nlp_sentiment'
+                    //'body_clean', 'body_clean_en', 
+                    ]
             }
         };
     },
@@ -136,9 +142,13 @@ export default {
     methods: {
 
         async doSearch(){        
+            
             if (this.profileIds){
                 this.searchOtions.profileIds = this.profileIds
             }
+
+            this.$log('Search options', this.searchOtions)
+
             var info = await API.getContent(this.searchOtions)
             this.pages = info.results
             this.pagesMeta = info.meta
@@ -156,6 +166,7 @@ export default {
         },
 
         onSelectedTopic(tags){
+            this.$log('Tags: ', tags)
             this.searchOtions.topics = tags.join(',')
             this.doSearch()
         },
