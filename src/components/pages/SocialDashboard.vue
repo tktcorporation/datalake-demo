@@ -1,33 +1,35 @@
 <template>
+  <div class="container" align="left">
+    <div class="row">
+      <div class="col-md-6">
+        <social-profile-selector @onSelectProfile="onSelectedProfiles"></social-profile-selector>
+      </div>
+      <div class="col-md-3">
+        <social-network-selector @onSelectNetworks="onSelectedNetworks"></social-network-selector>
+      </div>
+    </div>
 
-    <div class="container" align="left">
+    <ul class="nav nav-tabs mt-3 mb-3">
+      <li class="nav-item" v-for="(type, index) in nlpTypes" :key="index">
+        <span
+          class="nav-link capitalize"
+          :class="{'active':selectedNlpType == type}"
+          @click="selectedNlpType = type"
+        >{{type}}</span>
+      </li>
+    </ul>
 
-        <div class="row">
-            <div class="col-md-6">
-                <social-profile-selector @onSelectProfile="onSelectedProfiles"></social-profile-selector>
-            </div>
-            <div class="col-md-3">
-                <social-network-selector @onSelectNetworks="onSelectedNetworks"></social-network-selector>
-            </div>
-            <div class="col-md-3">
-                {{selectedNetwork}}
-            </div>
-        </div>
+    <div class="row" v-for="(type, index) in nlpTypes" :key="index">
+      <div class="col" v-show="selectedNlpType == type">
+        <tag-performance-bar
+          :profile-ids="selectedProfileIds"
+          :network="selectedNetwork"
+          :type="type"
+        ></tag-performance-bar>
+      </div>
+    </div>
 
-
-        <ul class="nav nav-tabs mt-3 mb-3">
-            <li class="nav-item" v-for="(type, index) in nlpTypes" :key="index">
-                <span class="nav-link capitalize" :class="{'active':selectedNlpType == type}" @click="selectedNlpType = type">{{type}}</span>
-            </li>
-        </ul>
-
-        <div class="row" v-for="(type, index) in nlpTypes" :key="index">
-            <div class="col" v-show="selectedNlpType == type">
-                <tag-performance-bar :profile-ids="selectedProfileIds" :network="selectedNetwork" :type="type"></tag-performance-bar>
-            </div>
-        </div>
-
-        <!--
+    <!--
         <div class="row mt-3">
             <div class="col" v-if="queryOptions" >
                 <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
@@ -42,99 +44,122 @@
                 <donut network='instagram' :target="networks.instagram.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
         </div>
+      <!-- <div class="row mt-3">
+      <div class="col" style="height:450px" v-if="networks.twitter.data">
+        <social-line-chart :network-data="networks" :last-refresh="lastRefreshDate" class="h-100"></social-line-chart>
+    </div>-->
 
-        <div class="row mt-3">
-            <div class="col" style="height:450px" v-if="networks.twitter.data">
-                <social-line-chart :network-data="networks" :last-refresh="lastRefreshDate" class="h-100"></social-line-chart>
-            </div>
-        </div>
-        -->
-
+    <!-- v-if="networks.twitter.data" -->
+    <div class="row mt-3">
+      <div class="col">
+        <SocialLineChartNew
+          :profile-ids="selectedProfileIds"
+          :network="selectedNetwork"
+          :type="selectedNlpType"
+          :network-data="networks"
+          class="h-100"
+        ></SocialLineChartNew>
+      </div>
     </div>
-    
+  </div>
 </template>
 
 <script>
-
-
-import API from '../../api'
-import Donut from '../partials/charts/Donut'
-import PolarArea from '../partials/charts/PolarArea'
-import SocialLineChart from '../partials/charts/SocialLineChart'
-import SocialProfileSelector from '../partials/selectors/SocialProfileSelector'
-import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector'
-import Promise from 'bluebird'
-import TagPerformanceBar from '../partials/charts/TagPerformanceBar'
+import API from "../../api";
+import Donut from "../partials/charts/Donut";
+import PolarArea from "../partials/charts/PolarArea";
+import SocialLineChart from "../partials/charts/SocialLineChart";
+import SocialProfileSelector from "../partials/selectors/SocialProfileSelector";
+import SocialNetworkSelector from "../partials/selectors/SocialNetworkSelector";
+import Promise from "bluebird";
+import TagPerformanceBar from "../partials/charts/TagPerformanceBar";
+import SocialLineChartNew from "../partials/charts/SocialLineChartNew.vue";
 
 export default {
-    
-    name: "social-dashboard",
+  name: "social-dashboard",
 
-    metaInfo: {
-        title: "social-dashboard"
-    },
+  metaInfo: {
+    title: "social-dashboard"
+  },
 
-    components: {
-        Donut,
-        PolarArea,
-        SocialProfileSelector,
-        TagPerformanceBar,
-        SocialLineChart,
-        SocialNetworkSelector
-    },
+  components: {
+    Donut,
+    PolarArea,
+    SocialProfileSelector,
+    TagPerformanceBar,
+    SocialLineChart,
+    SocialNetworkSelector,
+    SocialLineChartNew
+  },
 
-    data() {
-        return {
-            selectedProfileIds: [],
-            selectedNetwork: null,
-            selectedProfile: null,
-            lastRefreshDate: null,
-            queryOptions: null,
-            selectedNlpType: 'topics',
-            nlpTypes: ['topics', 'entities', 'categories'],
-            networks: {
-                'facebook': {name: 'facebook', proj: 'interactions, date, page_posts', data: null, target: 700},
-                'twitter': {name: 'twitter', proj: 'interactions, date, profile_activities', data: null, target: 45},
-                'youtube': {name: 'youtube', proj: 'interaction_change, date', data: null, target: 35},
-                'instagram': {name: 'instagram', proj: 'interactions, date', data: null, target: 400}
-            }            
-        };
-    },
-
-    computed: {},
-
-    mounted() {
-        this.init()
-    },
-
-    methods: {
-
-        init(){
-
+  data() {
+    return {
+      selectedProfileIds: [],
+      selectedNetwork: null,
+      selectedProfile: null,
+      lastRefreshDate: null,
+      queryOptions: null,
+      selectedNlpType: "topics",
+      nlpTypes: ["topics", "entities", "categories"],
+      networks: {
+        facebook: {
+          name: "facebook",
+          proj: "interactions, date, page_posts",
+          data: null,
+          target: 700
         },
-
-        onSelectedNetworks(network){
-            this.selectedNetwork = network
+        twitter: {
+          name: "twitter",
+          proj: "interactions, date, profile_activities",
+          data: null,
+          target: 45
         },
+        youtube: {
+          name: "youtube",
+          proj: "interaction_change, date",
+          data: null,
+          target: 35
+        },
+        instagram: {
+          name: "instagram",
+          proj: "interactions, date",
+          data: null,
+          target: 400
+        }
+      }
+    };
+  },
 
-        async onSelectedProfiles(profiles){
-            
-            this.selectedProfileIds = _.map(profiles, 'id').join(',')
+  computed: {},
 
-            this.queryOptions = {
-                //start: moment().subtract(30,'days').startOf('day'),
-                //end: moment().endOf('day'),
-                //profileLabels: labels.join(',')
-                profileIds: this.selectedProfileIds,
-            }
+  mounted() {
+    this.init();
+  },
 
-            if (this.selectedNetwork){
-                this.queryOptions.network = this.selectedNetwork
-            }
+  methods: {
+    init() {},
 
-            //await Promise.all([bar(), bam(), bat()].map(handleRejection));
+    onSelectedNetworks(network) {
+      this.selectedNetwork = network;
+    },
 
-            /*
+    async onSelectedProfiles(profiles) {
+      this.selectedProfileIds = _.map(profiles, "id").join(",");
+
+      this.queryOptions = {
+        //start: moment().subtract(30,'days').startOf('day'),
+        //end: moment().endOf('day'),
+        //profileLabels: labels.join(',')
+        profileIds: this.selectedProfileIds
+      };
+
+      if (this.selectedNetwork) {
+        this.queryOptions.network = this.selectedNetwork;
+      }
+
+      //await Promise.all([bar(), bam(), bat()].map(handleRejection));
+
+      /*
             await Promise.map(Object.keys(this.networks), async (name)=>{
                 
                 let network = this.networks[name]
@@ -193,10 +218,8 @@ export default {
 
             this.lastRefreshDate = new Date()
             */
-
-        }
-    },
-
+    }
+  }
 };
 </script>
 
