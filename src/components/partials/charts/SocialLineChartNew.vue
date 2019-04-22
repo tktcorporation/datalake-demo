@@ -9,7 +9,7 @@ export default {
         return {
             isLoading: false,
             tagData: null,
-            metrics: null,
+            metricsOverTime: [],
             data: {
                 datasets: [
                     {
@@ -104,10 +104,19 @@ export default {
     methods: {
         render() {
             if (this.type === 'categories') {
-                API.getTagsOverTime({
-                    tag: 'Art',
-                    range: 'last90days'
-                }).then(data => (this.metrics = data));
+                this.tagData.forEach(tag => {
+                    API.getTagsOverTime({
+                        tag: `${tag.name}`,
+                        range: 'last90days'
+                    }).then(
+                        data =>
+                            (this.metricsOverTime = [
+                                ...this.metricsOverTime,
+                                data
+                            ])
+                    );
+                });
+
                 this.renderChart(this.data, this.options);
             }
         },
