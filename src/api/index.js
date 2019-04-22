@@ -43,8 +43,119 @@ const API = {
       }
     }
 
-    console.log("API.rootUrls = ", API.rootUrls);
-  },
+
+    rootUrls: {
+        user: {url: '/api/user/', port:5000},
+        nlp: {url: '/api/nlp/', port:5001},
+        audience: {url: '/api/audience/', port:5003},
+        web: {url: '/api/web/', port:5002},
+        social: {url: '/api/social/', port:5004}
+    },
+    
+    user: {
+        authenticated:false
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Setup the API and get ready for usage
+     */
+    init() {
+
+        console.log('ENV: ', process.env)
+
+        Vue.use(Resource)
+        
+        var rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'https://data.usagm.gov'
+
+        if (window.location.host.search('localhost')){
+            rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'http://localhost'
+        }
+
+        console.log('ROOT: ', rootUrl)
+        
+        for (let key in API.rootUrls){       
+            if (rootUrl.search('localhost') !== -1){
+                API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + API.rootUrls[key].url
+            }
+            else {
+                API.rootUrls[key].url = rootUrl + API.rootUrls[key].url                    
+            }
+        }
+
+        console.log('API.rootUrls = ', API.rootUrls)
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async getUser(){
+        try {
+            return await this.__send('get', 'user', '', null);
+        }
+        catch(err){
+            return null
+        }
+    },
+
+    /**
+     * Redirect user to the login.gov login page, which then redirects back
+     * to the authentication page.
+     * @see https://developers.login.gov/oidc/
+     */
+    login(){
+
+        // Clear tokens
+        this.setPreference('token', '')
+
+        let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics'
+        let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`
+
+        // A unique value at least 32 characters in length used for maintaining state between the request and the callback. 
+        // This value will be returned to the client on a successful authorization.
+        var state = uuidv5('https://data.usagm.com', uuidv5.URL)
+
+        // A unique value at least 32 characters in length used to verify the integrity of the id_token and mitigate 
+        // replay attacks. This value should include per-session state and be unguessable by attackers. This value 
+        // will be present in the id_token of the token endpoint response, where clients will verify that the nonce 
+        // claim value is equal to the value of the nonce parameter sent in the authentication request. Read more 
+        // about nonce implementation in the spec.
+        var nonce = uuidv5('https://data.usagm.com', uuidv5.URL)
+
+        let opts = {
+            acr_values: 'http://idmanagement.gov/ns/assurance/loa/1',
+            client_id: CLIENT_ID,
+            nonce: nonce,
+            response_type: 'code',
+            redirect_uri: REDIRECT_URI,
+            scope: 'openid email profile:name',
+            state: state
+        }
+
+        let url = `https://idp.int.identitysandbox.gov/openid_connect/authorize?${$.param(opts)}`
+
+        window.location = url
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Take a code given by the login.gov authentication page and exchange for a access token
+     * which is used for hits to our API
+     * @param {*} code 
+     */
+    async register(code){
+
+        // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes         
+        let results = await this.__send('post', 'user', '', {code: code});
+                
+        console.log('REGISTER', results)
+
+        if (!results.token){
+            return
+        }
+
+        this.setPreference('token', results.token)
 
   // ///////////////////////////////////////////////////////////////////////////////////////
 
