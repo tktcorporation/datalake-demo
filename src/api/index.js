@@ -6,11 +6,11 @@ const uuidv5 = require('uuid/v5');
 const API = {
 
     rootUrls: {
-        user: {url: '/user/', port:5000},
-        nlp: {url: '/nlp/', port:5001},
-        audience: {url: '/audience/', port:5003},
-        web: {url: '/web/', port:5002},
-        social: {url: '/social/', port:5004}
+        user: {url: '/api/user/', port:5000},
+        nlp: {url: '/api/nlp/', port:5001},
+        audience: {url: '/api/audience/', port:5003},
+        web: {url: '/api/web/', port:5002},
+        social: {url: '/api/social/', port:5004}
     },
     
     user: {
@@ -28,11 +28,17 @@ const API = {
 
         Vue.use(Resource)
         
-        var rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'https://data.usagm.gov/api'
+        var rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'https://data.usagm.gov'
+
+        if (window.location.host.search('localhost')){
+            rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'http://localhost'
+        }
+
+        console.log('ROOT: ', rootUrl)
         
         for (let key in API.rootUrls){       
             if (rootUrl.search('localhost') !== -1){
-                API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + '/api' + API.rootUrls[key].url
+                API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + API.rootUrls[key].url
             }
             else {
                 API.rootUrls[key].url = rootUrl + API.rootUrls[key].url                    
