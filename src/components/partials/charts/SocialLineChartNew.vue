@@ -1,7 +1,7 @@
 <script>
 import { Line } from 'vue-chartjs';
 import API from '../../../api';
-
+import moment from 'moment';
 export default {
     extends: Line,
     props: ['profileIds', 'network', 'type'],
@@ -11,58 +11,7 @@ export default {
             tagData: null,
             metricsOverTime: [],
             data: {
-                datasets: [
-                    {
-                        label: 'Business',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: [
-                            {
-                                x: '04/01/2014',
-                                y: 175
-                            },
-                            {
-                                x: '10/01/2014',
-                                y: 175
-                            },
-                            {
-                                x: '04/01/2015',
-                                y: 178
-                            },
-                            {
-                                x: '10/01/2015',
-                                y: 178
-                            }
-                        ],
-                        fill: false,
-                        pointRadius: 0
-                    },
-                    {
-                        label: 'My second dataset',
-                        backgroundColor: 'blue',
-                        borderColor: 'blue',
-                        data: [
-                            {
-                                x: '01/04/2014',
-                                y: 175
-                            },
-                            {
-                                x: '01/10/2014',
-                                y: 175
-                            },
-                            {
-                                x: '01/04/2015',
-                                y: 178
-                            },
-                            {
-                                x: '01/10/2015',
-                                y: 178
-                            }
-                        ],
-                        fill: false,
-                        pointRadius: 0
-                    }
-                ]
+                datasets: []
             },
             options: {
                 responsive: true,
@@ -75,7 +24,7 @@ export default {
                         {
                             type: 'time',
                             time: {
-                                format: 'DD/MM/YYYY',
+                                format: 'MM/DD/YYYY',
                                 tooltipFormat: 'll'
                             },
 
@@ -102,22 +51,73 @@ export default {
     },
 
     methods: {
-        render() {
+        async render() {
+            console.log('tagdata', this.tagData);
+            //get the metrics over time
             if (this.type === 'categories') {
-                this.tagData.forEach(tag => {
+                this.metricsOverTime = [];
+                await this.tagData.forEach(tag => {
                     API.getTagsOverTime({
                         tag: `${tag.name}`,
                         range: 'last90days'
-                    }).then(
-                        data =>
-                            (this.metricsOverTime = [
-                                ...this.metricsOverTime,
-                                data
-                            ])
-                    );
-                });
+                    }).then(data => {
+                        this.metricsOverTime = [...this.metricsOverTime, data];
+                        console.log('metrics over time', this.metricsOverTime);
 
-                this.renderChart(this.data, this.options);
+                        //correct the format for chart rendering
+                        this.metricsOverTime.forEach(metric => {
+                            metric.forEach(dataPoint => {
+                                // push objects into the datasets
+                                if (
+                                    this.data.datasets.filter(
+                                        dataset =>
+                                            dataset.label === dataPoint.name
+                                    ).length > 0
+                                ) {
+                                    let currentDataset = this.data.datasets.filter(
+                                        dataset =>
+                                            dataset.label === dataPoint.name
+                                    )[0];
+                                    let newDataPoint = {
+                                        x: moment(`${dataPoint.date}`).format(
+                                            'MM/DD/YYYY'
+                                        ),
+                                        y: dataPoint.facebook_interactions
+                                    };
+
+                                    currentDataset.data = [
+                                        ...currentDataset.data,
+                                        newDataPoint
+                                    ];
+                                } else {
+                                    console.log(this.getRandomColor());
+                                    let color = `${this.getRandomColor()}`;
+                                    let newDataSet = {
+                                        label: dataPoint.name,
+                                        backgroundColor: color,
+                                        borderColor: color,
+                                        fill: false,
+                                        pointRadius: 0,
+                                        data: [
+                                            {
+                                                x: moment(
+                                                    `${dataPoint.date}`
+                                                ).format('MM/DD/YYYY'),
+                                                y:
+                                                    dataPoint.facebook_interactions
+                                            }
+                                        ]
+                                    };
+                                    this.data.datasets = [
+                                        ...this.data.datasets,
+                                        newDataSet
+                                    ];
+                                }
+                            });
+                            this.renderChart(this.data, this.options);
+                        });
+                    });
+                });
             }
         },
         update() {
@@ -125,7 +125,14 @@ export default {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
                 });
+                // waits for tagData then renders
+                this.render();
             });
+        },
+        getRandomColor() {
+            let colorArray = ['red', 'blue', 'green', 'purple'];
+
+            return colorArray[Math.floor(Math.random() * colorArray.length)];
         },
 
         async getTagData() {
@@ -190,8 +197,10 @@ export default {
         profileIds(val) {
             this.update();
         },
-        type() {
-            this.render();
+        async type() {
+            if (this.type === 'categories') {
+                await this.update();
+            }
         }
     }
 };
