@@ -38,7 +38,7 @@ export default {
                         {
                             scaleLabel: {
                                 display: true,
-                                labelString: 'value'
+                                labelString: 'Interactions'
                             }
                         }
                     ]
@@ -47,12 +47,14 @@ export default {
         };
     },
     mounted() {
-        this.render();
+        this.getTagsOverTime();
     },
 
     methods: {
-        async render() {
+        async getTagsOverTime() {
             console.log('tagdata', this.tagData);
+            // console.log('tagdata', this.tagData.length);
+
             //get the metrics over time
             if (this.type === 'categories') {
                 this.metricsOverTime = [];
@@ -62,71 +64,78 @@ export default {
                         range: 'last90days'
                     }).then(data => {
                         this.metricsOverTime = [...this.metricsOverTime, data];
-                        console.log('metrics over time', this.metricsOverTime);
-
-                        //correct the format for chart rendering
-                        this.metricsOverTime.forEach(metric => {
-                            metric.forEach(dataPoint => {
-                                // push objects into the datasets
-                                if (
-                                    this.data.datasets.filter(
-                                        dataset =>
-                                            dataset.label === dataPoint.name
-                                    ).length > 0
-                                ) {
-                                    let currentDataset = this.data.datasets.filter(
-                                        dataset =>
-                                            dataset.label === dataPoint.name
-                                    )[0];
-                                    let newDataPoint = {
-                                        x: moment(`${dataPoint.date}`).format(
-                                            'MM/DD/YYYY'
-                                        ),
-                                        y: dataPoint.facebook_interactions
-                                    };
-
-                                    currentDataset.data = [
-                                        ...currentDataset.data,
-                                        newDataPoint
-                                    ];
-                                } else {
-                                    console.log(this.getRandomColor());
-                                    let color = `${this.getRandomColor()}`;
-                                    let newDataSet = {
-                                        label: dataPoint.name,
-                                        backgroundColor: color,
-                                        borderColor: color,
-                                        fill: false,
-                                        pointRadius: 0,
-                                        data: [
-                                            {
-                                                x: moment(
-                                                    `${dataPoint.date}`
-                                                ).format('MM/DD/YYYY'),
-                                                y:
-                                                    dataPoint.facebook_interactions
-                                            }
-                                        ]
-                                    };
-                                    this.data.datasets = [
-                                        ...this.data.datasets,
-                                        newDataSet
-                                    ];
-                                }
-                            });
-                            this.renderChart(this.data, this.options);
-                        });
+                        //only render when all the data is here
+                        if (
+                            this.metricsOverTime.length === this.tagData.length
+                        ) {
+                            this.render();
+                        }
                     });
                 });
             }
         },
-        update() {
-            this.getTagData().then(() => {
+        render() {
+            if (this.metricsOverTime.length === this.tagData.length) {
+                //correct the format for chart rendering
+                this.metricsOverTime.forEach(metric => {
+                    metric.forEach(dataPoint => {
+                        // push objects into the datasets
+                        if (
+                            this.data.datasets.filter(
+                                dataset => dataset.label === dataPoint.name
+                            ).length > 0
+                        ) {
+                            let currentDataset = this.data.datasets.filter(
+                                dataset => dataset.label === dataPoint.name
+                            )[0];
+                            let newDataPoint = {
+                                x: moment(`${dataPoint.date}`).format(
+                                    'MM/DD/YYYY'
+                                ),
+                                y: dataPoint.facebook_interactions
+                            };
+
+                            currentDataset.data = [
+                                ...currentDataset.data,
+                                newDataPoint
+                            ];
+                        } else {
+                            let color = `${this.getRandomColor()}`;
+                            let newDataSet = {
+                                label: dataPoint.name,
+                                backgroundColor: color,
+                                borderColor: color,
+                                fill: false,
+                                pointRadius: 2,
+                                data: [
+                                    {
+                                        x: moment(`${dataPoint.date}`).format(
+                                            'MM/DD/YYYY'
+                                        ),
+                                        y: dataPoint.facebook_interactions
+                                    }
+                                ]
+                            };
+                            this.data.datasets = [
+                                ...this.data.datasets,
+                                newDataSet
+                            ];
+                        }
+                    });
+                });
+                console.log(this.data);
+
+                //renderChart is part of Chart.js
+                this.renderChart(this.data, this.options);
+            }
+        },
+        async update() {
+            await this.getTagData().then(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
                 });
                 // waits for tagData then renders
-                this.render();
+                this.getTagsOverTime();
             });
         },
         getRandomColor() {
@@ -191,15 +200,19 @@ export default {
     },
     watch: {
         network(val) {
-            this.update();
+            if (this.type === 'categories') {
+                this.update();
+            }
         },
 
         profileIds(val) {
-            this.update();
-        },
-        async type() {
             if (this.type === 'categories') {
-                await this.update();
+                this.update();
+            }
+        },
+        type() {
+            if (this.type === 'categories') {
+                this.update();
             }
         }
     }
