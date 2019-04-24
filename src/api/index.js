@@ -310,7 +310,7 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     async processText(opts) {
-        return await this.__send('post', 'nlp', 'process-text', opts);
+        return await this.__send('post', 'audience', 'analyze', opts);
     },
 
     async getSimilarPages(opts) {

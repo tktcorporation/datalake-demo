@@ -65,6 +65,7 @@
     -->
 
         <!-- v-if="networks.twitter.data" -->
+        <!--
         <div class="row mt-3">
             <div class="col">
                 <SocialLineChartNew
@@ -76,6 +77,7 @@
                 ></SocialLineChartNew>
             </div>
         </div>
+        -->
     </div>
 </template>
 

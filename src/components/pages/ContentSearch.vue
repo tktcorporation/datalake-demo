@@ -47,7 +47,7 @@
                                     <span class="badge badge-primary">Sentiment: {{page.nlp_sentiment}}</span> {{page.title}}
                                 </h5>
                                 
-                                {{page.extract_en}}
+                                {{page.body_clean}}
 
                                 <div class="mb-4">
                                     <div class="">
