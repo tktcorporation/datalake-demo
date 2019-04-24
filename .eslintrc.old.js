@@ -8,8 +8,8 @@ module.exports = {
             "experimentalObjectRestSpread": true,
             "jsx": true
         },
+        "indent": ["error", 4],
         "sourceType": "module"
     },
     "extends": ["eslint:recommended", "google"],
-    "indent": ["error", 4]
 };

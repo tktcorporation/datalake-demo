@@ -6,15 +6,30 @@ const uuidv5 = require('uuid/v5');
 const API = {
 
     rootUrls: {
-        user: {url: '/api/user/', port:5000},
-        nlp: {url: '/api/nlp/', port:5001},
-        audience: {url: '/api/audience/', port:5003},
-        web: {url: '/api/web/', port:5002},
-        social: {url: '/api/social/', port:5004}
+        user: {
+            url: '/api/user/',
+            port: 5000
+        },
+        nlp: {
+            url: '/api/nlp/',
+            port: 5001
+        },
+        audience: {
+            url: '/api/audience/',
+            port: 5003
+        },
+        web: {
+            url: '/api/web/',
+            port: 5002
+        },
+        social: {
+            url: '/api/social/',
+            port: 5004
+        }
     },
-    
+
     user: {
-        authenticated:false
+        authenticated: false
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -27,21 +42,20 @@ const API = {
         console.log('ENV: ', process.env)
 
         Vue.use(Resource)
-        
+
         var rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'https://data.usagm.gov'
 
-        if (window.location.host.search('localhost')){
+        if (window.location.host.search('localhost')) {
             rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'http://localhost'
         }
 
         console.log('ROOT: ', rootUrl)
-        
-        for (let key in API.rootUrls){       
-            if (rootUrl.search('localhost') !== -1){
+
+        for (let key in API.rootUrls) {
+            if (rootUrl.search('localhost') !== -1) {
                 API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + API.rootUrls[key].url
-            }
-            else {
-                API.rootUrls[key].url = rootUrl + API.rootUrls[key].url                    
+            } else {
+                API.rootUrls[key].url = rootUrl + API.rootUrls[key].url
             }
         }
 
@@ -50,11 +64,10 @@ const API = {
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    async getUser(){
+    async getUser() {
         try {
             return await this.__send('get', 'user', '', null);
-        }
-        catch(err){
+        } catch (err) {
             return null
         }
     },
@@ -64,7 +77,7 @@ const API = {
      * to the authentication page.
      * @see https://developers.login.gov/oidc/
      */
-    login(){
+    login() {
 
         // Clear tokens
         this.setPreference('token', '')
@@ -105,20 +118,22 @@ const API = {
      * which is used for hits to our API
      * @param {*} code 
      */
-    async register(code){
+    async register(code) {
 
         // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes         
-        let results = await this.__send('post', 'user', '', {code: code});
-                
+        let results = await this.__send('post', 'user', '', {
+            code: code
+        });
+
         console.log('REGISTER', results)
 
-        if (!results.token){
+        if (!results.token) {
             return
         }
 
         this.setPreference('token', results.token)
 
-        if (results.user && results.user.email){
+        if (results.user && results.user.email) {
             this.user = results.user
             this.user.authenticated = true
         }
@@ -128,13 +143,13 @@ const API = {
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    async logout(){        
-        
+    async logout() {
+
         var opts = {
             token: this.getPreference('token'),
             redirect: `${window.location.protocol}//${window.location.host}`
         }
-        
+
         this.setPreference('token', null)
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
@@ -143,13 +158,13 @@ const API = {
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    getPreference(name){
+    getPreference(name) {
         return localStorage.getItem(`opr-pref-${name}`)
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    setPreference(name, value){
+    setPreference(name, value) {
         localStorage.setItem(`opr-pref-${name}`, value)
     },
 
@@ -159,7 +174,7 @@ const API = {
     //
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    async getTopTags(profileIdList, opts){
+    async getTopTags(profileIdList, opts) {
         var merged = _.defaults(opts, {
             limit: 10,
             //type: 'topics',
@@ -169,7 +184,7 @@ const API = {
         return await this.__send('get', 'audience', `tag/rankings?${$.param(merged)}`, null);
     },
 
-    async getContent(opts){
+    async getContent(opts) {
         var merged = _.defaults(opts, {
             limit: 10,
             //type: 'topics',
@@ -178,7 +193,7 @@ const API = {
         return await this.__send('get', 'audience', `content?${$.param(merged)}`, null);
     },
 
-    async getTags(opts){
+    async getTags(opts) {
         var merged = _.defaults(opts, {
             limit: 10,
             type: 'topics',
@@ -187,6 +202,19 @@ const API = {
         return await this.__send('get', 'audience', `tags?${$.param(merged)}`, null);
     },
 
+    async getHosts(opts) {
+        var merged = _.defaults(opts, {
+            limit: 10,
+        })
+        return await this.__send('get', 'audience', `content/hosts?${$.param(merged)}`, null);
+    },
+
+    async getAuthors(opts) {
+        var merged = _.defaults(opts, {
+            limit: 10,
+        })
+        return await this.__send('get', 'audience', `content/authors?${$.param(merged)}`, null);
+    },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -194,15 +222,15 @@ const API = {
     //
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    async getSocialProfiles(){
+    async getSocialProfiles() {
         return await this.__send('get', 'social', 'profiles', null);
     },
 
-    async getSocialMetrics(){
+    async getSocialMetrics() {
         return await this.__send('get', 'social', 'metrics', null);
     },
 
-    async getSocialProfileLabels(){
+    async getSocialProfileLabels() {
         return await this.__send('get', 'social', 'profile-labels', null);
     },
 
@@ -216,7 +244,7 @@ const API = {
      *     start: Start date
      *     end: End date
      */
-    async getSocialProfilePosts(opts){
+    async getSocialProfilePosts(opts) {
         return await this.__send('get', 'social', `profiles/posts?${$.param(opts)}`, null);
     },
 
@@ -227,8 +255,8 @@ const API = {
      *     proifleLabels: csv list of profile labels (see getSocialProfileLabels)
      *     start: Start date
      *     end: End date
-     */    
-    async getSocialProfileMetrics(opts){
+     */
+    async getSocialProfileMetrics(opts) {
         return await this.__send('get', 'social', `profiles/metrics?${$.param(opts)}`, null);
     },
 
@@ -241,21 +269,21 @@ const API = {
      *     proj: csv list of fields to get back, interactions_per_1000_fans (highly recommended for performence!)
      *     start: Start date
      *     end: End date
-     */        
-    async getSocialProfileMetricsByNetwork(network, opts){
+     */
+    async getSocialProfileMetricsByNetwork(network, opts) {
         return await this.__send('get', 'social', `network/${network}/profiles/metrics?${$.param(opts)}`, null);
-    },    
+    },
 
-    async getSocialProfileInteractionsByNetwork(network, opts){
+    async getSocialProfileInteractionsByNetwork(network, opts) {
         return await this.__send('get', 'social', `network/${network}/profiles/interactions?${$.param(opts)}`, null);
     },
-    
+
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
     // WebTraffic
     //
     // ///////////////////////////////////////////////////////////////////////////////////////
-    
+
     /**
      * Get no of visits per network basis. 
      * @param {object} opts The options, including; 
@@ -263,15 +291,15 @@ const API = {
      *     start: Start date
      *     end: End date
      */
-    async getNoOfVisits(opts){
+    async getNoOfVisits(opts) {
         return await this.__send('get', 'web', 'getNoOfVisits', opts);
-    },   
+    },
 
-    async getNoOfVisitors(opts){
+    async getNoOfVisitors(opts) {
         return await this.__send('get', 'web', 'getNoOfVisitors', opts);
     },
 
-    async getMedium(opts){
+    async getMedium(opts) {
         return await this.__send('get', 'web', 'getMedium', opts);
     },
 
@@ -281,13 +309,13 @@ const API = {
     //
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    async processText(opts){
+    async processText(opts) {
         return await this.__send('post', 'nlp', 'process-text', opts);
-    },   
+    },
 
-    async getSimilarPages(opts){
+    async getSimilarPages(opts) {
         return await this.__send('post', 'nlp', 'similar', opts);
-    },   
+    },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -298,14 +326,14 @@ const API = {
     async __send(verb, service, path, opts) {
 
         let headers = {
-        //    'x-opr-uid': localStorage.getItem('opr-uid'),
-            'Authorization': 'Bearer ' + this.getPreference('token')          
+            //    'x-opr-uid': localStorage.getItem('opr-uid'),
+            'Authorization': 'Bearer ' + this.getPreference('token')
         }
 
         console.log(headers)
         let body = {}
 
-        if (opts){
+        if (opts) {
             body = opts
         }
 
@@ -313,15 +341,7 @@ const API = {
 
         console.log(`[${verb.toUpperCase()}][${service}] ${finalUrl}`)
 
-        /*
-        let parseError = function(body){
-            if (body.result && body.result != 'ok'){ 
-                return body.message
-            }
-            return body
-        }
-        
-        let errorCallback = function(response){
+        let errorCallback = function (response) {
             if (response.body && response.body.error) {
                 console.error('[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl, opts, headers, response.body.error)
                 return callback(response.body.error)
@@ -330,26 +350,28 @@ const API = {
                 return callback(parseError(response.body))
             }
         }
-        */
 
-        
         var response = null
 
         try {
-            if (verb == 'post'){
-                response = await Vue.http.post(finalUrl, body, {headers:headers})          
+            if (verb == 'post') {
+                response = await Vue.http.post(finalUrl, body, {
+                    headers: headers
+                })
+            } else if (verb == 'put') {
+                response = await Vue.http.put(finalUrl, body, {
+                    headers: headers
+                })
+            } else if (verb == 'get') {
+                response = await Vue.http.get(finalUrl, {
+                    headers: headers
+                })
+            } else if (verb == 'delete') {
+                response = await Vue.http.delete(finalUrl, {
+                    headers: headers
+                })
             }
-            else if (verb == 'put'){
-                response = await Vue.http.put(finalUrl, body, {headers:headers})         
-            }
-            else if (verb == 'get'){
-                response = await Vue.http.get(finalUrl, {headers:headers})   
-            }
-            else if (verb == 'delete'){
-                response = await Vue.http.delete(finalUrl, {headers:headers})       
-            }    
-        }
-        catch(err){
+        } catch (err) {
             console.error(`[${verb.toUpperCase()}][${service}] ${finalUrl}`, err)
             return null
         }
