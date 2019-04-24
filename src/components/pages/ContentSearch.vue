@@ -47,7 +47,7 @@
                                     <span class="badge badge-primary">Sentiment: {{page.nlp_sentiment}}</span> {{page.title}}
                                 </h5>
                                 
-                                {{page.body_clean}}
+                                {{page.body_clean_en}}
 
                                 <div class="mb-4">
                                     <div class="">
@@ -114,8 +114,8 @@ export default {
                 //type:'post',
                 proj: [
                     'title', 'title_en', 'url', 'image', 'thumbnail', 'host', 'network', 'type', 'author', 'profile_id', 
-                    'extract', 'extract_en', 'language', 'nlp_categories', 'nlp_topics', 'nlp_entities', 'nlp_sentiment'
-                    //'body_clean', 'body_clean_en', 
+                    'extract', 'extract_en', 'language', 'nlp_categories', 'nlp_topics', 'nlp_entities', 'nlp_sentiment',
+                    'body_clean', 'body_clean_en', 
                     ]
             }
         };
