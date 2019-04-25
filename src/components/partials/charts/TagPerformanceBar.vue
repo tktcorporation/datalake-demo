@@ -1,6 +1,8 @@
 <template>
     <div class="tag-performance-bar-chart card w-100 h-100">
+        
         <div class="card-body">
+
             <span class="text-primary" style="font-size:24px" v-if="isLoading">
                 <i class="fas fa-robot fa-spin ml-2"></i>
             </span>
@@ -88,9 +90,9 @@
 // @see https://github.com/apertureless/vue-chartjs
 import _ from "lodash";
 import moment from "moment";
-import PleaseJS from "../../../utils/PleaseJS.js";
+//import PleaseJS from "../../../utils/PleaseJS.js";
 import API from "../../../api";
-var tinycolor = require("tinycolor2");
+//var tinycolor = require("tinycolor2");
 
 export default {
     name: "tag-performance-bar",
@@ -105,6 +107,7 @@ export default {
     },
 
     watch: {
+
         network(val) {
             this.update();
         },
@@ -117,6 +120,7 @@ export default {
     mounted() {},
 
     methods: {
+
         update() {
             this.getTagData().then(() => {
                 $(function() {
@@ -126,6 +130,9 @@ export default {
         },
 
         async getTagData() {
+
+            this.$log('Getting tag data...')
+
             function parseNumber(val) {
                 var val = parseInt(val);
                 if (!_.isFinite(val)) {
@@ -135,6 +142,7 @@ export default {
             }
 
             this.isLoading = true;
+
             this.tags = await API.getTopTags(this.profileIds, {
                 type: this.type,
                 network: this.network
@@ -152,27 +160,19 @@ export default {
                     max = val;
                 }
             }
-            console.log(this.tags);
+
+            this.$log(this.tags);
 
             this.tagData = [];
 
             for (let i = 0; i < this.tags.length; i += 1) {
+                
                 this.tagData[i] = this.tags[i];
 
-                this.tagData[i].facebook_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].facebook_interactions)) /
-                        max
-                );
-                this.tagData[i].twitter_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].twitter_interactions)) / max
-                );
-                this.tagData[i].youtube_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].youtube_interactions)) / max
-                );
-                this.tagData[i].instagram_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].instagram_interactions)) /
-                        max
-                );
+                this.tagData[i].facebook_normalized = Math.round((100 * parseNumber(this.tags[i].facebook_interactions)) / max);
+                this.tagData[i].twitter_normalized = Math.round((100 * parseNumber(this.tags[i].twitter_interactions)) / max);
+                this.tagData[i].youtube_normalized = Math.round((100 * parseNumber(this.tags[i].youtube_interactions)) / max);
+                this.tagData[i].instagram_normalized = Math.round((100 * parseNumber(this.tags[i].instagram_interactions)) / max);
 
                 //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
                 //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)

@@ -179,7 +179,7 @@ const API = {
             limit: 10,
             //type: 'topics',
             //range: 'last7days',
-            profileIds: profileIdList
+            profileIds: (_.isArray(profileIdList)) ? profileIdList.join(',') : profileIdList
         })
         return await this.__send('get', 'audience', `tag/rankings?${$.param(merged)}`, null);
     },
@@ -203,16 +203,12 @@ const API = {
     },
 
     async getHosts(opts) {
-        var merged = _.defaults(opts, {
-            limit: 10,
-        })
+        var merged = _.defaults(opts, {})
         return await this.__send('get', 'audience', `content/hosts?${$.param(merged)}`, null);
     },
 
     async getAuthors(opts) {
-        var merged = _.defaults(opts, {
-            limit: 10,
-        })
+        var merged = _.defaults(opts, {})
         return await this.__send('get', 'audience', `content/authors?${$.param(merged)}`, null);
     },
 

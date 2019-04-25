@@ -1,10 +1,13 @@
 <template>
 
-    <div class="container" align="left">
+    <div class="container" align="left" id="WebTrafficPage">
 
-        <div class="row">
+        <div class="row mb-3">
             <div class="col">
-                <host-selector></host-selector>
+                <host-selector @onSelect="onSelectHost"></host-selector>
+            </div>
+            <div class="col">
+                <author-selector @onSelect="onSelectAuthor"></author-selector>
             </div>
             <div class="col">
                 <datepicker
@@ -27,29 +30,53 @@
         {{periodStart}}
         {{periodEnd}}
 
-        <ul class="nav nav-tabs mt-3 mb-3">
-            <li
-                class="nav-item"
-                v-for="(type, index) in nlpTypes"
-                :key="index"
-            >
-                <span
-                    class="nav-link capitalize"
-                    :class="{'active':selectedNlpType == type}"
-                    @click="selectedNlpType = type"
-                >{{type}}</span>
-            </li>
-        </ul>
-        
-        <div class="row" v-for="(type, index) in nlpTypes" :key="index">
-            <div class="col" v-show="selectedNlpType == type">
-                <tag-performance-bar
-                    :profile-ids="selectedProfileIds"
-                    :network="selectedNetwork"
-                    :type="type"
-                ></tag-performance-bar>
+        <div class="row mt-5">
+
+            <div class="col">
+
+                <h4>What topics are being read?</h4>
+
+                <ul class="nav mt-3">
+                    <li
+                        class="nav-item"
+                        v-for="(type, index) in nlpTypes"
+                        :key="index"
+                    >
+                        <span
+                            class="nav-link capitalize"
+                            :class="{'active':selectedNlpType == type}"
+                            @click="selectedNlpType = type"
+                        >{{type}}</span>
+                    </li>
+                </ul>
+                
+                <div v-for="(type, index) in nlpTypes" :key="index">
+                    <div v-show="selectedNlpType == type">
+                        <tag-performance-bar
+                            :profile-ids="selectedProfileIds"
+                            network="web"
+                            :type="type"
+                        ></tag-performance-bar>
+                    </div>
+                </div>
+
             </div>
+
         </div>
+
+
+
+        <div class="row mt-5">
+
+            <div class="col">
+
+                <h4>What articles are being read?</h4>
+
+                <web-pages-table :pages="pages" v-if="pages"></web-pages-table>
+            </div>
+
+        </div>
+
 
 <!--
         <div class="row">
@@ -107,7 +134,9 @@
 <script>
 import API from "../../api";
 import HostSelector from "../partials/selectors/HostSelector";
+import AuthorSelector from "../partials/selectors/AuthorSelector";
 import PolarArea from "../partials/charts/PolarArea";
+import WebPagesTable from "../partials/tables/WebPagesTable";
 import WebLineChart from "../partials/charts/WebLineChart";
 import UsagmNetworkSelector from "../partials/selectors/UsagmNetworkSelector";
 import Promise from "bluebird";
@@ -123,22 +152,26 @@ export default {
     },
 
     components: {
+        AuthorSelector,
         HostSelector,
         UsagmNetworkSelector,
         WebLineChart,
         Datepicker,
-        TagPerformanceBar
+        TagPerformanceBar,
+        WebPagesTable
     },
 
     data() {
         return {
             selectedNlpType: "topics",
             nlpTypes: ["topics", "entities", "categories"],
+            selectedProfileIds: [],
             selectedNetworkIds: [],
             selectedNetwork: null,
             lastRefreshDate: null,
             queryOptions: null,
             showSettings: true,
+            pages: null,
             periodStart: "",
             periodEnd: "",
 
@@ -180,6 +213,16 @@ export default {
         
         init() {},
         
+        onSelectAuthor(authors){
+
+        },
+
+        onSelectHost(hosts){
+            this.$set(this.selectedProfileIds, _.map(hosts, 'id'))
+            this.$log('onSelectHost ', this.selectedProfileIds)
+            this.doPageSearch()
+        },
+
         toggleSettings() {
             this.showSettings = !this.showSettings;
             this.$ga.event({
@@ -194,10 +237,39 @@ export default {
             this.queryOptions = {
                 networkIds: this.selectedNetworkIds
             };
-        }
+        },
+
+        async doPageSearch(){        
+            
+            var opts = {
+                profileIds: this.selectedProfileIds,
+                type: 'page'
+            }
+
+            this.$log('Search options', opts)
+
+            var info = await API.getContent(opts)
+
+            this.$log(info.results[0])
+            this.pages = info.results
+            this.pagesMeta = info.meta
+        },
+
     }
 };
 </script>
 
 <style lang="scss">
+
+#WebTrafficPage {
+
+    .nav-item {
+        color: #718EA4;
+    }
+
+    .nav-item .active {
+        color: #123652;
+    }
+
+}
 </style>

@@ -2,15 +2,13 @@
 
     <multiselect
         v-model="selectedHosts"
-        name="host-selector"
-        label="name"
-        track-by="id" 
-        deselect-label="Can't unselect host"
+        name="author-selector"
+        deselect-label="Can't unselect author"
         :multiple="true"
-        placeholder="Select a host"
-        :options="hosts"
+        placeholder="Select a author"
+        :options="authors"
         :loading="isLoading"
-        @input="onSelectProfile"
+        @input="onSelect"
         :searchable="true"
         :limit="3"
         :allow-empty="true"
@@ -26,11 +24,11 @@ require("vue-multiselect/dist/vue-multiselect.min.css");
 
 export default {
 
-    name: "host-selector",
+    name: "author-selector",
 
     data() {
         return {
-            hosts: [],
+            authors: [],
             selectedHosts: null,
             isLoading: false
         };
@@ -52,8 +50,8 @@ export default {
             this.isLoading = true;
             this.isLoadingLabels = true;
 
-            API.getHosts().then(hosts => {
-                this.hosts = hosts;
+            API.getAuthors().then(authors => {
+                this.authors = authors;
                 this.isLoading = false;
             });
 
@@ -61,7 +59,7 @@ export default {
 
         onSelectNetwork(network) {},
 
-        onSelectProfile() {
+        onSelect() {
             this.$emit("onSelect", this.selectedHosts);
         }
     }
