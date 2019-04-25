@@ -1,10 +1,9 @@
-import Vue from 'vue'
-import Resource from 'vue-resource'
-import _ from 'lodash'
+import Vue from 'vue';
+import Resource from 'vue-resource';
+import _ from 'lodash';
 const uuidv5 = require('uuid/v5');
 
 const API = {
-
     rootUrls: {
         user: {
             url: '/api/user/',
@@ -38,28 +37,35 @@ const API = {
      * Setup the API and get ready for usage
      */
     init() {
+        console.log('ENV: ', process.env);
 
-        console.log('ENV: ', process.env)
+        Vue.use(Resource);
 
-        Vue.use(Resource)
-
-        var rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'https://data.usagm.gov'
+        var rootUrl = process.env.VUE_APP_ROOT_URL
+            ? process.env.VUE_APP_ROOT_URL
+            : 'https://data.usagm.gov';
 
         if (window.location.host.search('localhost')) {
-            rootUrl = (process.env.VUE_APP_ROOT_URL) ? process.env.VUE_APP_ROOT_URL : 'http://localhost'
+            rootUrl = process.env.VUE_APP_ROOT_URL
+                ? process.env.VUE_APP_ROOT_URL
+                : 'http://localhost';
         }
 
-        console.log('ROOT: ', rootUrl)
+        console.log('ROOT: ', rootUrl);
 
         for (let key in API.rootUrls) {
             if (rootUrl.search('localhost') !== -1) {
-                API.rootUrls[key].url = rootUrl + ':' + API.rootUrls[key].port + API.rootUrls[key].url
+                API.rootUrls[key].url =
+                    rootUrl +
+                    ':' +
+                    API.rootUrls[key].port +
+                    API.rootUrls[key].url;
             } else {
-                API.rootUrls[key].url = rootUrl + API.rootUrls[key].url
+                API.rootUrls[key].url = rootUrl + API.rootUrls[key].url;
             }
         }
 
-        console.log('API.rootUrls = ', API.rootUrls)
+        console.log('API.rootUrls = ', API.rootUrls);
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -78,23 +84,25 @@ const API = {
      * @see https://developers.login.gov/oidc/
      */
     login() {
-
         // Clear tokens
-        this.setPreference('token', '')
+        this.setPreference('token', '');
 
-        let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics'
-        let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`
+        let CLIENT_ID =
+            'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
+        let REDIRECT_URI = `${window.location.protocol}//${
+            window.location.host
+        }/authenticate`;
 
-        // A unique value at least 32 characters in length used for maintaining state between the request and the callback. 
+        // A unique value at least 32 characters in length used for maintaining state between the request and the callback.
         // This value will be returned to the client on a successful authorization.
-        var state = uuidv5('https://data.usagm.com', uuidv5.URL)
+        var state = uuidv5('https://data.usagm.com', uuidv5.URL);
 
-        // A unique value at least 32 characters in length used to verify the integrity of the id_token and mitigate 
-        // replay attacks. This value should include per-session state and be unguessable by attackers. This value 
-        // will be present in the id_token of the token endpoint response, where clients will verify that the nonce 
-        // claim value is equal to the value of the nonce parameter sent in the authentication request. Read more 
+        // A unique value at least 32 characters in length used to verify the integrity of the id_token and mitigate
+        // replay attacks. This value should include per-session state and be unguessable by attackers. This value
+        // will be present in the id_token of the token endpoint response, where clients will verify that the nonce
+        // claim value is equal to the value of the nonce parameter sent in the authentication request. Read more
         // about nonce implementation in the spec.
-        var nonce = uuidv5('https://data.usagm.com', uuidv5.URL)
+        var nonce = uuidv5('https://data.usagm.com', uuidv5.URL);
 
         let opts = {
             acr_values: 'http://idmanagement.gov/ns/assurance/loa/1',
@@ -104,11 +112,13 @@ const API = {
             redirect_uri: REDIRECT_URI,
             scope: 'openid email profile:name',
             state: state
-        }
+        };
 
-        let url = `https://idp.int.identitysandbox.gov/openid_connect/authorize?${$.param(opts)}`
+        let url = `https://idp.int.identitysandbox.gov/openid_connect/authorize?${$.param(
+            opts
+        )}`;
 
-        window.location = url
+        window.location = url;
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +126,7 @@ const API = {
     /**
      * Take a code given by the login.gov authentication page and exchange for a access token
      * which is used for hits to our API
-     * @param {*} code 
+     * @param {*} code
      */
     async register(code) {
 
@@ -131,14 +141,14 @@ const API = {
             return
         }
 
-        this.setPreference('token', results.token)
+        this.setPreference('token', results.token);
 
         if (results.user && results.user.email) {
             this.user = results.user
             this.user.authenticated = true
         }
 
-        return results
+        return results;
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +164,6 @@ const API = {
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
     },
-
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -186,22 +195,47 @@ const API = {
 
     async getContent(opts) {
         var merged = _.defaults(opts, {
-            limit: 10,
+            limit: 10
             //type: 'topics',
             //range: 'last7days',
-        })
-        return await this.__send('get', 'audience', `content?${$.param(merged)}`, null);
+        });
+        return await this.__send(
+            'get',
+            'audience',
+            `content?${$.param(merged)}`,
+            null
+        );
     },
 
     async getTags(opts) {
         var merged = _.defaults(opts, {
             limit: 10,
-            type: 'topics',
+            type: 'topics'
             //range: 'last7days',
-        })
-        return await this.__send('get', 'audience', `tags?${$.param(merged)}`, null);
+        });
+        return await this.__send(
+            'get',
+            'audience',
+            `tags?${$.param(merged)}`,
+            null
+        );
     },
 
+    //Get Tag Metrics Over Time
+
+    async getTagsOverTime(opts) {
+        var merged = _.defaults(opts, {
+            tag: 'Art',
+            range: 'last90days'
+        });
+        return await this.__send(
+            'get',
+            'audience',
+            `tag/metrics?${$.param(merged)}`,
+            null
+        );
+    },
+    
     async getHosts(opts) {
         var merged = _.defaults(opts, {})
         return await this.__send('get', 'audience', `content/hosts?${$.param(merged)}`, null);
@@ -233,10 +267,10 @@ const API = {
     /**
      * Get a list of posts (and post level metrics) for the given profile (use getSocialProfiles to get a list of profiles)
      * @param {string} profileId The profile id (see getSocialProfiles)
-     * @param {object} opts The options, including; 
+     * @param {object} opts The options, including;
      *     limit: Max number to get (for paging)
      *     skip: Specify how many to skip (for paging)
-     *     projection: List of fields to get back, in csv list  
+     *     projection: List of fields to get back, in csv list
      *     start: Start date
      *     end: End date
      */
@@ -247,7 +281,7 @@ const API = {
     /**
      * Get a list of metrics. Note this result is not paged, as it contains mixed content
      * ideally use getSocialProfileMetricsByNetwork for speed and this supports projections (field selection)
-     * @param {object} opts The options, including; 
+     * @param {object} opts The options, including;
      *     proifleLabels: csv list of profile labels (see getSocialProfileLabels)
      *     start: Start date
      *     end: End date
@@ -258,7 +292,7 @@ const API = {
 
     /**
      * Get a list of metrics by network
-     * @param {object} opts The options, including; 
+     * @param {object} opts The options, including;
      *     proifleLabels: csv list of profile labels (see getSocialProfileLabels)
      *     limit: Max number to get (for paging)
      *     skip: Specify how many to skip (for paging)
@@ -281,8 +315,8 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Get no of visits per network basis. 
-     * @param {object} opts The options, including; 
+     * Get no of visits per network basis.
+     * @param {object} opts The options, including;
      *     networkLabels: list of network labels
      *     start: Start date
      *     end: End date
@@ -315,27 +349,26 @@ const API = {
 
     // ///////////////////////////////////////////////////////////////////////////////////////
     //
-    // 
+    //
     //
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     async __send(verb, service, path, opts) {
-
         let headers = {
             //    'x-opr-uid': localStorage.getItem('opr-uid'),
             'Authorization': 'Bearer ' + this.getPreference('token')
         }
 
-        console.log(headers)
-        let body = {}
+        console.log(headers);
+        let body = {};
 
         if (opts) {
             body = opts
         }
 
-        var finalUrl = this.rootUrls[service].url + path
+        var finalUrl = this.rootUrls[service].url + path;
 
-        console.log(`[${verb.toUpperCase()}][${service}] ${finalUrl}`)
+        console.log(`[${verb.toUpperCase()}][${service}] ${finalUrl}`);
 
         let errorCallback = function (response) {
             if (response.body && response.body.error) {
@@ -353,30 +386,30 @@ const API = {
             if (verb == 'post') {
                 response = await Vue.http.post(finalUrl, body, {
                     headers: headers
-                })
+                });
             } else if (verb == 'put') {
                 response = await Vue.http.put(finalUrl, body, {
                     headers: headers
-                })
+                });
             } else if (verb == 'get') {
-                response = await Vue.http.get(finalUrl, {
-                    headers: headers
-                })
+                response = await Vue.http.get(finalUrl, { headers: headers });
             } else if (verb == 'delete') {
                 response = await Vue.http.delete(finalUrl, {
                     headers: headers
-                })
+                });
             }
         } catch (err) {
-            console.error(`[${verb.toUpperCase()}][${service}] ${finalUrl}`, err)
-            return null
+            console.error(
+                `[${verb.toUpperCase()}][${service}] ${finalUrl}`,
+                err
+            );
+            return null;
         }
 
-        return response.body
+        return response.body;
     }
+};
 
-}
+API.init();
 
-API.init()
-
-export default API
+export default API;

@@ -1,183 +1,220 @@
-
-
-
 <script>
-import { Line } from "vue-chartjs";
-import API from "../../../api";
-
+import { Line } from 'vue-chartjs';
+import API from '../../../api';
+import moment from 'moment';
 export default {
-  extends: Line,
-  props: ["profileIds", "network", "type"],
-  data() {
-    return {
-      isLoading: false,
-      tagData: null,
-      data: {
-        datasets: [
-          {
-            label: "Business",
-            backgroundColor: "rgb(255, 99, 132)",
-            borderColor: "rgb(255, 99, 132)",
-            data: [
-              {
-                x: "04/01/2014",
-                y: 175
-              },
-              {
-                x: "10/01/2014",
-                y: 175
-              },
-              {
-                x: "04/01/2015",
-                y: 178
-              },
-              {
-                x: "10/01/2015",
-                y: 178
-              }
-            ],
-            fill: false,
-            pointRadius: 0
-          },
-          {
-            label: "My second dataset",
-            backgroundColor: "blue",
-            borderColor: "blue",
-            data: [
-              {
-                x: "01/04/2014",
-                y: 175
-              },
-              {
-                x: "01/10/2014",
-                y: 175
-              },
-              {
-                x: "01/04/2015",
-                y: 178
-              },
-              {
-                x: "01/10/2015",
-                y: 178
-              }
-            ],
-            fill: false,
-            pointRadius: 0
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        title: {
-          display: true,
-          text: "Topics Over Time"
+    extends: Line,
+    props: ['profileIds', 'network', 'type'],
+    data() {
+        return {
+            isLoading: false,
+            tagData: null,
+            metricsOverTime: [],
+            data: {
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Topics Over Time'
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            type: 'time',
+                            time: {
+                                format: 'MM/DD/YYYY',
+                                tooltipFormat: 'll'
+                            },
+
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            }
+                        }
+                    ],
+                    yAxes: [
+                        {
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Interactions'
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+    },
+    mounted() {
+        this.getTagsOverTime();
+    },
+
+    methods: {
+        async getTagsOverTime() {
+            console.log('tagdata', this.tagData);
+            // console.log('tagdata', this.tagData.length);
+
+            //get the metrics over time
+            if (this.type === 'categories') {
+                this.metricsOverTime = [];
+                await this.tagData.forEach(tag => {
+                    API.getTagsOverTime({
+                        tag: `${tag.name}`,
+                        range: 'last90days'
+                    }).then(data => {
+                        this.metricsOverTime = [...this.metricsOverTime, data];
+                        //only render when all the data is here
+                        if (
+                            this.metricsOverTime.length === this.tagData.length
+                        ) {
+                            this.render();
+                        }
+                    });
+                });
+            }
         },
-        scales: {
-          xAxes: [
-            {
-              type: "time",
-              time: {
-                format: "DD/MM/YYYY",
-                tooltipFormat: "ll"
-              },
+        render() {
+            if (this.metricsOverTime.length === this.tagData.length) {
+                //correct the format for chart rendering
+                this.metricsOverTime.forEach(metric => {
+                    metric.forEach(dataPoint => {
+                        // push objects into the datasets
+                        if (
+                            this.data.datasets.filter(
+                                dataset => dataset.label === dataPoint.name
+                            ).length > 0
+                        ) {
+                            let currentDataset = this.data.datasets.filter(
+                                dataset => dataset.label === dataPoint.name
+                            )[0];
+                            let newDataPoint = {
+                                x: moment(`${dataPoint.date}`).format(
+                                    'MM/DD/YYYY'
+                                ),
+                                y: dataPoint.facebook_interactions
+                            };
 
-              scaleLabel: {
-                display: true,
-                labelString: "Date"
-              }
+                            currentDataset.data = [
+                                ...currentDataset.data,
+                                newDataPoint
+                            ];
+                        } else {
+                            let color = `${this.getRandomColor()}`;
+                            let newDataSet = {
+                                label: dataPoint.name,
+                                backgroundColor: color,
+                                borderColor: color,
+                                fill: false,
+                                pointRadius: 2,
+                                data: [
+                                    {
+                                        x: moment(`${dataPoint.date}`).format(
+                                            'MM/DD/YYYY'
+                                        ),
+                                        y: dataPoint.facebook_interactions
+                                    }
+                                ]
+                            };
+                            this.data.datasets = [
+                                ...this.data.datasets,
+                                newDataSet
+                            ];
+                        }
+                    });
+                });
+                console.log(this.data);
+
+                //renderChart is part of Chart.js
+                this.renderChart(this.data, this.options);
             }
-          ],
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "value"
-              }
+        },
+        async update() {
+            await this.getTagData().then(() => {
+                $(function() {
+                    $('[data-toggle="popover"]').popover();
+                });
+                // waits for tagData then renders
+                this.getTagsOverTime();
+            });
+        },
+        getRandomColor() {
+            let colorArray = ['red', 'blue', 'green', 'purple'];
+
+            return colorArray[Math.floor(Math.random() * colorArray.length)];
+        },
+
+        async getTagData() {
+            function parseNumber(val) {
+                var val = parseInt(val);
+                if (!_.isFinite(val)) {
+                    return 0;
+                }
+                return val;
             }
-          ]
-        }
-      }
-    };
-  },
-  mounted() {},
 
-  methods: {
-    render() {
-      if (this.type === "categories") {
-        this.renderChart(this.data, this.options);
-      }
+            this.isLoading = true;
+            this.tags = await API.getTopTags(this.profileIds, {
+                type: this.type,
+                network: this.network
+            });
+            this.isLoading = false;
+
+            //var key = 'interactions'
+
+            var max = -9999999;
+
+            // Now normalize data
+            for (let i = 0; i < this.tags.length; i += 1) {
+                var val = parseNumber(this.tags[i].interactions);
+                if (val > max) {
+                    max = val;
+                }
+            }
+            console.log(this.tags);
+
+            this.tagData = [];
+
+            for (let i = 0; i < this.tags.length; i += 1) {
+                this.tagData[i] = this.tags[i];
+
+                this.tagData[i].facebook_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].facebook_interactions)) /
+                        max
+                );
+                this.tagData[i].twitter_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].twitter_interactions)) / max
+                );
+                this.tagData[i].youtube_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].youtube_interactions)) / max
+                );
+                this.tagData[i].instagram_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].instagram_interactions)) /
+                        max
+                );
+
+                //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
+                //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)
+            }
+        }
     },
-    update() {
-      this.getTagData().then(() => {
-        $(function() {
-          $('[data-toggle="popover"]').popover();
-        });
-      });
-    },
+    watch: {
+        network(val) {
+            if (this.type === 'categories') {
+                this.update();
+            }
+        },
 
-    async getTagData() {
-      function parseNumber(val) {
-        var val = parseInt(val);
-        if (!_.isFinite(val)) {
-          return 0;
+        profileIds(val) {
+            if (this.type === 'categories') {
+                this.update();
+            }
+        },
+        type() {
+            if (this.type === 'categories') {
+                this.update();
+            }
         }
-        return val;
-      }
-
-      this.isLoading = true;
-      this.tags = await API.getTopTags(this.profileIds, {
-        type: this.type,
-        network: this.network
-      });
-      this.isLoading = false;
-
-      //var key = 'interactions'
-
-      var max = -9999999;
-
-      // Now normalize data
-      for (let i = 0; i < this.tags.length; i += 1) {
-        var val = parseNumber(this.tags[i].interactions);
-        if (val > max) {
-          max = val;
-        }
-      }
-      console.log(this.tags);
-
-      this.tagData = [];
-
-      for (let i = 0; i < this.tags.length; i += 1) {
-        this.tagData[i] = this.tags[i];
-
-        this.tagData[i].facebook_normalized = Math.round(
-          (100 * parseNumber(this.tags[i].facebook_interactions)) / max
-        );
-        this.tagData[i].twitter_normalized = Math.round(
-          (100 * parseNumber(this.tags[i].twitter_interactions)) / max
-        );
-        this.tagData[i].youtube_normalized = Math.round(
-          (100 * parseNumber(this.tags[i].youtube_interactions)) / max
-        );
-        this.tagData[i].instagram_normalized = Math.round(
-          (100 * parseNumber(this.tags[i].instagram_interactions)) / max
-        );
-
-        //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
-        //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)
-      }
     }
-  },
-  watch: {
-    network(val) {
-      this.update();
-    },
-
-    profileIds(val) {
-      this.update();
-    },
-    type() {
-      this.render();
-    }
-  }
 };
 </script>
