@@ -29,8 +29,7 @@
       </div>
     </div>
 
-    <!--
-        <div class="row mt-3">
+    <!-- <div class="row mt-3">
             <div class="col" v-if="queryOptions" >
                 <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
@@ -43,24 +42,17 @@
             <div class="col" v-if="queryOptions">
                 <donut network='instagram' :target="networks.instagram.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
             </div>
-        </div>
-      <!-- <div class="row mt-3">
-      <div class="col" style="height:450px" v-if="networks.twitter.data">
-        <social-line-chart :network-data="networks" :last-refresh="lastRefreshDate" class="h-100"></social-line-chart>
-    </div>
-    -->
-
-    <!-- v-if="networks.twitter.data" -->
+    </div>-->
 
     <div class="row mt-3">
       <div class="col">
-        <SocialLineChartNew
+        <SocialLineChart
           :profile-ids="selectedProfileIds"
           :network="selectedNetwork"
           :type="selectedNlpType"
           :network-data="networks"
           class="h-100"
-        ></SocialLineChartNew>
+        ></SocialLineChart>
       </div>
     </div>
   </div>
@@ -75,7 +67,6 @@ import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import Promise from 'bluebird';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
-import SocialLineChartNew from '../partials/charts/SocialLineChartNew.vue';
 
 export default {
     name: 'social-dashboard',

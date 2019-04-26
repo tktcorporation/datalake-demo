@@ -1,166 +1,220 @@
-<template>
-  <div class="card w-100 h-100">
-    <div class="card-body">
-      <div class="p-1 w-100 h-100">
-        {{lastRefresh}}
-        <canvas ref="canvas" width="100%" height="100%"></canvas>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
-// @see https://github.com/apertureless/vue-chartjs
-//import VueCharts from "vue-chartjs";
-import { Line } from "vue-chartjs";
-import _ from "lodash";
-import moment from "moment";
-import PleaseJS from "../../../utils/PleaseJS.js";
-var tinycolor = require("tinycolor2");
-
+import { Line } from 'vue-chartjs';
+import API from '../../../api';
+import moment from 'moment';
 export default {
-  name: "social-line-chart",
+    extends: Line,
+    props: ['profileIds', 'network', 'type'],
+    data() {
+        return {
+            isLoading: false,
+            tagData: null,
+            metricsOverTime: [],
+            data: {
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Topics Over Time'
+                },
+                scales: {
+                    xAxes: [
+                        {
+                            type: 'time',
+                            time: {
+                                format: 'MM/DD/YYYY',
+                                tooltipFormat: 'll'
+                            },
 
-  extends: Line,
-
-  props: ["networkData", "lastRefresh"],
-
-  data() {
-    return {
-      networks: {
-        twitter: { name: "twitter", color: "#1DA1F2", index: 0 },
-        youtube: { name: "youtube", color: "#c4302b", index: 1 },
-        facebook: { name: "facebook", color: "#3b5998", index: 2 },
-        instagram: { name: "instagram", color: "#405DE6", index: 3 },
-        pinterest: { name: "pinterest", color: "#c8232c", index: 4 }
-      },
-      maxVal: -99999
-    };
-  },
-
-  //computed: {
-  //    chartData: function() {
-  //        return this.votes;
-  //    }
-  //},
-
-  watch: {
-    lastRefresh(val) {
-      this.update();
-    }
-  },
-
-  mounted() {
-    this.render();
-  },
-
-  methods: {
-    update() {
-      this.$log("CHART UPDATE", this.networkData);
-
-      var chartData = this.$data._chart.data.datasets;
-      this.$data._chart.data.labels = [];
-
-      this.maxVal = -999999;
-
-      var keys = Object.keys(this.networkData);
-
-      for (var i = 0; i < keys.length; i += 1) {
-        let networkName = keys[i];
-        var network = this.networks[networkName];
-        let data = this.networkData[networkName].data;
-
-        chartData[network.index].data = [];
-
-        try {
-          var newData = [];
-
-          for (var k = 0; k < data.length; k += 1) {
-            let val = 0;
-
-            //if (network.name == 'youtube'){
-            //    val = data[k].interactions_per_1000_subscribers
-            //}
-            //else if (network.name == 'facebook'){
-            //    val = data[k].interactions_per_1000_fans
-            //}
-            //else {
-            val = data[k].interactions;
-            //}
-
-            if (!val) {
-              val = 0;
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            }
+                        }
+                    ],
+                    yAxes: [
+                        {
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Interactions'
+                            }
+                        }
+                    ]
+                }
             }
-
-            //this.$log(`${network.name}: ${val}, ${data[k].date}`)
-
-            //newData.push({y: val, x: data[k].date})
-            newData.push({ y: val, t: moment(data[k].date).valueOf() });
-          }
-
-          this.$data._chart.data.labels[network.index] = network.name;
-          chartData[network.index].data = newData;
-        } catch (err) {
-          this.$log(err);
-        }
-
-        this.$log(network.name, newData);
-        //this.$log(network.name, chartData[network.index].data)
-      }
-
-      this.$data._chart.update();
+        };
+    },
+    mounted() {
+        this.getTagsOverTime();
     },
 
-    render() {
-      var networkNames = Object.keys(this.networks);
+    methods: {
+        async getTagsOverTime() {
+            console.log('tagdata', this.tagData);
+            // console.log('tagdata', this.tagData.length);
 
-      var chartData = [];
-
-      for (let i = 0; i < networkNames.length; i += 1) {
-        let network = this.networks[networkNames[i]];
-
-        chartData[network.index] = {
-          type: "line",
-          label: networkNames[i],
-          backgroundColor: tinycolor(network.color)
-            .darken(10)
-            .toString(),
-          borderColor: network.color,
-          fill: false,
-          data: []
-        };
-      }
-
-      var opts = {
-        fill: false,
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          xAxes: [
-            {
-              type: "time",
-              distribution: "series",
-              ticks: {
-                source: "data",
-                autoSkip: true
-              }
+            //get the metrics over time
+            if (this.type === 'categories') {
+                this.metricsOverTime = [];
+                await this.tagData.forEach(tag => {
+                    API.getTagsOverTime({
+                        tags: `${tag.name}`,
+                        range: 'last90days'
+                    }).then(data => {
+                        this.metricsOverTime = [...this.metricsOverTime, data];
+                        //only render when all the data is here
+                        if (
+                            this.metricsOverTime.length === this.tagData.length
+                        ) {
+                            this.render();
+                        }
+                    });
+                });
             }
-          ],
-          yAxes: [
-            {
-              display: true,
-              scaleLabel: {
-                display: true,
-                labelString: "Interactions"
-              }
+        },
+        render() {
+            if (this.metricsOverTime.length === this.tagData.length) {
+                //correct the format for chart rendering
+                this.metricsOverTime.forEach(metric => {
+                    metric.forEach(dataPoint => {
+                        // push objects into the datasets
+                        if (
+                            this.data.datasets.filter(
+                                dataset => dataset.label === dataPoint.name
+                            ).length > 0
+                        ) {
+                            let currentDataset = this.data.datasets.filter(
+                                dataset => dataset.label === dataPoint.name
+                            )[0];
+                            let newDataPoint = {
+                                x: moment(`${dataPoint.date}`).format(
+                                    'MM/DD/YYYY'
+                                ),
+                                y: dataPoint.interactions
+                            };
+
+                            currentDataset.data = [
+                                ...currentDataset.data,
+                                newDataPoint
+                            ];
+                        } else {
+                            let color = `${this.getRandomColor()}`;
+                            let newDataSet = {
+                                label: dataPoint.name,
+                                backgroundColor: color,
+                                borderColor: color,
+                                fill: false,
+                                pointRadius: 2,
+                                data: [
+                                    {
+                                        x: moment(`${dataPoint.date}`).format(
+                                            'MM/DD/YYYY'
+                                        ),
+                                        y: dataPoint.interactions
+                                    }
+                                ]
+                            };
+                            this.data.datasets = [
+                                ...this.data.datasets,
+                                newDataSet
+                            ];
+                        }
+                    });
+                });
+                console.log(this.data);
+
+                //renderChart is part of Chart.js
+                this.renderChart(this.data, this.options);
             }
-          ]
+        },
+        async update() {
+            await this.getTagData().then(() => {
+                $(function() {
+                    $('[data-toggle="popover"]').popover();
+                });
+                // waits for tagData then renders
+                this.getTagsOverTime();
+            });
+        },
+        getRandomColor() {
+            let colorArray = ['red', 'blue', 'green', 'purple'];
+
+            return colorArray[Math.floor(Math.random() * colorArray.length)];
+        },
+
+        async getTagData() {
+            function parseNumber(val) {
+                var val = parseInt(val);
+                if (!_.isFinite(val)) {
+                    return 0;
+                }
+                return val;
+            }
+
+            this.isLoading = true;
+            this.tags = await API.getTopTags(this.profileIds, {
+                type: this.type,
+                network: this.network
+            });
+            this.isLoading = false;
+
+            //var key = 'interactions'
+
+            var max = -9999999;
+
+            // Now normalize data
+            for (let i = 0; i < this.tags.length; i += 1) {
+                var val = parseNumber(this.tags[i].interactions);
+                if (val > max) {
+                    max = val;
+                }
+            }
+            console.log(this.tags);
+
+            this.tagData = [];
+
+            for (let i = 0; i < this.tags.length; i += 1) {
+                this.tagData[i] = this.tags[i];
+
+                this.tagData[i].facebook_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].facebook_interactions)) /
+                        max
+                );
+                this.tagData[i].twitter_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].twitter_interactions)) / max
+                );
+                this.tagData[i].youtube_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].youtube_interactions)) / max
+                );
+                this.tagData[i].instagram_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].instagram_interactions)) /
+                        max
+                );
+
+                //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
+                //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)
+            }
         }
-      };
+    },
+    watch: {
+        network(val) {
+            if (this.type === 'categories') {
+                this.update();
+            }
+        },
 
-      this.renderChart({ labels: networkNames, datasets: chartData }, opts);
-      //this.update()
+        profileIds(val) {
+            if (this.type === 'categories') {
+                this.update();
+            }
+        },
+        type() {
+            if (this.type === 'categories') {
+                this.update();
+            }
+        }
     }
-  }
 };
 </script>
