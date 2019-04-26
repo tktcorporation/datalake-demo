@@ -2,7 +2,7 @@
 import { Line } from 'vue-chartjs';
 import API from '../../../api';
 import moment from 'moment';
-import PleaseJS from '../../../utils/PleaseJS';
+const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
     props: ['profileIds', 'network', 'type'],
@@ -77,8 +77,19 @@ export default {
         },
         render() {
             if (this.metricsOverTime.length === this.tagData.length) {
+                //only creates 12 colors right now
+                let scheme = new ColorScheme();
+                scheme
+                    .from_hue(21)
+                    .scheme('triade')
+                    .variation('soft');
+
+                let colors = scheme.colors();
+
+                debugger;
                 //correct the format for chart rendering
-                this.metricsOverTime.forEach(metric => {
+                this.metricsOverTime.forEach((metric, index) => {
+                    let color = colors[index];
                     metric.forEach(dataPoint => {
                         // push objects into the datasets
                         if (
@@ -100,14 +111,10 @@ export default {
                                 newDataPoint
                             ];
                         } else {
-                            let color = PleaseJS.make_color({
-                                hue: 90,
-                                saturation: 0.8
-                            });
                             let newDataSet = {
                                 label: dataPoint.name,
-                                backgroundColor: color,
-                                borderColor: color,
+                                backgroundColor: `#${color}`,
+                                borderColor: `#${color}`,
                                 fill: false,
                                 pointRadius: 2,
                                 data: [
@@ -140,11 +147,6 @@ export default {
                 // waits for tagData then renders
                 this.getTagsOverTime();
             });
-        },
-        getRandomColor() {
-            let colorArray = ['red', 'blue', 'green', 'purple'];
-
-            return colorArray[Math.floor(Math.random() * colorArray.length)];
         },
 
         async getTagData() {
