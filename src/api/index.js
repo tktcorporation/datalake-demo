@@ -74,7 +74,11 @@ const API = {
         try {
             return await this.__send('get', 'user', '', null);
         } catch (err) {
+<<<<<<< HEAD
             return null;
+=======
+            return null
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
         }
     },
 
@@ -129,7 +133,12 @@ const API = {
      * @param {*} code
      */
     async register(code) {
+<<<<<<< HEAD
         // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes
+=======
+
+        // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes         
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
         let results = await this.__send('post', 'user', '', {
             code: code
         });
@@ -137,14 +146,23 @@ const API = {
         console.log('REGISTER', results);
 
         if (!results.token) {
+<<<<<<< HEAD
             return;
+=======
+            return
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
         }
 
         this.setPreference('token', results.token);
 
         if (results.user && results.user.email) {
+<<<<<<< HEAD
             this.user = results.user;
             this.user.authenticated = true;
+=======
+            this.user = results.user
+            this.user.authenticated = true
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
         }
 
         return results;
@@ -153,12 +171,22 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     async logout() {
+<<<<<<< HEAD
         var opts = {
             token: this.getPreference('token'),
             redirect: `${window.location.protocol}//${window.location.host}`
         };
 
         this.setPreference('token', null);
+=======
+
+        var opts = {
+            token: this.getPreference('token'),
+            redirect: `${window.location.protocol}//${window.location.host}`
+        }
+
+        this.setPreference('token', null)
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
     },
@@ -166,13 +194,21 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     getPreference(name) {
+<<<<<<< HEAD
         return localStorage.getItem(`opr-pref-${name}`);
+=======
+        return localStorage.getItem(`opr-pref-${name}`)
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     setPreference(name, value) {
+<<<<<<< HEAD
         localStorage.setItem(`opr-pref-${name}`, value);
+=======
+        localStorage.setItem(`opr-pref-${name}`, value)
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -186,6 +222,7 @@ const API = {
             limit: 10,
             //type: 'topics',
             //range: 'last7days',
+<<<<<<< HEAD
             profileIds: _.isArray(profileIdList)
                 ? profileIdList.join(',')
                 : profileIdList
@@ -196,6 +233,11 @@ const API = {
             `tag/rankings?${$.param(merged)}`,
             null
         );
+=======
+            profileIds: (_.isArray(profileIdList)) ? profileIdList.join(',') : profileIdList
+        })
+        return await this.__send('get', 'audience', `tag/rankings?${$.param(merged)}`, null);
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     async getContent(opts) {
@@ -226,6 +268,11 @@ const API = {
         );
     },
 
+<<<<<<< HEAD
+=======
+    //Get Tag Metrics Over Time
+
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     async getTagsOverTime(opts) {
         var merged = _.defaults(opts, {
             tags: 'Art',
@@ -238,7 +285,11 @@ const API = {
             null
         );
     },
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     async getHosts(opts) {
         var merged = _.defaults(opts, {});
         return await this.__send(
@@ -250,6 +301,7 @@ const API = {
     },
 
     async getAuthors(opts) {
+<<<<<<< HEAD
         var merged = _.defaults(opts, {});
         return await this.__send(
             'get',
@@ -257,6 +309,10 @@ const API = {
             `content/authors?${$.param(merged)}`,
             null
         );
+=======
+        var merged = _.defaults(opts, {})
+        return await this.__send('get', 'audience', `content/authors?${$.param(merged)}`, null);
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -288,12 +344,16 @@ const API = {
      *     end: End date
      */
     async getSocialProfilePosts(opts) {
+<<<<<<< HEAD
         return await this.__send(
             'get',
             'social',
             `profiles/posts?${$.param(opts)}`,
             null
         );
+=======
+        return await this.__send('get', 'social', `profiles/posts?${$.param(opts)}`, null);
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     /**
@@ -305,12 +365,16 @@ const API = {
      *     end: End date
      */
     async getSocialProfileMetrics(opts) {
+<<<<<<< HEAD
         return await this.__send(
             'get',
             'social',
             `profiles/metrics?${$.param(opts)}`,
             null
         );
+=======
+        return await this.__send('get', 'social', `profiles/metrics?${$.param(opts)}`, null);
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     /**
@@ -324,6 +388,7 @@ const API = {
      *     end: End date
      */
     async getSocialProfileMetricsByNetwork(network, opts) {
+<<<<<<< HEAD
         return await this.__send(
             'get',
             'social',
@@ -339,6 +404,13 @@ const API = {
             `network/${network}/profiles/interactions?${$.param(opts)}`,
             null
         );
+=======
+        return await this.__send('get', 'social', `network/${network}/profiles/metrics?${$.param(opts)}`, null);
+    },
+
+    async getSocialProfileInteractionsByNetwork(network, opts) {
+        return await this.__send('get', 'social', `network/${network}/profiles/interactions?${$.param(opts)}`, null);
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -389,14 +461,23 @@ const API = {
     async __send(verb, service, path, opts) {
         let headers = {
             //    'x-opr-uid': localStorage.getItem('opr-uid'),
+<<<<<<< HEAD
             Authorization: 'Bearer ' + this.getPreference('token')
         };
+=======
+            'Authorization': 'Bearer ' + this.getPreference('token')
+        }
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
 
         console.log(headers);
         let body = {};
 
         if (opts) {
+<<<<<<< HEAD
             body = opts;
+=======
+            body = opts
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
         }
 
         var finalUrl = this.rootUrls[service].url + path;
@@ -423,7 +504,11 @@ const API = {
             }
         };
 
+<<<<<<< HEAD
         var response = null;
+=======
+        var response = null
+>>>>>>> 39b4eadad0370042ea5d66d824ca7fca30409ccf
 
         try {
             if (verb == 'post') {
