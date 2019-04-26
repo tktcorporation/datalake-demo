@@ -85,7 +85,6 @@ export default {
                     .variation('hard');
 
                 let colors = scheme.colors();
-
                 //correct the format for chart rendering
                 this.metricsOverTime.forEach((metric, index) => {
                     let color = colors[index];
