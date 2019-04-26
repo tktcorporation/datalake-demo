@@ -82,11 +82,10 @@ export default {
                 scheme
                     .from_hue(21)
                     .scheme('triade')
-                    .variation('soft');
+                    .variation('hard');
 
                 let colors = scheme.colors();
 
-                debugger;
                 //correct the format for chart rendering
                 this.metricsOverTime.forEach((metric, index) => {
                     let color = colors[index];
