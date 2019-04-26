@@ -47,9 +47,11 @@
       <!-- <div class="row mt-3">
       <div class="col" style="height:450px" v-if="networks.twitter.data">
         <social-line-chart :network-data="networks" :last-refresh="lastRefreshDate" class="h-100"></social-line-chart>
-    </div>-->
+    </div>
+    -->
 
     <!-- v-if="networks.twitter.data" -->
+
     <div class="row mt-3">
       <div class="col">
         <SocialLineChartNew
@@ -65,101 +67,101 @@
 </template>
 
 <script>
-import API from "../../api";
-import Donut from "../partials/charts/Donut";
-import PolarArea from "../partials/charts/PolarArea";
-import SocialLineChart from "../partials/charts/SocialLineChart";
-import SocialProfileSelector from "../partials/selectors/SocialProfileSelector";
-import SocialNetworkSelector from "../partials/selectors/SocialNetworkSelector";
-import Promise from "bluebird";
-import TagPerformanceBar from "../partials/charts/TagPerformanceBar";
-import SocialLineChartNew from "../partials/charts/SocialLineChartNew.vue";
+import API from '../../api';
+import Donut from '../partials/charts/Donut';
+import PolarArea from '../partials/charts/PolarArea';
+import SocialLineChart from '../partials/charts/SocialLineChart';
+import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
+import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
+import Promise from 'bluebird';
+import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
+import SocialLineChartNew from '../partials/charts/SocialLineChartNew.vue';
 
 export default {
-  name: "social-dashboard",
+    name: 'social-dashboard',
 
-  metaInfo: {
-    title: "social-dashboard"
-  },
-
-  components: {
-    Donut,
-    PolarArea,
-    SocialProfileSelector,
-    TagPerformanceBar,
-    SocialLineChart,
-    SocialNetworkSelector,
-    SocialLineChartNew
-  },
-
-  data() {
-    return {
-      selectedProfileIds: [],
-      selectedNetwork: null,
-      selectedProfile: null,
-      lastRefreshDate: null,
-      queryOptions: null,
-      selectedNlpType: "topics",
-      nlpTypes: ["topics", "entities", "categories"],
-      networks: {
-        facebook: {
-          name: "facebook",
-          proj: "interactions, date, page_posts",
-          data: null,
-          target: 700
-        },
-        twitter: {
-          name: "twitter",
-          proj: "interactions, date, profile_activities",
-          data: null,
-          target: 45
-        },
-        youtube: {
-          name: "youtube",
-          proj: "interaction_change, date",
-          data: null,
-          target: 35
-        },
-        instagram: {
-          name: "instagram",
-          proj: "interactions, date",
-          data: null,
-          target: 400
-        }
-      }
-    };
-  },
-
-  computed: {},
-
-  mounted() {
-    this.init();
-  },
-
-  methods: {
-    init() {},
-
-    onSelectedNetworks(network) {
-      this.selectedNetwork = network;
+    metaInfo: {
+        title: 'social-dashboard'
     },
 
-    async onSelectedProfiles(profiles) {
-      this.selectedProfileIds = _.map(profiles, "id").join(",");
+    components: {
+        Donut,
+        PolarArea,
+        SocialProfileSelector,
+        TagPerformanceBar,
+        SocialLineChart,
+        SocialNetworkSelector,
+        SocialLineChartNew
+    },
 
-      this.queryOptions = {
-        //start: moment().subtract(30,'days').startOf('day'),
-        //end: moment().endOf('day'),
-        //profileLabels: labels.join(',')
-        profileIds: this.selectedProfileIds
-      };
+    data() {
+        return {
+            selectedProfileIds: [],
+            selectedNetwork: null,
+            selectedProfile: null,
+            lastRefreshDate: null,
+            queryOptions: null,
+            selectedNlpType: 'topics',
+            nlpTypes: ['topics', 'entities', 'categories'],
+            networks: {
+                facebook: {
+                    name: 'facebook',
+                    proj: 'interactions, date, page_posts',
+                    data: null,
+                    target: 700
+                },
+                twitter: {
+                    name: 'twitter',
+                    proj: 'interactions, date, profile_activities',
+                    data: null,
+                    target: 45
+                },
+                youtube: {
+                    name: 'youtube',
+                    proj: 'interaction_change, date',
+                    data: null,
+                    target: 35
+                },
+                instagram: {
+                    name: 'instagram',
+                    proj: 'interactions, date',
+                    data: null,
+                    target: 400
+                }
+            }
+        };
+    },
 
-      if (this.selectedNetwork) {
-        this.queryOptions.network = this.selectedNetwork;
-      }
+    computed: {},
 
-      //await Promise.all([bar(), bam(), bat()].map(handleRejection));
+    mounted() {
+        this.init();
+    },
 
-      /*
+    methods: {
+        init() {},
+
+        onSelectedNetworks(network) {
+            this.selectedNetwork = network;
+        },
+
+        async onSelectedProfiles(profiles) {
+            this.selectedProfileIds = _.map(profiles, 'id').join(',');
+
+            this.queryOptions = {
+                //start: moment().subtract(30,'days').startOf('day'),
+                //end: moment().endOf('day'),
+                //profileLabels: labels.join(',')
+                profileIds: this.selectedProfileIds
+            };
+
+            if (this.selectedNetwork) {
+                this.queryOptions.network = this.selectedNetwork;
+            }
+
+            //await Promise.all([bar(), bam(), bat()].map(handleRejection));
+
+            /*
             await Promise.map(Object.keys(this.networks), async (name)=>{
                 
                 let network = this.networks[name]
@@ -218,8 +220,8 @@ export default {
 
             this.lastRefreshDate = new Date()
             */
+        }
     }
-  }
 };
 </script>
 

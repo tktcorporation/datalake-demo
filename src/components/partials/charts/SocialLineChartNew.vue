@@ -59,10 +59,12 @@ export default {
             if (this.type === 'categories') {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
+                    debugger;
                     API.getTagsOverTime({
-                        tag: `${tag.name}`,
+                        tags: `${tag.name}`,
                         range: 'last90days'
                     }).then(data => {
+                        debugger;
                         this.metricsOverTime = [...this.metricsOverTime, data];
                         //only render when all the data is here
                         if (
@@ -92,7 +94,7 @@ export default {
                                 x: moment(`${dataPoint.date}`).format(
                                     'MM/DD/YYYY'
                                 ),
-                                y: dataPoint.facebook_interactions
+                                y: dataPoint.interactions
                             };
 
                             currentDataset.data = [
@@ -112,7 +114,7 @@ export default {
                                         x: moment(`${dataPoint.date}`).format(
                                             'MM/DD/YYYY'
                                         ),
-                                        y: dataPoint.facebook_interactions
+                                        y: dataPoint.interactions
                                     }
                                 ]
                             };

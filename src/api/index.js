@@ -5,11 +5,26 @@ const uuidv5 = require('uuid/v5');
 
 const API = {
     rootUrls: {
-        user: { url: '/api/user/', port: 5000 },
-        nlp: { url: '/api/nlp/', port: 5001 },
-        audience: { url: '/api/audience/', port: 5003 },
-        web: { url: '/api/web/', port: 5002 },
-        social: { url: '/api/social/', port: 5004 }
+        user: {
+            url: '/api/user/',
+            port: 5000
+        },
+        nlp: {
+            url: '/api/nlp/',
+            port: 5001
+        },
+        audience: {
+            url: '/api/audience/',
+            port: 5003
+        },
+        web: {
+            url: '/api/web/',
+            port: 5002
+        },
+        social: {
+            url: '/api/social/',
+            port: 5004
+        }
     },
 
     user: {
@@ -115,7 +130,9 @@ const API = {
      */
     async register(code) {
         // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes
-        let results = await this.__send('post', 'user', '', { code: code });
+        let results = await this.__send('post', 'user', '', {
+            code: code
+        });
 
         console.log('REGISTER', results);
 
@@ -169,7 +186,9 @@ const API = {
             limit: 10,
             //type: 'topics',
             //range: 'last7days',
-            profileIds: profileIdList
+            profileIds: _.isArray(profileIdList)
+                ? profileIdList.join(',')
+                : profileIdList
         });
         return await this.__send(
             'get',
@@ -207,17 +226,35 @@ const API = {
         );
     },
 
-    //Get Tag Metrics Over Time
-
     async getTagsOverTime(opts) {
         var merged = _.defaults(opts, {
-            tag: 'Art',
+            tags: 'Art',
             range: 'last90days'
         });
         return await this.__send(
             'get',
             'audience',
             `tag/metrics?${$.param(merged)}`,
+            null
+        );
+    },
+
+    async getHosts(opts) {
+        var merged = _.defaults(opts, {});
+        return await this.__send(
+            'get',
+            'audience',
+            `content/hosts?${$.param(merged)}`,
+            null
+        );
+    },
+
+    async getAuthors(opts) {
+        var merged = _.defaults(opts, {});
+        return await this.__send(
+            'get',
+            'audience',
+            `content/authors?${$.param(merged)}`,
             null
         );
     },
@@ -267,7 +304,6 @@ const API = {
      *     start: Start date
      *     end: End date
      */
-
     async getSocialProfileMetrics(opts) {
         return await this.__send(
             'get',
@@ -287,7 +323,6 @@ const API = {
      *     start: Start date
      *     end: End date
      */
-
     async getSocialProfileMetricsByNetwork(network, opts) {
         return await this.__send(
             'get',
@@ -338,7 +373,7 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     async processText(opts) {
-        return await this.__send('post', 'nlp', 'process-text', opts);
+        return await this.__send('post', 'audience', 'analyze', opts);
     },
 
     async getSimilarPages(opts) {
@@ -368,24 +403,25 @@ const API = {
 
         console.log(`[${verb.toUpperCase()}][${service}] ${finalUrl}`);
 
-        /*
-        let parseError = function(body){
-            if (body.result && body.result != 'ok'){ 
-                return body.message
-            }
-            return body
-        }
-        
-        let errorCallback = function(response){
+        let errorCallback = function(response) {
             if (response.body && response.body.error) {
-                console.error('[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl, opts, headers, response.body.error)
-                return callback(response.body.error)
+                console.error(
+                    '[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl,
+                    opts,
+                    headers,
+                    response.body.error
+                );
+                return callback(response.body.error);
             } else {
-                console.error('[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl, opts, headers, response.body)
-                return callback(parseError(response.body))
+                console.error(
+                    '[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl,
+                    opts,
+                    headers,
+                    response.body
+                );
+                return callback(parseError(response.body));
             }
-        }
-        */
+        };
 
         var response = null;
 
@@ -399,7 +435,9 @@ const API = {
                     headers: headers
                 });
             } else if (verb == 'get') {
-                response = await Vue.http.get(finalUrl, { headers: headers });
+                response = await Vue.http.get(finalUrl, {
+                    headers: headers
+                });
             } else if (verb == 'delete') {
                 response = await Vue.http.delete(finalUrl, {
                     headers: headers
