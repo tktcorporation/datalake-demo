@@ -81,8 +81,7 @@ export default {
         SocialProfileSelector,
         TagPerformanceBar,
         SocialLineChart,
-        SocialNetworkSelector,
-        SocialLineChartNew
+        SocialNetworkSelector
     },
 
     data() {

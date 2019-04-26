@@ -2,6 +2,7 @@
 import { Line } from 'vue-chartjs';
 import API from '../../../api';
 import moment from 'moment';
+import PleaseJS from '../../../utils/PleaseJS';
 export default {
     extends: Line,
     props: ['profileIds', 'network', 'type'],
@@ -94,13 +95,15 @@ export default {
                                 ),
                                 y: dataPoint.interactions
                             };
-
                             currentDataset.data = [
                                 ...currentDataset.data,
                                 newDataPoint
                             ];
                         } else {
-                            let color = `${this.getRandomColor()}`;
+                            let color = PleaseJS.make_color({
+                                hue: 90,
+                                saturation: 0.8
+                            });
                             let newDataSet = {
                                 label: dataPoint.name,
                                 backgroundColor: color,
