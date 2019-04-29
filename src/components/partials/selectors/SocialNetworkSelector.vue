@@ -59,7 +59,7 @@ export default {
                 !this.selectedNetworks.length ||
                 this.selectedNetworks.length == 0
             ) {
-                this.$emit('onSelectNetworks', null);
+                // this.$emit('onSelectNetworks', null);
             } else {
                 this.$emit('onSelectNetworks', this.selectedNetworks[0].name);
                 this.$store.commit(
@@ -67,8 +67,6 @@ export default {
                     this.selectedNetworks[0].name
                 );
             }
-
-            //this.$emit('onSelectNetworks', _.map(this.selectedNetworks, 'name'))
         }
     }
 };

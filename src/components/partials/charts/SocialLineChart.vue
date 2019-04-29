@@ -5,7 +5,12 @@ import moment from 'moment';
 const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
-    props: ['profileIds', 'network', 'type'],
+    props: ['profileIds', 'type'],
+    computed: {
+        network() {
+            return this.$store.state.selectors.social.selectedNetwork;
+        }
+    },
     data() {
         return {
             isLoading: false,

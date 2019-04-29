@@ -5,7 +5,7 @@
         <social-profile-selector @onSelectProfile="onSelectedProfiles"></social-profile-selector>
       </div>
       <div class="col-md-3">
-        <social-network-selector @onSelectNetworks="onSelectedNetworks"></social-network-selector>
+        <social-network-selector></social-network-selector>
       </div>
     </div>
 
@@ -21,11 +21,7 @@
 
     <div class="row" v-for="(type, index) in nlpTypes" :key="index">
       <div class="col" v-show="selectedNlpType == type">
-        <tag-performance-bar
-          :profile-ids="selectedProfileIds"
-          :network="selectedNetwork"
-          :type="type"
-        ></tag-performance-bar>
+        <tag-performance-bar :profile-ids="selectedProfileIds" :type="type"></tag-performance-bar>
       </div>
     </div>
 
@@ -95,7 +91,6 @@ export default {
     data() {
         return {
             selectedProfileIds: [],
-            selectedNetwork: null,
             selectedProfile: null,
             lastRefreshDate: null,
             queryOptions: null,
@@ -131,10 +126,10 @@ export default {
     },
 
     methods: {
-        onSelectedNetworks(network) {
-            this.selectedNetwork = network;
-            this.$store.commit('selectNetwork', network);
-        },
+        // onSelectedNetworks(network) {
+        //     this.selectedNetwork = network;
+        //     this.$store.commit('selectNetwork', network);
+        // },
 
         async onSelectedProfiles(profiles) {
             let selectedProfileIds = _.map(profiles, 'id').join(',');
