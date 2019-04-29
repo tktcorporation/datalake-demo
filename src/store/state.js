@@ -8,10 +8,7 @@ export default {
         social: {
             selectedProfileIds: [],
             selectedNetwork: null,
-            selectedProfile: null,
             selectedNlpType: 'topics',
-
-            queryOptions: {},
             nlpTypes: ['topics', 'entities', 'categories'],
             networks: {
                 facebook: {

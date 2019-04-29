@@ -25,21 +25,6 @@
       </div>
     </div>
 
-    <!-- <div class="row mt-3">
-            <div class="col" v-if="queryOptions" >
-                <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
-            </div>
-            <div class="col" v-if="queryOptions">
-                <donut network='youtube' :target="networks.youtube.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
-            </div>
-            <div class="col" v-if="queryOptions">
-                <donut network='facebook' :target="networks.facebook.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
-            </div>
-            <div class="col" v-if="queryOptions">
-                <donut network='instagram' :target="networks.instagram.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
-            </div>
-    </div>-->
-
     <div class="row mt-3">
       <div class="col">
         <SocialLineChart
@@ -58,6 +43,21 @@
       </div>
     </div>
   </div>
+
+  <!-- <div class="row mt-3">
+            <div class="col" v-if="queryOptions" >
+                <donut network='twitter' :target="networks.twitter.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
+            </div>
+            <div class="col" v-if="queryOptions">
+                <donut network='youtube' :target="networks.youtube.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
+            </div>
+            <div class="col" v-if="queryOptions">
+                <donut network='facebook' :target="networks.facebook.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
+            </div>
+            <div class="col" v-if="queryOptions">
+                <donut network='instagram' :target="networks.instagram.target" :options="queryOptions" :last-refresh="lastRefreshDate"></donut>
+            </div>
+  </div>-->
 </template>
 
 <script>
@@ -99,9 +99,8 @@ export default {
     data() {
         return {
             selectedProfileIds: [],
-            selectedProfile: null,
-            lastRefreshDate: null,
-            queryOptions: null,
+            // lastRefreshDate: null,
+            // queryOptions: null,
             // selectedNlpType: 'topics',
             // nlpTypes: ['topics', 'entities', 'categories'],
             networks: {
@@ -147,23 +146,23 @@ export default {
             this.selectedProfileIds = selectedProfileIds;
 
             this.$store.commit('selectSocialProfileIds', selectedProfileIds);
-            this.$store.commit('queryOptions', {
-                profileIds: selectedProfileIds
-            });
+            // this.$store.commit('queryOptions', {
+            //     profileIds: selectedProfileIds
+            // });
 
-            this.queryOptions = {
-                //start: moment().subtract(30,'days').startOf('day'),
-                //end: moment().endOf('day'),
-                //profileLabels: labels.join(',')
-                profileIds: this.selectedProfileIds
-            };
+            // this.queryOptions = {
+            //     //start: moment().subtract(30,'days').startOf('day'),
+            //     //end: moment().endOf('day'),
+            //     //profileLabels: labels.join(',')
+            //     profileIds: this.selectedProfileIds
+            // };
 
-            if (this.selectedNetwork) {
-                this.queryOptions.network = this.selectedNetwork;
-                this.$store.commit('queryOptions', {
-                    network: this.$store.selectors.social.selectedNetwork
-                });
-            }
+            // if (this.selectedNetwork) {
+            //     this.queryOptions.network = this.selectedNetwork;
+            //     this.$store.commit('queryOptions', {
+            //         network: this.$store.selectors.social.selectedNetwork
+            //     });
+            // }
 
             //await Promise.all([bar(), bam(), bat()].map(handleRejection));
 
