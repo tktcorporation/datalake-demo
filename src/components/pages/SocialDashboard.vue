@@ -141,10 +141,14 @@ export default {
 
         onSelectedNetworks(network) {
             this.selectedNetwork = network;
+            this.$store.commit('selectNetwork', network);
         },
 
         async onSelectedProfiles(profiles) {
-            this.selectedProfileIds = _.map(profiles, 'id').join(',');
+            let selectedProfileIds = _.map(profiles, 'id').join(',');
+            this.selectedProfileIds = selectedProfileIds;
+
+            this.$store.commit('selectSocialProfileIds', selectedProfileIds);
 
             this.queryOptions = {
                 //start: moment().subtract(30,'days').startOf('day'),

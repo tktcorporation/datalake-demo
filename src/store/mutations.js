@@ -25,5 +25,13 @@ export default {
         state.user.isAdmin = isLevel('admin');
         state.user.isSuper = isLevel('super');
         state.user.authenticated = isLevel('user');
+    },
+
+    selectNetwork(state, network) {
+        state.selectors.social.selectedNetwork = network;
+    },
+
+    selectSocialProfileIds(state, profileIds) {
+        state.selectors.social.selectedProfileIds = profileIds;
     }
 };

@@ -53,9 +53,6 @@ export default {
 
     methods: {
         async getTagsOverTime() {
-            console.log('tagdata', this.tagData);
-            // console.log('tagdata', this.tagData.length);
-
             //get the metrics over time
             if (this.type === 'categories') {
                 this.metricsOverTime = [];
