@@ -1,103 +1,101 @@
 <template>
-    <div class="tag-performance-bar-chart card w-100 h-100">
-        
-        <div class="card-body">
+  <div class="tag-performance-bar-chart card w-100 h-100">
+    <div class="card-body">
+      <span class="text-primary" style="font-size:24px" v-if="isLoading">
+        <i class="fas fa-robot fa-spin ml-2"></i>
+      </span>
 
-            <span class="text-primary" style="font-size:24px" v-if="isLoading">
-                <i class="fas fa-robot fa-spin ml-2"></i>
-            </span>
-
-            <div class="p-1 w-100 h-100" v-if="!isLoading">
-                <div class="row" v-for="tag in tagData" :key="tag.name">
-                    <div class="col-md-2">
-                        <div
-                            class="tag-label"
-                            :title="`${tag.name}: facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`"
-                        >
-                            <router-link
-                                class="tag-link"
-                                :to="{name:'content', query: { tag: tag.name, type: type, profileIds: profileIds }}"
-                            >{{tag.name}}</router-link>
-                        </div>
-                    </div>
-
-                    <div class="col-md-10">
-                        <div class="progress mt-1">
-                            <div
-                                v-if="!network || network=='facebook'"
-                                class="progress-bar bg-facebook"
-                                role="progressbar"
-                                :style="`width: ${tag.facebook_normalized}%`"
-                                :aria-valuenow="tag.facebook_normalized"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                            >
-                                <i class="fab fa-facebook" v-if="tag.facebook_normalized">
-                                    <span class="ml-1">{{tag.facebook_interactions | humanNumber}}</span>
-                                </i>
-                            </div>
-
-                            <div
-                                v-if="!network || network=='twitter'"
-                                class="progress-bar bg-twitter"
-                                role="progressbar"
-                                :style="`width: ${tag.twitter_normalized}%`"
-                                :aria-valuenow="tag.twitter_normalized"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                            >
-                                <i class="fab fa-twitter" v-if="tag.twitter_normalized">
-                                    <span class="ml-1">{{tag.twitter_interactions | humanNumber}}</span>
-                                </i>
-                            </div>
-
-                            <div
-                                v-if="!network || network=='youtube'"
-                                class="progress-bar bg-youtube"
-                                role="progressbar"
-                                :style="`width: ${tag.youtube_normalized}%`"
-                                :aria-valuenow="tag.youtube_normalized"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                            >
-                                <i class="fab fa-youtube" v-if="tag.youtube_normalized">
-                                    <span class="ml-1">{{tag.youtube_interactions | humanNumber}}</span>
-                                </i>
-                            </div>
-
-                            <div
-                                v-if="!network || network=='instagram'"
-                                class="progress-bar bg-instagram"
-                                role="progressbar"
-                                :style="`width: ${tag.instagram_normalized}%`"
-                                :aria-valuenow="tag.instagram_normalized"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                            >
-                                <i class="fab fa-instagram" v-if="tag.instagram_normalized">
-                                    <span class="ml-1">{{tag.instagram_interactions | humanNumber}}</span>
-                                </i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <div class="p-1 w-100 h-100" v-if="!isLoading">
+        <div class="row" v-for="tag in tagData" :key="tag.name">
+          <div class="col-md-2">
+            <div
+              class="tag-label"
+              :title="`${tag.name}: facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`"
+            >
+              <router-link
+                class="tag-link"
+                :to="{name:'content', query: { tag: tag.name, type: type, profileIds: profileIds }}"
+              >{{tag.name}}</router-link>
             </div>
+          </div>
+
+          <div class="col-md-10">
+            <div class="progress mt-1">
+              <div
+                v-if="!network || network=='facebook'"
+                class="progress-bar bg-facebook"
+                role="progressbar"
+                :style="`width: ${tag.facebook_normalized}%`"
+                :aria-valuenow="tag.facebook_normalized"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <i class="fab fa-facebook" v-if="tag.facebook_normalized">
+                  <span class="ml-1">{{tag.facebook_interactions | humanNumber}}</span>
+                </i>
+              </div>
+
+              <div
+                v-if="!network || network=='twitter'"
+                class="progress-bar bg-twitter"
+                role="progressbar"
+                :style="`width: ${tag.twitter_normalized}%`"
+                :aria-valuenow="tag.twitter_normalized"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <i class="fab fa-twitter" v-if="tag.twitter_normalized">
+                  <span class="ml-1">{{tag.twitter_interactions | humanNumber}}</span>
+                </i>
+              </div>
+
+              <div
+                v-if="!network || network=='youtube'"
+                class="progress-bar bg-youtube"
+                role="progressbar"
+                :style="`width: ${tag.youtube_normalized}%`"
+                :aria-valuenow="tag.youtube_normalized"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <i class="fab fa-youtube" v-if="tag.youtube_normalized">
+                  <span class="ml-1">{{tag.youtube_interactions | humanNumber}}</span>
+                </i>
+              </div>
+
+              <div
+                v-if="!network || network=='instagram'"
+                class="progress-bar bg-instagram"
+                role="progressbar"
+                :style="`width: ${tag.instagram_normalized}%`"
+                :aria-valuenow="tag.instagram_normalized"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <i class="fab fa-instagram" v-if="tag.instagram_normalized">
+                  <span class="ml-1">{{tag.instagram_interactions | humanNumber}}</span>
+                </i>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 // @see https://github.com/apertureless/vue-chartjs
-import _ from "lodash";
-import moment from "moment";
+import _ from 'lodash';
+import moment from 'moment';
 //import PleaseJS from "../../../utils/PleaseJS.js";
-import API from "../../../api";
+import API from '../../../api';
 //var tinycolor = require("tinycolor2");
 
 export default {
-    name: "tag-performance-bar",
+    name: 'tag-performance-bar',
 
-    props: ["profileIds", "network", "type"],
+    props: ['profileIds', 'network', 'type'],
 
     data() {
         return {
@@ -107,7 +105,6 @@ export default {
     },
 
     watch: {
-
         network(val) {
             this.update();
         },
@@ -120,7 +117,6 @@ export default {
     mounted() {},
 
     methods: {
-
         update() {
             this.getTagData().then(() => {
                 $(function() {
@@ -130,8 +126,7 @@ export default {
         },
 
         async getTagData() {
-
-            this.$log('Getting tag data...')
+            this.$log('Getting tag data...');
 
             function parseNumber(val) {
                 var val = parseInt(val);
@@ -166,13 +161,22 @@ export default {
             this.tagData = [];
 
             for (let i = 0; i < this.tags.length; i += 1) {
-                
                 this.tagData[i] = this.tags[i];
 
-                this.tagData[i].facebook_normalized = Math.round((100 * parseNumber(this.tags[i].facebook_interactions)) / max);
-                this.tagData[i].twitter_normalized = Math.round((100 * parseNumber(this.tags[i].twitter_interactions)) / max);
-                this.tagData[i].youtube_normalized = Math.round((100 * parseNumber(this.tags[i].youtube_interactions)) / max);
-                this.tagData[i].instagram_normalized = Math.round((100 * parseNumber(this.tags[i].instagram_interactions)) / max);
+                this.tagData[i].facebook_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].facebook_interactions)) /
+                        max
+                );
+                this.tagData[i].twitter_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].twitter_interactions)) / max
+                );
+                this.tagData[i].youtube_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].youtube_interactions)) / max
+                );
+                this.tagData[i].instagram_normalized = Math.round(
+                    (100 * parseNumber(this.tags[i].instagram_interactions)) /
+                        max
+                );
 
                 //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
                 //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)

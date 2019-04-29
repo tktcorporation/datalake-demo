@@ -74,7 +74,7 @@ const API = {
         try {
             return await this.__send('get', 'user', '', null);
         } catch (err) {
-            return null
+            return null;
         }
     },
 
@@ -129,23 +129,22 @@ const API = {
      * @param {*} code
      */
     async register(code) {
-
-        // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes         
+        // TODO: Compare nonce, https://openid.net/specs/openid-connect-core-1_0.html#NonceNotes
         let results = await this.__send('post', 'user', '', {
             code: code
         });
 
-        console.log('REGISTER', results)
+        console.log('REGISTER', results);
 
         if (!results.token) {
-            return
+            return;
         }
 
         this.setPreference('token', results.token);
 
         if (results.user && results.user.email) {
-            this.user = results.user
-            this.user.authenticated = true
+            this.user = results.user;
+            this.user.authenticated = true;
         }
 
         return results;
@@ -154,13 +153,12 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     async logout() {
-
         var opts = {
             token: this.getPreference('token'),
             redirect: `${window.location.protocol}//${window.location.host}`
-        }
+        };
 
-        this.setPreference('token', null)
+        this.setPreference('token', null);
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
     },
@@ -168,13 +166,13 @@ const API = {
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     getPreference(name) {
-        return localStorage.getItem(`opr-pref-${name}`)
+        return localStorage.getItem(`opr-pref-${name}`);
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
     setPreference(name, value) {
-        localStorage.setItem(`opr-pref-${name}`, value)
+        localStorage.setItem(`opr-pref-${name}`, value);
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -188,9 +186,16 @@ const API = {
             limit: 10,
             //type: 'topics',
             //range: 'last7days',
-            profileIds: (_.isArray(profileIdList)) ? profileIdList.join(',') : profileIdList
-        })
-        return await this.__send('get', 'audience', `tag/rankings?${$.param(merged)}`, null);
+            profileIds: _.isArray(profileIdList)
+                ? profileIdList.join(',')
+                : profileIdList
+        });
+        return await this.__send(
+            'get',
+            'audience',
+            `tag/rankings?${$.param(merged)}`,
+            null
+        );
     },
 
     async getContent(opts) {
@@ -221,11 +226,9 @@ const API = {
         );
     },
 
-    //Get Tag Metrics Over Time
-
     async getTagsOverTime(opts) {
         var merged = _.defaults(opts, {
-            tag: 'Art',
+            tags: 'Art',
             range: 'last90days'
         });
         return await this.__send(
@@ -235,15 +238,24 @@ const API = {
             null
         );
     },
-    
     async getHosts(opts) {
-        var merged = _.defaults(opts, {})
-        return await this.__send('get', 'audience', `content/hosts?${$.param(merged)}`, null);
+        var merged = _.defaults(opts, {});
+        return await this.__send(
+            'get',
+            'audience',
+            `content/hosts?${$.param(merged)}`,
+            null
+        );
     },
 
     async getAuthors(opts) {
-        var merged = _.defaults(opts, {})
-        return await this.__send('get', 'audience', `content/authors?${$.param(merged)}`, null);
+        var merged = _.defaults(opts, {});
+        return await this.__send(
+            'get',
+            'audience',
+            `content/authors?${$.param(merged)}`,
+            null
+        );
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -275,7 +287,12 @@ const API = {
      *     end: End date
      */
     async getSocialProfilePosts(opts) {
-        return await this.__send('get', 'social', `profiles/posts?${$.param(opts)}`, null);
+        return await this.__send(
+            'get',
+            'social',
+            `profiles/posts?${$.param(opts)}`,
+            null
+        );
     },
 
     /**
@@ -287,7 +304,12 @@ const API = {
      *     end: End date
      */
     async getSocialProfileMetrics(opts) {
-        return await this.__send('get', 'social', `profiles/metrics?${$.param(opts)}`, null);
+        return await this.__send(
+            'get',
+            'social',
+            `profiles/metrics?${$.param(opts)}`,
+            null
+        );
     },
 
     /**
@@ -301,11 +323,21 @@ const API = {
      *     end: End date
      */
     async getSocialProfileMetricsByNetwork(network, opts) {
-        return await this.__send('get', 'social', `network/${network}/profiles/metrics?${$.param(opts)}`, null);
+        return await this.__send(
+            'get',
+            'social',
+            `network/${network}/profiles/metrics?${$.param(opts)}`,
+            null
+        );
     },
 
     async getSocialProfileInteractionsByNetwork(network, opts) {
-        return await this.__send('get', 'social', `network/${network}/profiles/interactions?${$.param(opts)}`, null);
+        return await this.__send(
+            'get',
+            'social',
+            `network/${network}/profiles/interactions?${$.param(opts)}`,
+            null
+        );
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -356,31 +388,41 @@ const API = {
     async __send(verb, service, path, opts) {
         let headers = {
             //    'x-opr-uid': localStorage.getItem('opr-uid'),
-            'Authorization': 'Bearer ' + this.getPreference('token')
-        }
+            Authorization: 'Bearer ' + this.getPreference('token')
+        };
 
         console.log(headers);
         let body = {};
 
         if (opts) {
-            body = opts
+            body = opts;
         }
 
         var finalUrl = this.rootUrls[service].url + path;
 
         console.log(`[${verb.toUpperCase()}][${service}] ${finalUrl}`);
 
-        let errorCallback = function (response) {
+        let errorCallback = function(response) {
             if (response.body && response.body.error) {
-                console.error('[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl, opts, headers, response.body.error)
-                return callback(response.body.error)
+                console.error(
+                    '[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl,
+                    opts,
+                    headers,
+                    response.body.error
+                );
+                return callback(response.body.error);
             } else {
-                console.error('[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl, opts, headers, response.body)
-                return callback(parseError(response.body))
+                console.error(
+                    '[' + verb.toUpperCase() + '][' + service + '] ' + finalUrl,
+                    opts,
+                    headers,
+                    response.body
+                );
+                return callback(parseError(response.body));
             }
-        }
+        };
 
-        var response = null
+        var response = null;
 
         try {
             if (verb == 'post') {
@@ -392,7 +434,9 @@ const API = {
                     headers: headers
                 });
             } else if (verb == 'get') {
-                response = await Vue.http.get(finalUrl, { headers: headers });
+                response = await Vue.http.get(finalUrl, {
+                    headers: headers
+                });
             } else if (verb == 'delete') {
                 response = await Vue.http.delete(finalUrl, {
                     headers: headers
