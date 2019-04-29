@@ -55,6 +55,12 @@
         ></SocialLineChart>
       </div>
     </div>
+
+    <div class="row mt-3">
+      <div class="col">
+        <DonutNew class="h-100"></DonutNew>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,6 +73,7 @@ import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import Promise from 'bluebird';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
+import DonutNew from '../partials/charts/DonutNew.vue';
 
 export default {
     name: 'social-dashboard',
@@ -81,7 +88,8 @@ export default {
         SocialProfileSelector,
         TagPerformanceBar,
         SocialLineChart,
-        SocialNetworkSelector
+        SocialNetworkSelector,
+        DonutNew
     },
 
     data() {
