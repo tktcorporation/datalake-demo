@@ -35,7 +35,6 @@ export default {
     selectSocialProfileIds(state, profileIds) {
         state.selectors.social.selectedProfileIds = profileIds;
     },
-
     queryOptions(state, payload) {
         if (payload.profileIds) {
             state.selectors.social.queryOptions['profileIds'] =
@@ -43,5 +42,8 @@ export default {
         } else if (payload.network) {
             state.selectors.social.queryOptions['network'] = payload.network;
         }
+    },
+    selectNlpType(state, type) {
+        state.selectors.social.selectedNlpType = type;
     }
 };

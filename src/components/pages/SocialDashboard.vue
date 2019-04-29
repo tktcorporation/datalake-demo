@@ -13,8 +13,8 @@
       <li class="nav-item" v-for="(type, index) in nlpTypes" :key="index">
         <span
           class="nav-link capitalize"
-          :class="{'active':selectedNlpType == type}"
-          @click="selectedNlpType = type"
+          :class="{'active': selectedNlpType == type}"
+          @click="onSelectedNlpType(type)"
         >{{type}}</span>
       </li>
     </ul>
@@ -87,6 +87,14 @@ export default {
         SocialNetworkSelector,
         DonutNew
     },
+    computed: {
+        nlpTypes() {
+            return this.$store.state.selectors.social.nlpTypes;
+        },
+        selectedNlpType() {
+            return this.$store.state.selectors.social.selectedNlpType;
+        }
+    },
 
     data() {
         return {
@@ -94,8 +102,8 @@ export default {
             selectedProfile: null,
             lastRefreshDate: null,
             queryOptions: null,
-            selectedNlpType: 'topics',
-            nlpTypes: ['topics', 'entities', 'categories'],
+            // selectedNlpType: 'topics',
+            // nlpTypes: ['topics', 'entities', 'categories'],
             networks: {
                 facebook: {
                     name: 'facebook',
@@ -126,6 +134,9 @@ export default {
     },
 
     methods: {
+        onSelectedNlpType(type) {
+            this.$store.commit('selectNlpType', type);
+        },
         // onSelectedNetworks(network) {
         //     this.selectedNetwork = network;
         //     this.$store.commit('selectNetwork', network);

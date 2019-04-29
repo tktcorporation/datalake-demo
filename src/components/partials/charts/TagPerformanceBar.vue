@@ -103,7 +103,6 @@ export default {
             tagData: null
         };
     },
-
     computed: {
         network() {
             return this.$store.state.selectors.social.selectedNetwork;
