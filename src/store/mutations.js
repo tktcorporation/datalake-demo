@@ -27,11 +27,21 @@ export default {
         state.user.authenticated = isLevel('user');
     },
 
+    // Social
     selectNetwork(state, network) {
         state.selectors.social.selectedNetwork = network;
     },
 
     selectSocialProfileIds(state, profileIds) {
         state.selectors.social.selectedProfileIds = profileIds;
+    },
+
+    queryOptions(state, payload) {
+        if (payload.profileIds) {
+            state.selectors.social.queryOptions['profileIds'] =
+                payload.profileIds;
+        } else if (payload.network) {
+            state.selectors.social.queryOptions['network'] = payload.network;
+        }
     }
 };

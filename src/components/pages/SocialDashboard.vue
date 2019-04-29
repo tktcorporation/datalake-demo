@@ -130,15 +130,7 @@ export default {
         };
     },
 
-    computed: {},
-
-    mounted() {
-        this.init();
-    },
-
     methods: {
-        init() {},
-
         onSelectedNetworks(network) {
             this.selectedNetwork = network;
             this.$store.commit('selectNetwork', network);
@@ -149,6 +141,9 @@ export default {
             this.selectedProfileIds = selectedProfileIds;
 
             this.$store.commit('selectSocialProfileIds', selectedProfileIds);
+            this.$store.commit('queryOptions', {
+                profileIds: selectedProfileIds
+            });
 
             this.queryOptions = {
                 //start: moment().subtract(30,'days').startOf('day'),
@@ -159,6 +154,9 @@ export default {
 
             if (this.selectedNetwork) {
                 this.queryOptions.network = this.selectedNetwork;
+                this.$store.commit('queryOptions', {
+                    network: this.$store.selectors.social.selectedNetwork
+                });
             }
 
             //await Promise.all([bar(), bam(), bat()].map(handleRejection));

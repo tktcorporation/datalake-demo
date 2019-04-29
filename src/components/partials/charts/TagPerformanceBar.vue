@@ -95,7 +95,7 @@ import API from '../../../api';
 export default {
     name: 'tag-performance-bar',
 
-    props: ['profileIds', 'network', 'type'],
+    props: ['profileIds', 'type'],
 
     data() {
         return {
@@ -104,6 +104,11 @@ export default {
         };
     },
 
+    computed: {
+        network() {
+            return this.$store.state.selectors.social.selectedNetwork;
+        }
+    },
     watch: {
         network(val) {
             this.update();

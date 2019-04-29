@@ -11,7 +11,7 @@ export default {
             selectedProfile: null,
             selectedNlpType: 'topics',
 
-            queryOptions: null,
+            queryOptions: {},
             nlpTypes: ['topics', 'entities', 'categories'],
             networks: {
                 facebook: {
