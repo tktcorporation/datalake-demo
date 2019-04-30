@@ -118,6 +118,9 @@ export default {
 
         profileIds(val) {
             this.update();
+        },
+        type() {
+            this.updatE();
         }
     },
 
