@@ -78,7 +78,7 @@ export default {
 
     data() {
         return {
-            selectedProfileIds: [],
+            // selectedProfileIds: [],
             // lastRefreshDate: null,
             // queryOptions: null,
             // selectedNlpType: 'topics',

@@ -120,11 +120,9 @@ export default {
             this.update();
         },
         type() {
-            this.updatE();
+            this.update();
         }
     },
-
-    mounted() {},
 
     methods: {
         update() {
