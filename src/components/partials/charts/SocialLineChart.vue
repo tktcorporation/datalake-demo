@@ -5,12 +5,6 @@ import moment from 'moment';
 const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
-    props: ['profileIds', 'type'],
-    computed: {
-        network() {
-            return this.$store.state.selectors.social.selectedNetwork;
-        }
-    },
     data() {
         return {
             isLoading: false,
@@ -51,6 +45,17 @@ export default {
                 }
             }
         };
+    },
+    computed: {
+        network() {
+            return this.$store.state.selectors.social.selectedNetwork;
+        },
+        profileIds() {
+            return this.$store.state.selectors.social.selectedProfileIds;
+        },
+        type() {
+            return this.$store.state.selectors.social.selectedNlpType;
+        }
     },
     mounted() {
         this.getTagsOverTime();
