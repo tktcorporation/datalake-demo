@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import API from '../api';
 
 import state from './state';
 import mutations from './mutations';

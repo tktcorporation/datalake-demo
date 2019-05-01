@@ -88,22 +88,27 @@
 // @see https://github.com/apertureless/vue-chartjs
 import _ from 'lodash';
 import moment from 'moment';
-//import PleaseJS from "../../../utils/PleaseJS.js";
 import API from '../../../api';
-//var tinycolor = require("tinycolor2");
 
 export default {
     name: 'tag-performance-bar',
-
-    props: ['profileIds', 'network', 'type'],
-
     data() {
         return {
             isLoading: false,
             tagData: null
         };
     },
-
+    computed: {
+        network() {
+            return this.$store.state.selectors.social.selectedNetwork;
+        },
+        profileIds() {
+            return this.$store.state.selectors.social.selectedProfileIds;
+        },
+        type() {
+            return this.$store.state.selectors.social.selectedNlpType;
+        }
+    },
     watch: {
         network(val) {
             this.update();
@@ -111,10 +116,11 @@ export default {
 
         profileIds(val) {
             this.update();
+        },
+        type() {
+            this.update();
         }
     },
-
-    mounted() {},
 
     methods: {
         update() {
@@ -143,8 +149,6 @@ export default {
                 network: this.network
             });
             this.isLoading = false;
-
-            //var key = 'interactions'
 
             var max = -9999999;
 
@@ -177,9 +181,6 @@ export default {
                     (100 * parseNumber(this.tags[i].instagram_interactions)) /
                         max
                 );
-
-                //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
-                //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)
             }
         }
     }
@@ -189,9 +190,6 @@ export default {
 
 <style lang="scss">
 .tag-performance-bar-chart {
-    .tag-label {
-    }
-
     .tag-link {
         display: inline-block;
         font-size: 12px;
