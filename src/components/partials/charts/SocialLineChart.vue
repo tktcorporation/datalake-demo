@@ -170,8 +170,6 @@ export default {
             });
             this.isLoading = false;
 
-            //var key = 'interactions'
-
             var max = -9999999;
 
             // Now normalize data
@@ -202,9 +200,6 @@ export default {
                     (100 * parseNumber(this.tags[i].instagram_interactions)) /
                         max
                 );
-
-                //this.$log('tag, fb = ', max, this.tags[i].twitter_interactions,  typeof this.tags[i].twitter_interactions, parseNumber(this.tags[i].twitter_interactions), this.tagData[i].twitter_normalized)
-                //this.$log('tag, tw = ', max, this.tags[i].facebook_interactions,  typeof this.tags[i].facebook_interactions, parseNumber(this.tags[i].facebook_interactions), this.tagData[i].facebook_normalized)
             }
         }
     },

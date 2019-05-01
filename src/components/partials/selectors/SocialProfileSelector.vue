@@ -137,8 +137,6 @@ export default {
         onSelectNetwork(network) {},
 
         onSelectLabel() {
-            //this.$log('onSelectLabel', this.profiles)
-
             let newProfiles = [];
             for (let i = 0; i < this.profiles.length; i += 1) {
                 let matches = _.intersection(
@@ -146,12 +144,10 @@ export default {
                     this.selectedProfileLabels
                 );
                 if (matches.length > 0) {
-                    //this.$log(matches)
                     newProfiles.push(this.profiles[i]);
                 }
             }
             this.selectedProfiles = newProfiles;
-            // this.$emit("onSelectProfileLabel", this.selectedProfileLabels);
             let selectedProfileIds = _.map(this.selectedProfiles, 'id').join(
                 ','
             );
@@ -189,13 +185,6 @@ export default {
 
     .user-list-text {
         margin-left: 40px;
-    }
-
-    .multiselect__option {
-        /*
-            padding-top: 8px;
-            padding-bottom: 8px;
-            */
     }
 
     .multiselect__option--highlight {
