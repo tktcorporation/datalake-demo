@@ -8,14 +8,7 @@
         <social-network-selector></social-network-selector>
       </div>
       <div class="col-md-3">
-        <v-date-picker
-          mode="range"
-          v-model="date"
-          show-caps
-          :formats="formats"
-          :available-dates="{ start: null, end: new Date() }"
-          @input="onDate"
-        ></v-date-picker>
+        <dateCalendar></dateCalendar>
       </div>
     </div>
 
@@ -57,6 +50,7 @@ import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
 import moment from 'moment';
+import dateCalendar from '../partials/selectors/DateCalendar.vue';
 
 export default {
     name: 'social-dashboard',
@@ -70,7 +64,8 @@ export default {
         TagPerformanceBar,
         SocialLineChart,
         SocialNetworkSelector,
-        DonutNew
+        DonutNew,
+        dateCalendar
     },
     computed: {
         nlpTypes() {
@@ -80,23 +75,9 @@ export default {
             return this.$store.state.selectors.social.selectedNlpType;
         }
     },
-
-    data() {
-        return {
-            date: {
-                start: moment(new Date()),
-                end: moment(new Date())
-            }
-        };
-    },
     methods: {
         onSelectedNlpType(type) {
             this.$store.commit('selectNlpType', type);
-        },
-        onDate() {
-            this.$store.commit('changeDate', this.date);
-            debugger;
-            console.log('date', date);
         }
     }
 };
