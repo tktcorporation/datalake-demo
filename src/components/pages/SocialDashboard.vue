@@ -8,17 +8,13 @@
         <social-network-selector></social-network-selector>
       </div>
       <div class="col-md-3">
-        <!-- <DatePicker
-          input-class="form-control"
-          placeholder="Date"
+        <v-date-picker
+          mode="range"
           v-model="date"
-          name="date"
-          clear-button="true"
-          clear-button-icon="fa fa-times"
-          calendar-button="true"
-          calendar-button-icon="fa fa-calendar"
-          typeable="true"
-        />-->
+          show-caps
+          :formats="formats"
+          :available-dates="{ start: null, end: new Date() }"
+        ></v-date-picker>
       </div>
     </div>
 
@@ -59,7 +55,7 @@ import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
-import DatePicker from 'vuejs-datepicker';
+import moment from 'moment';
 
 export default {
     name: 'social-dashboard',
@@ -73,8 +69,7 @@ export default {
         TagPerformanceBar,
         SocialLineChart,
         SocialNetworkSelector,
-        DonutNew,
-        DatePicker
+        DonutNew
     },
     computed: {
         nlpTypes() {
@@ -87,7 +82,10 @@ export default {
 
     data() {
         return {
-            date: null
+            date: {
+                start: moment(new Date()),
+                end: moment(new Date())
+            }
         };
     },
     methods: {

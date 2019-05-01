@@ -8,9 +8,16 @@ import Logger from './utils/Logger';
 import Resource from 'vue-resource';
 import filters from './filters';
 import store from './store/index'; // Veux store
+import VCalendar from 'v-calendar';
+import 'v-calendar/lib/v-calendar.min.css';
 
 Vue.use(Logger, { level: 'debug' });
 Vue.use(Resource);
+Vue.use(VCalendar, {
+    // formats: {
+    //     disabled-dates:''
+    // }
+});
 
 Vue.config.productionTip = false;
 
