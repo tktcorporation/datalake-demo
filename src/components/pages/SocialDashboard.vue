@@ -7,6 +7,19 @@
       <div class="col-md-3">
         <social-network-selector></social-network-selector>
       </div>
+      <div class="col-md-3">
+        <!-- <DatePicker
+          input-class="form-control"
+          placeholder="Date"
+          v-model="date"
+          name="date"
+          clear-button="true"
+          clear-button-icon="fa fa-times"
+          calendar-button="true"
+          calendar-button-icon="fa fa-calendar"
+          typeable="true"
+        />-->
+      </div>
     </div>
 
     <ul class="nav nav-tabs mt-3 mb-3">
@@ -46,6 +59,7 @@ import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
+import DatePicker from 'vuejs-datepicker';
 
 export default {
     name: 'social-dashboard',
@@ -59,7 +73,8 @@ export default {
         TagPerformanceBar,
         SocialLineChart,
         SocialNetworkSelector,
-        DonutNew
+        DonutNew,
+        DatePicker
     },
     computed: {
         nlpTypes() {
@@ -70,6 +85,11 @@ export default {
         }
     },
 
+    data() {
+        return {
+            date: null
+        };
+    },
     methods: {
         onSelectedNlpType(type) {
             this.$store.commit('selectNlpType', type);
