@@ -41,9 +41,6 @@ export default {
     },
 
     changeDate(state, date) {
-        state.selectors.social.dates = {
-            startDate: date.start,
-            endDate: date.end
-        };
+        state.selectors.social.dates = date;
     }
 };

@@ -8,7 +8,7 @@
         <social-network-selector></social-network-selector>
       </div>
       <div class="col-md-3">
-        <dateCalendar></dateCalendar>
+        <DateCalendar></DateCalendar>
       </div>
     </div>
 
@@ -49,8 +49,7 @@ import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
-import moment from 'moment';
-import dateCalendar from '../partials/selectors/DateCalendar.vue';
+import DateCalendar from '../partials/selectors/DateCalendar.vue';
 
 export default {
     name: 'social-dashboard',
@@ -65,7 +64,7 @@ export default {
         SocialLineChart,
         SocialNetworkSelector,
         DonutNew,
-        dateCalendar
+        DateCalendar
     },
     computed: {
         nlpTypes() {
