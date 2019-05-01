@@ -14,6 +14,7 @@
           show-caps
           :formats="formats"
           :available-dates="{ start: null, end: new Date() }"
+          @input="onDate"
         ></v-date-picker>
       </div>
     </div>
@@ -91,6 +92,11 @@ export default {
     methods: {
         onSelectedNlpType(type) {
             this.$store.commit('selectNlpType', type);
+        },
+        onDate() {
+            this.$store.commit('changeDate', this.date);
+            debugger;
+            console.log('date', date);
         }
     }
 };

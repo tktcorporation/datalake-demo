@@ -13,11 +13,7 @@ import 'v-calendar/lib/v-calendar.min.css';
 
 Vue.use(Logger, { level: 'debug' });
 Vue.use(Resource);
-Vue.use(VCalendar, {
-    // formats: {
-    //     disabled-dates:''
-    // }
-});
+Vue.use(VCalendar);
 
 Vue.config.productionTip = false;
 
