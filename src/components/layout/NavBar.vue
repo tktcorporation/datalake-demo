@@ -54,7 +54,6 @@
                             data-target="#navbarSupportedContent"
                         >Web</router-link>
                     </li>
-
                     <li class="nav-item">
                         <router-link
                             class="nav-link"
@@ -129,6 +128,15 @@
                             class="nav-link"
                             :to="{name:'similar'}"
                         >NLP Demo</router-link>
+                    </li>
+                    <li
+                        class="nav-item"
+                        v-if="user.authenticated"
+                    >
+                        <router-link
+                            class="nav-link"
+                            :to="{name:'user-admin'}"
+                        >Admin</router-link>
                     </li>
 
                     <li

@@ -44,7 +44,8 @@ const API = {
         var rootUrl = process.env.VUE_APP_ROOT_URL
             ? process.env.VUE_APP_ROOT_URL
             : 'https://data.usagm.gov';
-
+         
+          
         if (window.location.host.search('localhost')) {
             rootUrl = process.env.VUE_APP_ROOT_URL
                 ? process.env.VUE_APP_ROOT_URL
@@ -161,6 +162,16 @@ const API = {
         this.setPreference('token', null);
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async getNewUsers() {
+        try {
+            return await this.__send('get','user','newusers',null);
+        } catch (err) {
+            return null;
+        }
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
