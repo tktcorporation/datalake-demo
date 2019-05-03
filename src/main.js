@@ -7,10 +7,17 @@ import router from './router';
 import Logger from './utils/Logger';
 import Resource from 'vue-resource';
 import filters from './filters';
-import store from './store/index'; // Veux store
+import store from './store/index'; // Vuex store
+import { ClientTable } from 'vue-tables-2';
+
+
+
+Vue.use(ClientTable);
+
 
 Vue.use(Logger, { level: 'debug' });
 Vue.use(Resource);
+
 
 Vue.config.productionTip = false;
 
