@@ -72,7 +72,7 @@ export default {
                 this.$log('Register, res = ', res)
 
                 this.$store.commit('setUser', API.user)
-                //this.$router.replace({name:'social'})
+                this.$router.replace({name:'social'})
 
             }
             catch(err){
