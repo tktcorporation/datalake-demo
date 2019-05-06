@@ -18,6 +18,10 @@
 
             </h4>            
 
+            <div class="text-danger mb-2" v-if="errorMessage">
+                {{errorMessage}}
+            </div>
+
             <pre>{{user}}</pre>
             
         </div>
@@ -47,6 +51,7 @@ export default {
 
     data() {
         return {
+            errorMessage: 'test'
         };
     },
 
@@ -58,12 +63,21 @@ export default {
     methods: {
 
         async getToken(){
-            this.$log('Getting token...')
-            let res = await API.register(this.$route.query.code)
-            this.$log('Register, res = ', res)
 
-            this.$store.commit('setUser', API.user)
-            this.$router.replace({name:'social'})
+            this.$log('Getting token...')
+
+            try {
+                
+                let res = await API.register(this.$route.query.code)
+                this.$log('Register, res = ', res)
+
+                this.$store.commit('setUser', API.user)
+                //this.$router.replace({name:'social'})
+
+            }
+            catch(err){
+                this.errorMessage = err.toString()
+            }
         }
     }
 
