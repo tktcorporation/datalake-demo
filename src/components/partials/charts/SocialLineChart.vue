@@ -66,27 +66,19 @@ export default {
 
     methods: {
         async getTagsOverTime() {
-            let lol = moment().subtract(90, 'days');
-            console.log(
-                moment()
-                    .subtract(90, 'days')
-                    .toDate()
-            );
-            console.log(
-                moment()
-                    .endOf('day')
-                    .toDate()
-            );
             //get the metrics over time
             if (this.type === 'categories') {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
                     if (this.date) {
+                        console.log(this.date);
+                        debugger;
                         API.getTagsOverTime({
                             tags: `${tag.name}`,
                             start: this.date.start,
                             end: this.date.end
                         }).then(data => {
+                            debugger;
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
@@ -100,6 +92,8 @@ export default {
                             }
                         });
                     } else {
+                        console.log(this.date);
+                        debugger;
                         // 90 days default
                         API.getTagsOverTime({
                             tags: `${tag.name}`
