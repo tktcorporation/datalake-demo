@@ -14,13 +14,13 @@ export default {
     name: "users-table",
     data() {
         return {
-            columns: [ 'email', 'isActive'],
+            columns: [ 'email', 'level'],
             tableData: [],
             options: {
                 headings: {
                    
                     email: 'Email',
-                    isActive: 'Status'
+                    isActive: 'User Level'
                 },
                 //sortable: ['name', 'isActive'],
                 //filterable: ['name', 'isActive']

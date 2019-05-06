@@ -1,14 +1,30 @@
 <template>
-    <div class="container" align="left">
+    <div class="container" align="left" id="UserAdminPage">
         <h2>Home</h2>
-        <h4>New Requests</h4>   
-        <users-table></users-table>
+        <h4>New Users</h4>              
+
+        <div class="row mb-3"> 
+            <div class="col">
+                <new-requests-table></new-requests-table>
+            </div>     
+        </div>   
+
+        <h4>Current Users</h4>              
+
+        <div class="row mb-3"> 
+            <div class="col">
+                <current-users-table></current-users-table>
+            </div> 
+        </div>    
+        
     </div>
 </template>
 
 <script>
 
-import UsersTable  from "../partials/tables/UsersGrid";
+import NewRequestsTable  from "../partials/tables/NewRequestsTable";
+import CurrentUsersTable  from "../partials/tables/CurrentUsersTable";
+import LevelSelector from "../partials/selectors/LevelSelector";
 
 export default {
     
@@ -19,7 +35,9 @@ export default {
     },
 
     components: {
-        UsersTable
+        NewRequestsTable,
+        //LevelSelector,
+        CurrentUsersTable
     },
 
     data() {
@@ -36,7 +54,14 @@ export default {
     mounted() {},
 
     methods: {
-
+        init() {},
+        
+        /*onSelectLevel(users){
+            this.$set(this.selectedProfileIds, _.map(hosts, 'id'))
+            this.$log('onSelectHost ', this.selectedProfileIds)
+            this.doPageSearch()
+        }*/
+       
     }
 
 };

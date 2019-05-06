@@ -43,7 +43,9 @@ const API = {
 
         var rootUrl = process.env.VUE_APP_ROOT_URL
             ? process.env.VUE_APP_ROOT_URL
-            : 'https://data.usagm.gov';
+            //: 'https://data.usagm.gov';
+            : 'http://localhost';
+
          
           
         if (window.location.host.search('localhost')) {
@@ -166,12 +168,33 @@ const API = {
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
+    async getAllUsers() {
+        var opts = {
+            token: this.getPreference('token'),
+        };
+       return await this.__send('get', 'user', `allusers?${$.param(opts)}`, null);
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
     async getNewUsers() {
-        try {
-            return await this.__send('get','user','newusers',null);
-        } catch (err) {
-            return null;
-        }
+        var opts = {
+            token: this.getPreference('token'),
+        };
+       return await this.__send('get', 'user', `newusers?${$.param(opts)}`, null);
+    },
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async removeUser(deletedUser) {
+        console.debug(deletedUser.email);
+        var opts = {
+            token: this.getPreference('token'),
+            email: deletedUser.email
+        };
+        
+       let result =  await this.__send('delete', 'user', `removeuser?${$.param(opts)}`, null);
+       console.log("this is from remove user", result);
+       return result;
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
