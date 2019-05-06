@@ -55,6 +55,9 @@ export default {
         },
         type() {
             return this.$store.state.selectors.social.selectedNlpType;
+        },
+        date() {
+            return this.$store.state.selectors.social.dates;
         }
     },
     mounted() {
@@ -67,18 +70,46 @@ export default {
             if (this.type === 'categories') {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
-                    API.getTagsOverTime({
-                        tags: `${tag.name}`,
-                        range: 'last90days'
-                    }).then(data => {
-                        this.metricsOverTime = [...this.metricsOverTime, data];
-                        //only render when all the data is here
-                        if (
-                            this.metricsOverTime.length === this.tagData.length
-                        ) {
-                            this.render();
-                        }
-                    });
+                    if (this.date) {
+                        console.log(this.date);
+                        debugger;
+                        API.getTagsOverTime({
+                            tags: `${tag.name}`,
+                            start: this.date.start,
+                            end: this.date.end
+                        }).then(data => {
+                            debugger;
+                            this.metricsOverTime = [
+                                ...this.metricsOverTime,
+                                data
+                            ];
+                            //only render when all the data is here
+                            if (
+                                this.metricsOverTime.length ===
+                                this.tagData.length
+                            ) {
+                                this.render();
+                            }
+                        });
+                    } else {
+                        console.log(this.date);
+                        debugger;
+                        // 90 days default
+                        API.getTagsOverTime({
+                            tags: `${tag.name}`
+                        }).then(data => {
+                            this.metricsOverTime = [
+                                ...this.metricsOverTime,
+                                data
+                            ];
+                            if (
+                                this.metricsOverTime.length ===
+                                this.tagData.length
+                            ) {
+                                this.render();
+                            }
+                        });
+                    }
                 });
             }
         },
@@ -96,6 +127,7 @@ export default {
                 this.metricsOverTime.forEach((metric, index) => {
                     let color = colors[index];
                     metric.forEach(dataPoint => {
+                        debugger;
                         // push objects into the datasets
                         if (
                             this.data.datasets.filter(

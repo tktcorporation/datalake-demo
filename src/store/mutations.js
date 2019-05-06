@@ -38,5 +38,9 @@ export default {
 
     selectNlpType(state, type) {
         state.selectors.social.selectedNlpType = type;
+    },
+
+    changeDate(state, date) {
+        state.selectors.social.dates = date;
     }
 };

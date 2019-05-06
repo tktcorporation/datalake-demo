@@ -10,6 +10,7 @@ export default {
             selectedNetwork: null,
             selectedNlpType: 'topics',
             nlpTypes: ['topics', 'entities', 'categories'],
+            dates: null,
             networks: {
                 facebook: {
                     name: 'facebook',

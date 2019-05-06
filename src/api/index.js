@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Resource from 'vue-resource';
 import _ from 'lodash';
 const uuidv5 = require('uuid/v5');
+import moment from 'moment';
 
 const API = {
     rootUrls: {
@@ -224,7 +225,12 @@ const API = {
     async getTagsOverTime(opts) {
         var merged = _.defaults(opts, {
             tags: 'Art',
-            range: 'last90days'
+            start: moment()
+                .subtract(90, 'days')
+                .toDate(),
+            end: moment()
+                .endOf('day')
+                .toDate()
         });
         return await this.__send(
             'get',

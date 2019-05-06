@@ -7,6 +7,9 @@
       <div class="col-md-3">
         <social-network-selector></social-network-selector>
       </div>
+      <div class="col-md-3">
+        <DateCalendar></DateCalendar>
+      </div>
     </div>
 
     <ul class="nav nav-tabs mt-3 mb-3">
@@ -46,6 +49,7 @@ import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
+import DateCalendar from '../partials/selectors/DateCalendar.vue';
 
 export default {
     name: 'social-dashboard',
@@ -59,7 +63,8 @@ export default {
         TagPerformanceBar,
         SocialLineChart,
         SocialNetworkSelector,
-        DonutNew
+        DonutNew,
+        DateCalendar
     },
     computed: {
         nlpTypes() {
@@ -69,7 +74,6 @@ export default {
             return this.$store.state.selectors.social.selectedNlpType;
         }
     },
-
     methods: {
         onSelectedNlpType(type) {
             this.$store.commit('selectNlpType', type);
