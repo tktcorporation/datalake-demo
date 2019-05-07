@@ -1773,7 +1773,6 @@ color-name@^1.0.0:
 color-scheme@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/color-scheme/-/color-scheme-1.0.1.tgz#d1de417f65e10f73c0eb2c97f7ed6c156bc6e8f5"
-  integrity sha512-4x+ya6+z6g9DaTFSfVzTZc8TSjxHuDT40NB43N3XPUkQlF6uujhwH8aeMeq8HBgoQQog/vrYgJ16mt/eVTRXwQ==
 
 color-string@^1.5.2:
   version "1.5.3"
@@ -6986,6 +6985,12 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
+v-calendar@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-0.9.7.tgz#a0c770d9132ada9dea1684f18f7a35c0da7f9838"
+  dependencies:
+    vue "^2.5.0"
+
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
@@ -7094,6 +7099,10 @@ vue-template-compiler@^2.5.17:
 vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
+
+vue@^2.5.0:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
 
 vue@^2.5.2:
   version "2.5.17"

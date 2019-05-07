@@ -27,7 +27,7 @@
         <tag-performance-bar></tag-performance-bar>
       </div>
     </div>
-
+<!--
     <div class="row mt-3">
       <div class="col">
         <SocialLineChart class="h-100"></SocialLineChart>
@@ -39,6 +39,7 @@
         <DonutNew class="h-100"></DonutNew>
       </div>
     </div>
+    -->
   </div>
 </template>
 
