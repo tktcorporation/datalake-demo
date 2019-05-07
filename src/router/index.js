@@ -7,6 +7,7 @@ import SimilarPages from "../components/pages/SimilarPages";
 import NotFound from "../components/pages/NotFound";
 import Authenticate from "../components/pages/Authenticate";
 import ContentSearch from "../components/pages/ContentSearch";
+import ContentGenerator from "../components/pages/ContentGenerator";
 import store from "../store";
 import API from "../api";
 
@@ -49,6 +50,14 @@ var router = new Router({
             name: "authenticate",
             component: Authenticate
         },
+        {
+            path: "/generator",
+            name: "generator",
+            component: ContentGenerator,
+            meta: {
+                requiresAuth: true
+            }            
+        },      
         {
             path: "/content",
             name: "content",
