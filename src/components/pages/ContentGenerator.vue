@@ -80,10 +80,10 @@ export default {
         onSubmit() {
             this.isLoading = true;
 
-            var path = 'http://127.0.0.1:5100/content/generate';
+            var path = 'http://127.0.0.1:5100/api/content/generate';
 
             if (window.location.hostname.search('localhost') == -1) {
-                path = 'content/generate';
+                path = 'api/content/generate';
             }
 
             let body = { text: this.seedText };
