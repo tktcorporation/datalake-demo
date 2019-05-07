@@ -1,5 +1,5 @@
 <template>
-    <div class="current-users-table card w-100 h-100">
+    <div class="current-users-table card w-50 ">
         
         <div class="card-body">
 
@@ -54,7 +54,7 @@ export default {
     
     data() {
         return {
-            users:[],
+            users:[]
         };
     },
 
@@ -66,24 +66,20 @@ export default {
         async getAllUsers() {
             API.getAllUsers().then(res => {
             this.users = res
-        })
+        });
       },
       async confirmDelete(deletedUser,index) {
-          console.log(deletedUser.id)
-          if (index > -1) {
+          var res = await API.removeUser(deletedUser);
+          if (index > -1 & res.result=="ok") {
                 this.users.splice(index, 1);
           }
-          //TO DO: need to add api call
-          //API.removeUser(deletedUser);
-
       },
       deleteUser(dialog,user,index) {
-            console.log(user.email)
-            this.confirmDelete(user,index)
-            dialog.close()
+            this.confirmDelete(user,index);
+            dialog.close();
         },
       cancelDelete(dialog) {
-			dialog.close()
+			dialog.close();
 		}  
 
     }

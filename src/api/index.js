@@ -179,22 +179,31 @@ const API = {
 
     async getNewUsers() {
         var opts = {
-            token: this.getPreference('token'),
+            token: this.getPreference('token')
         };
        return await this.__send('get', 'user', `newusers?${$.param(opts)}`, null);
     },
     // ///////////////////////////////////////////////////////////////////////////////////////
 
+    async updateUser(updatedUser) {
+        var opts = {
+            token: this.getPreference('token'),
+            isActive:updatedUser.isActive,
+            email:updatedUser.email
+        }
+       return await this.__send('post', 'user', `update?${$.param(opts)}`, null);
+    },
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
     async removeUser(deletedUser) {
-        console.debug(deletedUser.email);
         var opts = {
             token: this.getPreference('token'),
             email: deletedUser.email
         };
         
-       let result =  await this.__send('delete', 'user', `removeuser?${$.param(opts)}`, null);
-       console.log("this is from remove user", result);
-       return result;
+       let res =  await this.__send('delete', 'user', `removeuser?${$.param(opts)}`, null);
+       console.log("this is stupid result" + res.result)
+       return res;
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
