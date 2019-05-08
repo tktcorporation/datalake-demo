@@ -92,8 +92,6 @@ export default {
                             }
                         });
                     } else {
-                        console.log(this.date);
-                        debugger;
                         // 90 days default
                         API.getTagsOverTime({
                             tags: `${tag.name}`
@@ -127,7 +125,6 @@ export default {
                 this.metricsOverTime.forEach((metric, index) => {
                     let color = colors[index];
                     metric.forEach(dataPoint => {
-                        debugger;
                         // push objects into the datasets
                         if (
                             this.data.datasets.filter(

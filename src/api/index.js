@@ -88,8 +88,11 @@ const API = {
         // Clear tokens
         this.setPreference('token', '');
 
-        let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
-        let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`;
+        let CLIENT_ID =
+            'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
+        let REDIRECT_URI = `${window.location.protocol}//${
+            window.location.host
+        }/authenticate`;
 
         // A unique value at least 32 characters in length used for maintaining state between the request and the callback.
         // This value will be returned to the client on a successful authorization.
@@ -112,7 +115,9 @@ const API = {
             state: state
         };
 
-        let url = `https://idp.int.identitysandbox.gov/openid_connect/authorize?${$.param(opts)}`;
+        let url = `https://idp.int.identitysandbox.gov/openid_connect/authorize?${$.param(
+            opts
+        )}`;
 
         window.location = url;
     },
@@ -443,15 +448,17 @@ const API = {
                     headers: headers
                 });
             }
-        } 
-        catch (err) {
-            console.error(`[${verb.toUpperCase()}][${service}] ${finalUrl}`, err);
-            console.error(err)
+        } catch (err) {
+            console.error(
+                `[${verb.toUpperCase()}][${service}] ${finalUrl}`,
+                err
+            );
+            console.error(err);
             //return (err.body.message) ? err.body : null;
-            if (err.body && err.body.message){
-                throw new Error(err.body.message.replace('Error:',''))
+            if (err.body && err.body.message) {
+                throw new Error(err.body.message.replace('Error:', ''));
             }
-            return null
+            return null;
         }
 
         return response.body;
