@@ -71,14 +71,11 @@ export default {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
                     if (this.date) {
-                        console.log(this.date);
-                        debugger;
                         API.getTagsOverTime({
                             tags: `${tag.name}`,
                             start: this.date.start,
                             end: this.date.end
                         }).then(data => {
-                            debugger;
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
