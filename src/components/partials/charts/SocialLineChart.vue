@@ -71,14 +71,11 @@ export default {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
                     if (this.date) {
-                        console.log(this.date);
-                        debugger;
                         API.getTagsOverTime({
                             tags: `${tag.name}`,
                             start: this.date.start,
                             end: this.date.end
                         }).then(data => {
-                            debugger;
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
@@ -92,8 +89,6 @@ export default {
                             }
                         });
                     } else {
-                        console.log(this.date);
-                        debugger;
                         // 90 days default
                         API.getTagsOverTime({
                             tags: `${tag.name}`
@@ -127,7 +122,6 @@ export default {
                 this.metricsOverTime.forEach((metric, index) => {
                     let color = colors[index];
                     metric.forEach(dataPoint => {
-                        debugger;
                         // push objects into the datasets
                         if (
                             this.data.datasets.filter(
