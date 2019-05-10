@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "../components/pages/Home";
 import Admin from "../components/pages/UserAdminPage";
+import OneTimeRegistration from "../components/pages/OneTimeRegistration";
 import SocialDashboard from "../components/pages/SocialDashboard";
 import WebTraffic from "../components/pages/WebTraffic";
 import SimilarPages from "../components/pages/SimilarPages";
@@ -54,6 +55,14 @@ var router = new Router({
             path: "/admin",
             name: "user-admin",
             component: Admin,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: "/onetimeregister",
+            name: "one-time-registration",
+            component: OneTimeRegistration,
             meta: {
                 requiresAuth: true
             }

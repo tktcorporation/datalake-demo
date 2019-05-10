@@ -16,21 +16,20 @@
                             {{user.email}}
                         </td>
                         <td>
-                          <div :class=actions> 
                              <label>
-                                <input type="checkbox" v-bind:id = index :value= "user.id" v-model="actions">
-                                                                  Approve 
+                                <input type="checkbox" v-bind:id = "index" v-bind:value= "user.id" :disabled="approve.length >= max && approve.indexOf(index) == -1" v-model="approve"
+                                  v-confirm="{loader: true, ok: dialog => approveUserRequest(dialog,user,index),
+                                                                    cancel: dialog => cancelAction(dialog),
+                                                                    message: 'Are you sure you want to approve this user?'}" 
+                                >
+                        
                              </label>
-                             <span>{{ actions }}</span>
-                          </div>  
                         </td>
                         <td>
-                            <div :class=actions>
-                                <label><input type="checkbox" id = "reject" value="reject" v-model="actions"
-                                 v-confirm="{loader: true, ok: dialog => updateUserRequest(dialog, user,index),
-                                                                    cancel: dialog => cancel(dialog),
+                                <label><input type="checkbox" v-bind:id = "index" v-bind:value= "user.id" v-model="reject"
+                                 v-confirm="{loader: true, ok: dialog => rejectUserRequest(dialog, user,index),
+                                                                    cancel: dialog => cancelAction(dialog),
                                                                     message: 'Are you sure you want to reject this user?'}"> Reject</label>
-                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -48,12 +47,12 @@ import API from "../../../api";
 export default {
 
     name: "new-requests-table",
-
-
     data() {
         return {
             users:[],
-            actions:[]
+            approve:[],
+            reject:[],
+             max: 2
         };
     },
 
@@ -67,28 +66,34 @@ export default {
             this.users = res
         })
       },
-        async updateUser(user) {
-           // API.updateUsers().then(res => {
-            //this.users = res
-        //})
-        //alert("this is submitted");
-        return API.updateUser(user)
+      async updateUser(updatedUser) {
+          var res = await API.updateUser(updatedUser);
+          if (res.result=="ok") {
+             console.debug("I am success");
+            //dialog.close();
+         }      
+         else {
+             console.debug("this is not success");
+         }
       },
-       updateUserRequest(dialog,user,index) {
-           console.log("this is the action::::" + actions)
-           /*if(this.actions.includes("approve")) {
-               console.log("this is approve")
-               dialog.close()
-           }
-           /*if (this.updateUser(user)=="OK") {  
-               console.log("updated")
-               dialog.close()
-            }*/
-            dialog.close()
+      approveUserRequest(dialog,user,index) {
+           let user_action = dialog.node;
+           console.log("this is the user_action", user.email)
+           user.isActive = true;
+           this.updateUser(user);
+           this.approve.push(user.id);
+           dialog.close();
         },
-      cancel(dialog) {
-			dialog.close()
+      rejectUserRequest(dialog,user,index) {
+           //let user_action = dialog.node();
+           //console.log("this is the user_action", user_action)
+           user.isAction = false;
+           this.reject.push(user.id);
+           dialog.close();
         },
+      cancelAction(dialog) {
+			//dialog.close();
+        }
     } 
 };
 </script>
