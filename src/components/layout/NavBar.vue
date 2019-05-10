@@ -77,6 +77,19 @@
 
                     <li
                         class="nav-item"
+                        v-if="!user.authenticated"
+                        data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                    >
+                        <span
+                            class="nav-link"
+                            @click="doRegister()"
+                        >Sign UP</span>
+                    </li>
+
+
+                    <li
+                        class="nav-item"
                         v-if="user.authenticated"
                         data-toggle="collapse"
                         data-target="#navbarSupportedContent"
@@ -204,6 +217,9 @@ export default {
 
         doLogin() {
             API.login();
+        },
+        doRegister() {
+            API.registerPreferences();
         },
 
         doLogout() {

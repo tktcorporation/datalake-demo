@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Resource from 'vue-resource';
 import _ from 'lodash';
+var isEmptyObject = require('is-empty-object')
 const uuidv5 = require('uuid/v5');
 
 const API = {
@@ -43,8 +44,8 @@ const API = {
 
         var rootUrl = process.env.VUE_APP_ROOT_URL
             ? process.env.VUE_APP_ROOT_URL
-            //: 'https://data.usagm.gov';
-            : 'http://localhost';
+            : 'https://data.usagm.gov';
+            //: 'http://localhost';
 
          
           
@@ -149,6 +150,14 @@ const API = {
             this.user = results.user;
             this.user.authenticated = true;
         }
+        if(isEmptyObject(results.user.preferences)) {
+            //redirect to One Time Registration page
+            console.log("This is a new user");
+            let url = "onetimeregister";
+            window.location = url;
+           
+
+        }
 
         return results;
     },
@@ -165,6 +174,20 @@ const API = {
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
     },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async registerPreferences() {
+        var opts = {
+            token: this.getPreference('token'),
+            redirect: `${window.location.protocol}//${window.location.host}`
+        };
+
+        this.setPreference('token', null);
+
+        await this.__send('delete', 'user', `?${$.param(opts)}`, null);
+    },
+
 
     // ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -202,7 +225,6 @@ const API = {
         };
         
        let res =  await this.__send('delete', 'user', `removeuser?${$.param(opts)}`, null);
-       console.log("this is stupid result" + res.result)
        return res;
     },
 
