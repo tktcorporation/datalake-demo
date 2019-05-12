@@ -59,8 +59,6 @@ export default {
 
     methods: {
         async onSubmitPreferences() {
-            console.log("I am in submit button::::"+ this.$store.state.selectors.onetimeregister.selectedHostsIds);
-            console.log("I am in submit button::::"+ this.$store.state.selectors.onetimeregister.selectedAuthors);
            let preferences = {
                 authors: this.$store.state.selectors.onetimeregister.selectedAuthors,
                 hostsIds: this.$store.state.selectors.onetimeregister.selectedHostsIds,
