@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "../components/pages/Home";
 import Admin from "../components/pages/UserAdminPage";
 import OneTimeRegistration from "../components/pages/OneTimeRegistration";
+import ApprovalPending from "../components/pages/ApprovalPending";
 import SocialDashboard from "../components/pages/SocialDashboard";
 import WebTraffic from "../components/pages/WebTraffic";
 import SimilarPages from "../components/pages/SimilarPages";
@@ -63,6 +64,14 @@ var router = new Router({
             path: "/onetimeregister",
             name: "one-time-registration",
             component: OneTimeRegistration,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: "/approvalpending",
+            name: "approval-pending",
+            component: ApprovalPending,
             meta: {
                 requiresAuth: true
             }

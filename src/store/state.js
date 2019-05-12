@@ -39,6 +39,11 @@ export default {
         },
         web: {},
         content: {},
-        nlpDemo: {}
+        nlpDemo: {},
+        onetimeregister: {
+            selectedHostsIds: [],
+            selectedAuthors:[],
+            selectedUsagmNetworks:[]
+        }
     }
 };

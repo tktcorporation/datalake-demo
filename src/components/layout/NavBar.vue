@@ -144,7 +144,7 @@
                     </li>
                     <li
                         class="nav-item"
-                        v-if="user.authenticated"
+                        v-if="user.isAdmin"
                     >
                         <router-link
                             class="nav-link"

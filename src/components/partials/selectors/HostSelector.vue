@@ -3,18 +3,17 @@
     <multiselect
         v-model="selectedHosts"
         name="host-selector"
+        track-by="id"
         label="name"
-        track-by="id" 
         deselect-label="Can't unselect host"
         :multiple="true"
         placeholder="Select a host"
         :options="hosts"
-        :loading="isLoading"
-        @input="onSelectProfile"
+        :loading="isLoadingHosts"
+        @input="onSelectHost"
         :searchable="true"
         :limit="3"
-        :allow-empty="true"
-    >
+        :allow-empty="true">
     </multiselect>
 
 </template>
@@ -32,7 +31,7 @@ export default {
         return {
             hosts: [],
             selectedHosts: null,
-            isLoading: false
+            isLoadingHosts: false
         };
     },
 
@@ -49,20 +48,18 @@ export default {
     methods: {
         getHosts() {
 
-            this.isLoading = true;
-            this.isLoadingLabels = true;
-
+            this.isLoadingHosts = true;
             API.getHosts().then(hosts => {
                 this.hosts = hosts;
-                this.isLoading = false;
+                this.isLoadingHosts = false;
             });
 
         },
-
-        onSelectNetwork(network) {},
-
-        onSelectProfile() {
-            this.$emit("onSelect", this.selectedHosts);
+        onSelectHost() { 
+            let selectedHostsIds = _.map(this.selectedHosts, 'id').join(
+                ','
+            );
+            this.$store.commit('selectHostsIds', selectedHostsIds);
         }
     }
 };

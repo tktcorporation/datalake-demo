@@ -146,19 +146,23 @@ const API = {
 
         this.setPreference('token', results.token);
 
-        if (results.user && results.user.email) {
+        if (results.user && results.user.email && results.user.isActive) {
             this.user = results.user;
             this.user.authenticated = true;
+            if(isEmptyObject(results.user.preferences)) {
+                //redirect to One Time Registration page
+                console.log("This is a new user.Redirect to one time registration page");
+                let url = "onetimeregister";
+                window.location = url;
+            }
         }
-        if(isEmptyObject(results.user.preferences)) {
-            //redirect to One Time Registration page
-            console.log("This is a new user");
-            let url = "onetimeregister";
+
+        if(!results.user.isActive) {
+            console.log("This is a new user and is waiting for approval");
+            let url = "approvalpending";
             window.location = url;
-           
 
         }
-
         return results;
     },
 
@@ -216,7 +220,16 @@ const API = {
         }
        return await this.__send('post', 'user', `update?${$.param(opts)}`, null);
     },
-    // ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+    async updateUserPreferences(preferences) {
+        var opts = {
+            token: this.getPreference('token'),
+            preferences:preferences
+        }
+       return await this.__send('post', 'user', `updatepreferences?${$.param(opts)}`, null);
+    },
+
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     async removeUser(deletedUser) {
         var opts = {
@@ -228,7 +241,7 @@ const API = {
        return res;
     },
 
-    // ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     getPreference(name) {
         return localStorage.getItem(`opr-pref-${name}`);

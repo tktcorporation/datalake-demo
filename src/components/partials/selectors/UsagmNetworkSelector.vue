@@ -46,11 +46,13 @@ export default {
 		return {
             selectedUsagmNetworks: null,
             networks: [
-                {name: 'VOA', iconClass: 'fab fa-voanews'},
-                {name: 'MBN', iconClass: 'fab fa-alhurra'},
-                {name: 'RFE/RL', iconClass: 'fab fa-rfe'},
-                {name: 'RFA', iconClass: 'fab fa-rfa'},
-                {name: 'OCB', iconClass: 'fab fa-radiotelevisionmarti'}
+                {name: 'Voice of America'},
+                {name: 'MBN'},
+                {name: 'RFE/RL'},
+                {name: 'RFA'},
+                {name: 'OCB'},
+                {name:'CurrentTime'},
+                {name:'Competitor'}
             ]
 		};
 	},
@@ -60,9 +62,11 @@ export default {
     },
 
 	methods: {
-
         onSelectUsagmNetwork(){
-            this.$emit('onSelectUsagmNetwork', _.map(this.selectedUsagmNetworks, 'name'))
+            let selectUsagmNetworks = this.selectedUsagmNetworks.join(
+                ','
+            );
+            this.$store.commit('selectUsagmNetwork', selectUsagmNetworks);
         }
 	}
 

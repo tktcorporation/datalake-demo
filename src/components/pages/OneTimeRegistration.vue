@@ -14,7 +14,7 @@
       </div>  
       <br>
       <div class = "row" >
-          <button type="button" class="btn btn-primary" @click="submitPreferences">Submit</button>
+          <button type="button" class="btn btn-primary" @click="onSubmitPreferences">Submit</button>
       </div>    
     </div>
 </template>        
@@ -27,6 +27,7 @@ import API from '../../api';
 import AuthorSelector from '../partials/selectors/AuthorSelector';
 import HostSelector from '../partials/selectors/HostSelector';
 import UsagmNetworkSelector from '../partials/selectors/UsagmNetworkSelector';
+import SocialProfileSelector from '../partials/selectors/SocialProfileSelector';
 import Vue from "vue"
 
 export default {
@@ -41,7 +42,6 @@ export default {
       AuthorSelector,
       HostSelector,
       UsagmNetworkSelector
-
     },
 
     data() {
@@ -58,8 +58,20 @@ export default {
     mounted() {},
 
     methods: {
-        async submitPreferences() {
-            console.log("I am in submit button");
+        async onSubmitPreferences() {
+            console.log("I am in submit button::::"+ this.$store.state.selectors.onetimeregister.selectedHostsIds);
+            console.log("I am in submit button::::"+ this.$store.state.selectors.onetimeregister.selectedAuthors);
+           let preferences = {
+                authors: this.$store.state.selectors.onetimeregister.selectedAuthors,
+                hostsIds: this.$store.state.selectors.onetimeregister.selectedHostsIds,
+                usagmNetworks:this.$store.state.selectors.onetimeregister.selectedUsagmNetworks
+            };
+            /*let preferences = {
+                authors: "james,Ruslan Smeshchuk,Ruslan Smeshchuk",
+                hostsIds: "b1f2bb70-5a00-4e34-adc5-c02b3d9a0bdf,b1f2bb70-5a00-4e34-adc5-c02b3d9a0bdf"
+            };*/
+            var res = await API.updateUserPreferences(preferences)
+            //TO DO: If this res is ok the redirect the user to main site
 
         }
 

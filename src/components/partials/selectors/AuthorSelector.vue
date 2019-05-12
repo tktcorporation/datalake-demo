@@ -1,14 +1,14 @@
 <template>
 
     <multiselect
-        v-model="selectedHosts"
+        v-model="selectedAuthors"
         name="author-selector"
         deselect-label="Can't unselect author"
         :multiple="true"
         placeholder="Select a author"
         :options="authors"
         :loading="isLoading"
-        @input="onSelect"
+        @input="onSelectAuthors"
         :searchable="true"
         :limit="3"
         :allow-empty="true"
@@ -29,7 +29,7 @@ export default {
     data() {
         return {
             authors: [],
-            selectedHosts: null,
+            selectedAuthors: null,
             isLoading: false
         };
     },
@@ -39,16 +39,15 @@ export default {
     },
 
     mounted() {
-        this.getHosts();
+        this.getAuthors();
     },
 
     destroyed() {},
 
     methods: {
-        getHosts() {
+        getAuthors() {
 
             this.isLoading = true;
-            this.isLoadingLabels = true;
 
             API.getAuthors().then(authors => {
                 this.authors = authors;
@@ -57,10 +56,11 @@ export default {
 
         },
 
-        onSelectNetwork(network) {},
-
-        onSelect() {
-            this.$emit("onSelect", this.selectedHosts);
+        onSelectAuthors() {
+            let selectAuthors = this.selectedAuthors.join(
+                ','
+            );
+            this.$store.commit('selectAuthors', selectAuthors);
         }
     }
 };

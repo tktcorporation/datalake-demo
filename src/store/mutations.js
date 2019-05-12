@@ -38,5 +38,14 @@ export default {
 
     selectNlpType(state, type) {
         state.selectors.social.selectedNlpType = type;
+    },
+    selectHostsIds(state, hostIds) {
+        state.selectors.onetimeregister.selectedHostsIds = hostIds;
+    },
+    selectAuthors(state, authors) {
+        state.selectors.onetimeregister.selectedAuthors = authors;
+    },
+    selectUsagmNetwork(state, usagmNetwork) {
+        state.selectors.onetimeregister.selectedUsagmNetworks = usagmNetwork;
     }
 };
