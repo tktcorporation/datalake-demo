@@ -46,14 +46,11 @@ export default {
 
     data() {
         return {
+            error: null
         };
     },
 
-    computed: {
-        user() {
-            return this.$store.state.user
-        }
-    },
+    computed: {},
 
     mounted() {},
 
@@ -68,9 +65,13 @@ export default {
                 authors: "james,Ruslan Smeshchuk,Ruslan Smeshchuk",
                 hostsIds: "b1f2bb70-5a00-4e34-adc5-c02b3d9a0bdf,b1f2bb70-5a00-4e34-adc5-c02b3d9a0bdf"
             };*/
-            var res = await API.updateUserPreferences(preferences)
-            //TO DO: If this res is ok the redirect the user to main site
-
+            try { 
+                var res = await API.updateUserPreferences(preferences)
+                let url = "/";
+                window.location = url;
+            } catch (err) {
+                this.error = err.toString();
+            }
         }
 
     }
