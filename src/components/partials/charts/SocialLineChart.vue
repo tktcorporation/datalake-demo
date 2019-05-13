@@ -126,10 +126,9 @@ export default {
                 let colors = scheme.colors();
                 //correct the format for chart rendering
                 this.metricsOverTime.forEach((metric, index) => {
-                    debugger;
                     let color = colors[index];
                     metric.forEach(dataPoint => {
-                        debugger;
+                        console.log('datapoint', dataPoint);
                         // push objects into the datasets
                         if (
                             this.data.datasets.filter(
