@@ -71,11 +71,16 @@ export default {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
                     if (this.date) {
+                        console.log(this.date.start);
+                        console.log(this.date.end);
+
                         API.getTagsOverTime({
                             tags: `${tag.name}`,
                             start: this.date.start,
                             end: this.date.end
                         }).then(data => {
+                            console.log('metrics', data);
+
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
@@ -93,6 +98,7 @@ export default {
                         API.getTagsOverTime({
                             tags: `${tag.name}`
                         }).then(data => {
+                            console.log('metrics90days', data);
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
@@ -120,8 +126,10 @@ export default {
                 let colors = scheme.colors();
                 //correct the format for chart rendering
                 this.metricsOverTime.forEach((metric, index) => {
+                    debugger;
                     let color = colors[index];
                     metric.forEach(dataPoint => {
+                        debugger;
                         // push objects into the datasets
                         if (
                             this.data.datasets.filter(
@@ -235,13 +243,17 @@ export default {
                 this.update();
             }
         },
-
         profileIds(val) {
             if (this.type === 'categories') {
                 this.update();
             }
         },
         type() {
+            if (this.type === 'categories') {
+                this.update();
+            }
+        },
+        date() {
             if (this.type === 'categories') {
                 this.update();
             }

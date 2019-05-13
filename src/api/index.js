@@ -228,6 +228,7 @@ const API = {
     },
 
     async getTagsOverTime(opts) {
+        console.log(opts)
         var merged = _.defaults(opts, {
             tags: 'Art',
             start: moment()
