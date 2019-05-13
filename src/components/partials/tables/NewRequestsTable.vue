@@ -68,7 +68,7 @@ export default {
       async approveUserRequest(dialog,user,index) {
           user.isActive = true;
           try { 
-              await API.updateUser(user);
+              var res = await API.updateUser(user);
               if(res.result == 'ok') this.approve.push(user.id);
           } catch(err) {
               alert("unable update the user");
@@ -78,7 +78,7 @@ export default {
       async rejectUserRequest(dialog,user,index) {
            user.isAction = false;
           try { 
-              await API.updateUser(user);
+              var res = await API.updateUser(user);
               if(res.result == 'ok') this.reject.push(user.id);
           } catch(err) {
               alert("unable update the user");
