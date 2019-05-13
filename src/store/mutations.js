@@ -39,6 +39,7 @@ export default {
     selectNlpType(state, type) {
         state.selectors.social.selectedNlpType = type;
     },
+    //one time register
     selectHostsIds(state, hostIds) {
         state.selectors.onetimeregister.selectedHostsIds = hostIds;
     },

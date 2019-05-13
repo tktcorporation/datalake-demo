@@ -17,17 +17,17 @@
                         </td>
                         <td>
                              <label>
-                                <input type="checkbox" v-bind:id = "index" v-bind:value= "user.id" :disabled="approve.length >= max && approve.indexOf(index) == -1" v-model="approve"
-                                  v-confirm="{loader: true, ok: dialog => approveUserRequest(dialog,user,index),
+                                <input type="checkbox" v-bind:id = "index" v-bind:value= "user.id" v-model="approve"
+                                  v-confirm="{loader: true, ok: dialog => approveUserRequest(dialog,user),
                                                                     cancel: dialog => cancelAction(dialog),
                                                                     message: 'Are you sure you want to approve this user?'}" 
-                                >
+                                >Approve
                         
                              </label>
                         </td>
                         <td>
                                 <label><input type="checkbox" v-bind:id = "index" v-bind:value= "user.id" v-model="reject"
-                                 v-confirm="{loader: true, ok: dialog => rejectUserRequest(dialog, user,index),
+                                 v-confirm="{loader: true, ok: dialog => rejectUserRequest(dialog, user),
                                                                     cancel: dialog => cancelAction(dialog),
                                                                     message: 'Are you sure you want to reject this user?'}"> Reject</label>
                         </td>
@@ -51,8 +51,7 @@ export default {
         return {
             users:[],
             approve:[],
-            reject:[],
-             max: 2
+            reject:[]
         };
     },
 
@@ -61,38 +60,33 @@ export default {
     },
 
     methods: {
-        async getNewUsers() {
+        getNewUsers() {
             API.getNewUsers().then(res => {
             this.users = res
         })
       },
-      async updateUser(updatedUser) {
-          var res = await API.updateUser(updatedUser);
-          if (res.result=="ok") {
-             console.debug("I am success");
-            //dialog.close();
-         }      
-         else {
-             console.debug("this is not success");
-         }
-      },
-      approveUserRequest(dialog,user,index) {
-           let user_action = dialog.node;
-           console.log("this is the user_action", user.email)
-           user.isActive = true;
-           this.updateUser(user);
-           this.approve.push(user.id);
+      async approveUserRequest(dialog,user,index) {
+          user.isActive = true;
+          try { 
+              await API.updateUser(user);
+              if(res.result == 'ok') this.approve.push(user.id);
+          } catch(err) {
+              alert("unable update the user");
+          }
            dialog.close();
         },
-      rejectUserRequest(dialog,user,index) {
-           //let user_action = dialog.node();
-           //console.log("this is the user_action", user_action)
+      async rejectUserRequest(dialog,user,index) {
            user.isAction = false;
-           this.reject.push(user.id);
+          try { 
+              await API.updateUser(user);
+              if(res.result == 'ok') this.reject.push(user.id);
+          } catch(err) {
+              alert("unable update the user");
+          }
            dialog.close();
         },
       cancelAction(dialog) {
-			//dialog.close();
+			dialog.close();
         }
     } 
 };

@@ -41,10 +41,6 @@ export default {
     mounted() {},
 
     methods: {
-        onOk() {
-
-        }
-
     }
 
 };
