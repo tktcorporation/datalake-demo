@@ -71,16 +71,11 @@ export default {
                 this.metricsOverTime = [];
                 await this.tagData.forEach(tag => {
                     if (this.date) {
-                        console.log(this.date.start);
-                        console.log(this.date.end);
-
                         API.getTagsOverTime({
                             tags: `${tag.name}`,
                             start: this.date.start,
                             end: this.date.end
                         }).then(data => {
-                            console.log('metrics', data);
-
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
@@ -98,7 +93,6 @@ export default {
                         API.getTagsOverTime({
                             tags: `${tag.name}`
                         }).then(data => {
-                            console.log('metrics90days', data);
                             this.metricsOverTime = [
                                 ...this.metricsOverTime,
                                 data
@@ -115,7 +109,15 @@ export default {
             }
         },
         render() {
+            console.log(this.tagData);
+            console.log(this.metricsOverTime);
+            console.log(this.data);
+            debugger;
             if (this.metricsOverTime.length === this.tagData.length) {
+                console.log(this.tagData);
+                console.log(this.metricsOverTime);
+                console.log(this.data);
+                debugger;
                 //only creates 12 colors right now
                 let scheme = new ColorScheme();
                 scheme
@@ -128,7 +130,6 @@ export default {
                 this.metricsOverTime.forEach((metric, index) => {
                     let color = colors[index];
                     metric.forEach(dataPoint => {
-                        console.log('datapoint', dataPoint);
                         // push objects into the datasets
                         if (
                             this.data.datasets.filter(
@@ -171,13 +172,16 @@ export default {
                         }
                     });
                 });
-                console.log(this.data);
 
                 //renderChart is part of Chart.js
                 this.renderChart(this.data, this.options);
             }
         },
         async update() {
+            console.log(this.tagData);
+            console.log(this.metricsOverTime);
+            console.log(this.data);
+            debugger;
             await this.getTagData().then(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
@@ -212,7 +216,6 @@ export default {
                     max = val;
                 }
             }
-            console.log(this.tags);
 
             this.tagData = [];
 
