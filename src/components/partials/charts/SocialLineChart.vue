@@ -1,5 +1,5 @@
 <script>
-import { Line } from 'vue-chartjs';
+import { Line, mixins } from 'vue-chartjs';
 import API from '../../../api';
 import moment from 'moment';
 const ColorScheme = require('color-scheme');
@@ -10,7 +10,7 @@ export default {
             isLoading: false,
             tagData: null,
             metricsOverTime: [],
-            data: {
+            chartData: {
                 datasets: []
             },
             options: {
@@ -25,7 +25,10 @@ export default {
                             type: 'time',
                             time: {
                                 format: 'MM/DD/YYYY',
-                                tooltipFormat: 'll'
+                                tooltipFormat: 'll',
+                                min: null,
+
+                                max: null
                             },
 
                             scaleLabel: {
@@ -63,7 +66,6 @@ export default {
     mounted() {
         this.getTagsOverTime();
     },
-
     methods: {
         async getTagsOverTime() {
             //get the metrics over time
@@ -109,15 +111,24 @@ export default {
             }
         },
         render() {
-            console.log(this.tagData);
-            console.log(this.metricsOverTime);
-            console.log(this.data);
-            debugger;
+            this.chartData = {
+                datasets: []
+            };
             if (this.metricsOverTime.length === this.tagData.length) {
-                console.log(this.tagData);
                 console.log(this.metricsOverTime);
-                console.log(this.data);
-                debugger;
+                if (this.date) {
+                    this.options.scales.xAxes[0].time.min = this.date.start;
+                    this.options.scales.xAxes[0].time.max = this.date.end;
+                } else {
+                    this.options.scales.xAxes[0].time.min = moment().subtract(
+                        90,
+                        'days'
+                    );
+                    this.options.scales.xAxes[0].time.max = moment().endOf(
+                        'day'
+                    );
+                }
+
                 //only creates 12 colors right now
                 let scheme = new ColorScheme();
                 scheme
@@ -132,11 +143,11 @@ export default {
                     metric.forEach(dataPoint => {
                         // push objects into the datasets
                         if (
-                            this.data.datasets.filter(
+                            this.chartData.datasets.filter(
                                 dataset => dataset.label === dataPoint.name
                             ).length > 0
                         ) {
-                            let currentDataset = this.data.datasets.filter(
+                            let currentDataset = this.chartData.datasets.filter(
                                 dataset => dataset.label === dataPoint.name
                             )[0];
                             let newDataPoint = {
@@ -165,8 +176,8 @@ export default {
                                     }
                                 ]
                             };
-                            this.data.datasets = [
-                                ...this.data.datasets,
+                            this.chartData.datasets = [
+                                ...this.chartData.datasets,
                                 newDataSet
                             ];
                         }
@@ -174,20 +185,20 @@ export default {
                 });
 
                 //renderChart is part of Chart.js
-                this.renderChart(this.data, this.options);
+                this.renderChart(this.chartData, this.options);
             }
         },
-        async update() {
-            console.log(this.tagData);
-            console.log(this.metricsOverTime);
-            console.log(this.data);
-            debugger;
+        async updateAll() {
             await this.getTagData().then(() => {
                 $(function() {
                     $('[data-toggle="popover"]').popover();
                 });
+                console.log(this.tagData);
+
                 // waits for tagData then renders
                 this.getTagsOverTime();
+                //this.update is a chartjs function
+                // this.update();
             });
         },
 
@@ -242,22 +253,22 @@ export default {
     watch: {
         network(val) {
             if (this.type === 'categories') {
-                this.update();
+                this.updateAll();
             }
         },
         profileIds(val) {
             if (this.type === 'categories') {
-                this.update();
+                this.updateAll();
             }
         },
         type() {
             if (this.type === 'categories') {
-                this.update();
+                this.updateAll();
             }
         },
         date() {
             if (this.type === 'categories') {
-                this.update();
+                this.updateAll();
             }
         }
     }
