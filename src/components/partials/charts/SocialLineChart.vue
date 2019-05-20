@@ -191,21 +191,21 @@ export default {
                     //renderChart is part of Chart.js
                     this.renderChart(this.chartData, this.options);
                 } else {
+                    let colorCount = 0;
                     this.metricsOverTime.forEach((metric, index) => {
-                        let color = colors[index];
                         metric.forEach(dataPoint => {
                             // push objects into the datasets
                             if (
                                 this.chartData.datasets.filter(
                                     dataset =>
                                         dataset.label ===
-                                        dataPoint.profile.name_en
+                                        dataPoint.profile.usagmNetwork
                                 ).length > 0
                             ) {
                                 let currentDataset = this.chartData.datasets.filter(
                                     dataset =>
                                         dataset.label ===
-                                        dataPoint.profile.name_en
+                                        dataPoint.profile.usagmNetwork
                                 )[0];
                                 let newDataPoint = {
                                     x: moment(`${dataPoint.date}`).format(
@@ -218,8 +218,10 @@ export default {
                                     newDataPoint
                                 ];
                             } else {
+                                let color = colors[colorCount];
+                                colorCount++;
                                 let newDataSet = {
-                                    label: dataPoint.profile.name_en,
+                                    label: dataPoint.profile.usagmNetwork,
                                     backgroundColor: `#${color}`,
                                     borderColor: `#${color}`,
                                     fill: false,
@@ -241,6 +243,8 @@ export default {
                         });
                     });
                     this.options.title.text = 'Engagements Over Time';
+                    this.options.scales.yAxes[0].scaleLabel.labelString =
+                        'Engagements';
                     //renderChart is part of Chart.js
                     this.renderChart(this.chartData, this.options);
                 }
