@@ -5,6 +5,7 @@ import moment from 'moment';
 const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
+    props: ['TopicsOverTime', 'NetworkOverTime'],
     data() {
         return {
             isLoading: false,
@@ -45,6 +46,109 @@ export default {
                             }
                         }
                     ]
+                },
+                tooltips: {
+                    callbacks: {
+                        title: (toolTipItem, data) => {
+                            const dataPointInfo = this.metricsOverTime[
+                                toolTipItem[0].datasetIndex
+                            ][toolTipItem[0].index];
+                            console.log('titletooltip', toolTipItem);
+                            console.log('titledata', data);
+                            console.log(dataPointInfo);
+
+                            return `${dataPointInfo.name} - ${
+                                toolTipItem[0].label
+                            }`;
+                        },
+                        label: (toolTipItem, data) => {
+                            const dataPoint =
+                                data.datasets[toolTipItem.datasetIndex].data[
+                                    toolTipItem.index
+                                ];
+
+                            const dataPointInfo = this.metricsOverTime[
+                                toolTipItem.datasetIndex
+                            ][toolTipItem.index];
+
+                            console.log('tooltip', toolTipItem);
+                            console.log('data', data);
+                            console.log(dataPoint);
+                            console.log(dataPointInfo);
+
+                            const facebookComments = `Facebook Comments: ${
+                                dataPointInfo.facebook_comments
+                            }`;
+
+                            const facebookInteractions = `Facebook Interactions: ${
+                                dataPointInfo.facebook_interactions
+                            }`;
+
+                            const facebookReactions = `Facebook Reactions: ${
+                                dataPointInfo.facebook_reactions
+                            }`;
+                            const facebookShares = `Facebook Shares: ${
+                                dataPointInfo.facebook_shares
+                            }`;
+
+                            const instagramComments = `Instagram Comments: ${
+                                dataPointInfo.instagram_comments
+                            }`;
+                            const instagramInteractions = `Instagram Interactions: ${
+                                dataPointInfo.instagram_interactions
+                            }`;
+                            const instagramLikes = `Instagram Likes: ${
+                                dataPointInfo.instagram_likes
+                            }`;
+
+                            const twitterInteractions = `Twitter Interactions: ${
+                                dataPointInfo.twitter_interactions
+                            }`;
+                            const twitterLikes = `Twitter Likes: ${
+                                dataPointInfo.twitter_likes
+                            }`;
+                            const twitterShares = `Twitter Shares: ${
+                                dataPointInfo.twitter_shares
+                            }`;
+
+                            const youtubeInteractions = `Youtube Interactions: ${
+                                dataPointInfo.youtube_interactions
+                            }`;
+                            const youtubeLikes = `Youtube Likes: ${
+                                dataPointInfo.youtube_likes
+                            }`;
+                            const youtubeImpressions = `Youtube Impressions: ${
+                                dataPointInfo.youtube_impressions
+                            }`;
+                            const youtubeComments = `Youtube Comments: ${
+                                dataPointInfo.youtube_comments
+                            }`;
+
+                            const totalInteractions = `Total Interactions: ${
+                                dataPointInfo.interactions
+                            }`;
+
+                            let toolTips = [
+                                facebookInteractions,
+                                facebookComments,
+                                facebookReactions,
+                                facebookShares,
+                                instagramInteractions,
+                                instagramLikes,
+                                instagramComments,
+                                twitterInteractions,
+                                twitterLikes,
+                                twitterShares,
+                                youtubeInteractions,
+                                youtubeComments,
+                                youtubeLikes,
+                                youtubeImpressions,
+                                totalInteractions
+                            ];
+
+                            return toolTips;
+                        }
+                    }
                 }
             }
         };
@@ -128,7 +232,6 @@ export default {
                         'day'
                     );
                 }
-
                 //only creates 12 colors right now
                 let scheme = new ColorScheme();
                 scheme
@@ -137,55 +240,117 @@ export default {
                     .variation('hard');
 
                 let colors = scheme.colors();
-                //correct the format for chart rendering
-                this.metricsOverTime.forEach((metric, index) => {
-                    let color = colors[index];
-                    metric.forEach(dataPoint => {
-                        // push objects into the datasets
-                        if (
-                            this.chartData.datasets.filter(
-                                dataset => dataset.label === dataPoint.name
-                            ).length > 0
-                        ) {
-                            let currentDataset = this.chartData.datasets.filter(
-                                dataset => dataset.label === dataPoint.name
-                            )[0];
-                            let newDataPoint = {
-                                x: moment(`${dataPoint.date}`).format(
-                                    'MM/DD/YYYY'
-                                ),
-                                y: dataPoint.interactions
-                            };
-                            currentDataset.data = [
-                                ...currentDataset.data,
-                                newDataPoint
-                            ];
-                        } else {
-                            let newDataSet = {
-                                label: dataPoint.name,
-                                backgroundColor: `#${color}`,
-                                borderColor: `#${color}`,
-                                fill: false,
-                                pointRadius: 2,
-                                data: [
-                                    {
-                                        x: moment(`${dataPoint.date}`).format(
-                                            'MM/DD/YYYY'
-                                        ),
-                                        y: dataPoint.interactions
-                                    }
-                                ]
-                            };
-                            this.chartData.datasets = [
-                                ...this.chartData.datasets,
-                                newDataSet
-                            ];
-                        }
-                    });
-                });
 
-                //renderChart is part of Chart.js
-                this.renderChart(this.chartData, this.options);
+                // difference between all graphs
+
+                if (this.TopicsOverTime) {
+                    //correct the format for chart rendering
+                    this.metricsOverTime.forEach((metric, index) => {
+                        let color = colors[index];
+                        metric.forEach(dataPoint => {
+                            // push objects into the datasets
+                            if (
+                                this.chartData.datasets.filter(
+                                    dataset => dataset.label === dataPoint.name
+                                ).length > 0
+                            ) {
+                                let currentDataset = this.chartData.datasets.filter(
+                                    dataset => dataset.label === dataPoint.name
+                                )[0];
+                                let newDataPoint = {
+                                    x: moment(`${dataPoint.date}`).format(
+                                        'MM/DD/YYYY'
+                                    ),
+                                    y: dataPoint.interactions
+                                };
+                                currentDataset.data = [
+                                    ...currentDataset.data,
+                                    newDataPoint
+                                ];
+                            } else {
+                                let newDataSet = {
+                                    label: dataPoint.name,
+                                    backgroundColor: `#${color}`,
+                                    borderColor: `#${color}`,
+                                    fill: false,
+                                    pointRadius: 2,
+                                    data: [
+                                        {
+                                            x: moment(
+                                                `${dataPoint.date}`
+                                            ).format('MM/DD/YYYY'),
+                                            y: dataPoint.interactions
+                                        }
+                                    ]
+                                };
+                                this.chartData.datasets = [
+                                    ...this.chartData.datasets,
+                                    newDataSet
+                                ];
+                            }
+                        });
+                    });
+
+                    //renderChart is part of Chart.js
+                    this.renderChart(this.chartData, this.options);
+                } else {
+                    let colorCount = 0;
+                    this.metricsOverTime.forEach((metric, index) => {
+                        metric.forEach(dataPoint => {
+                            // push objects into the datasets
+                            if (
+                                this.chartData.datasets.filter(
+                                    dataset =>
+                                        dataset.label ===
+                                        dataPoint.profile.usagmNetwork
+                                ).length > 0
+                            ) {
+                                let currentDataset = this.chartData.datasets.filter(
+                                    dataset =>
+                                        dataset.label ===
+                                        dataPoint.profile.usagmNetwork
+                                )[0];
+                                let newDataPoint = {
+                                    x: moment(`${dataPoint.date}`).format(
+                                        'MM/DD/YYYY'
+                                    ),
+                                    y: dataPoint.interactions
+                                };
+                                currentDataset.data = [
+                                    ...currentDataset.data,
+                                    newDataPoint
+                                ];
+                            } else {
+                                let color = colors[colorCount];
+                                colorCount++;
+                                let newDataSet = {
+                                    label: dataPoint.profile.usagmNetwork,
+                                    backgroundColor: `#${color}`,
+                                    borderColor: `#${color}`,
+                                    fill: false,
+                                    pointRadius: 2,
+                                    data: [
+                                        {
+                                            x: moment(
+                                                `${dataPoint.date}`
+                                            ).format('MM/DD/YYYY'),
+                                            y: dataPoint.interactions
+                                        }
+                                    ]
+                                };
+                                this.chartData.datasets = [
+                                    ...this.chartData.datasets,
+                                    newDataSet
+                                ];
+                            }
+                        });
+                    });
+                    this.options.title.text = 'Engagements Over Time';
+                    this.options.scales.yAxes[0].scaleLabel.labelString =
+                        'Engagements';
+                    //renderChart is part of Chart.js
+                    this.renderChart(this.chartData, this.options);
+                }
             }
         },
         async updateAll() {

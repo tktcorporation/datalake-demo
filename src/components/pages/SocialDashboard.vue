@@ -30,7 +30,13 @@
 
     <div class="row mt-3">
       <div class="col">
-        <SocialLineChart class="h-100"></SocialLineChart>
+        <SocialLineChart class="h-100" NetworkOverTime="true"></SocialLineChart>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col">
+        <SocialLineChart class="h-100" TopicsOverTime="true"></SocialLineChart>
       </div>
     </div>
 
