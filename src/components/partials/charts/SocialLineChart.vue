@@ -49,6 +49,18 @@ export default {
                 },
                 tooltips: {
                     callbacks: {
+                        title: (toolTipItem, data) => {
+                            const dataPointInfo = this.metricsOverTime[
+                                toolTipItem[0].datasetIndex
+                            ][toolTipItem[0].index];
+                            console.log('titletooltip', toolTipItem);
+                            console.log('titledata', data);
+                            console.log(dataPointInfo);
+
+                            return `${dataPointInfo.name} - ${
+                                toolTipItem[0].label
+                            }`;
+                        },
                         label: (toolTipItem, data) => {
                             const dataPoint =
                                 data.datasets[toolTipItem.datasetIndex].data[
