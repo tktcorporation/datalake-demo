@@ -46,6 +46,97 @@ export default {
                             }
                         }
                     ]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: (toolTipItem, data) => {
+                            const dataPoint =
+                                data.datasets[toolTipItem.datasetIndex].data[
+                                    toolTipItem.index
+                                ];
+
+                            const dataPointInfo = this.metricsOverTime[
+                                toolTipItem.datasetIndex
+                            ][toolTipItem.index];
+
+                            console.log('tooltip', toolTipItem);
+                            console.log('data', data);
+                            console.log(dataPoint);
+                            console.log(dataPointInfo);
+
+                            const facebookComments = `Facebook Comments: ${
+                                dataPointInfo.facebook_comments
+                            }`;
+
+                            const facebookInteractions = `Facebook Interactions: ${
+                                dataPointInfo.facebook_interactions
+                            }`;
+
+                            const facebookReactions = `Facebook Reactions: ${
+                                dataPointInfo.facebook_reactions
+                            }`;
+                            const facebookShares = `Facebook Shares: ${
+                                dataPointInfo.facebook_shares
+                            }`;
+
+                            const instagramComments = `Instagram Comments: ${
+                                dataPointInfo.instagram_comments
+                            }`;
+                            const instagramInteractions = `Instagram Interactions: ${
+                                dataPointInfo.instagram_interactions
+                            }`;
+                            const instagramLikes = `Instagram Likes: ${
+                                dataPointInfo.instagram_likes
+                            }`;
+
+                            const twitterInteractions = `Twitter Interactions: ${
+                                dataPointInfo.twitter_interactions
+                            }`;
+                            const twitterLikes = `Twitter Likes: ${
+                                dataPointInfo.twitter_likes
+                            }`;
+                            const twitterShares = `Twitter Shares: ${
+                                dataPointInfo.twitter_shares
+                            }`;
+
+                            const youtubeInteractions = `Youtube Interactions: ${
+                                dataPointInfo.youtube_interactions
+                            }`;
+                            const youtubeLikes = `Youtube Likes: ${
+                                dataPointInfo.youtube_likes
+                            }`;
+                            const youtubeImpressions = `Youtube Impressions: ${
+                                dataPointInfo.youtube_impressions
+                            }`;
+                            const youtubeComments = `Youtube Comments: ${
+                                dataPointInfo.youtube_comments
+                            }`;
+
+                            const totalInteractions = `Total Interactions: ${
+                                dataPointInfo.interactions
+                            }`;
+
+                            let toolTips = [
+                                facebookInteractions,
+                                facebookComments,
+                                facebookReactions,
+                                facebookShares,
+                                instagramInteractions,
+                                instagramLikes,
+                                instagramComments,
+                                twitterInteractions,
+                                twitterLikes,
+                                twitterShares,
+                                youtubeInteractions,
+                                youtubeComments,
+                                youtubeLikes,
+                                youtubeImpressions,
+                                totalInteractions
+                            ];
+
+                            return toolTips;
+                        }
+                    }
                 }
             }
         };
