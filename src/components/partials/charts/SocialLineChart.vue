@@ -5,6 +5,7 @@ import moment from 'moment';
 const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
+    props: ['TopicsOverTime', 'NetworkOverTime'],
     data() {
         return {
             isLoading: false,
@@ -128,7 +129,6 @@ export default {
                         'day'
                     );
                 }
-
                 //only creates 12 colors right now
                 let scheme = new ColorScheme();
                 scheme
@@ -137,55 +137,113 @@ export default {
                     .variation('hard');
 
                 let colors = scheme.colors();
-                //correct the format for chart rendering
-                this.metricsOverTime.forEach((metric, index) => {
-                    let color = colors[index];
-                    metric.forEach(dataPoint => {
-                        // push objects into the datasets
-                        if (
-                            this.chartData.datasets.filter(
-                                dataset => dataset.label === dataPoint.name
-                            ).length > 0
-                        ) {
-                            let currentDataset = this.chartData.datasets.filter(
-                                dataset => dataset.label === dataPoint.name
-                            )[0];
-                            let newDataPoint = {
-                                x: moment(`${dataPoint.date}`).format(
-                                    'MM/DD/YYYY'
-                                ),
-                                y: dataPoint.interactions
-                            };
-                            currentDataset.data = [
-                                ...currentDataset.data,
-                                newDataPoint
-                            ];
-                        } else {
-                            let newDataSet = {
-                                label: dataPoint.name,
-                                backgroundColor: `#${color}`,
-                                borderColor: `#${color}`,
-                                fill: false,
-                                pointRadius: 2,
-                                data: [
-                                    {
-                                        x: moment(`${dataPoint.date}`).format(
-                                            'MM/DD/YYYY'
-                                        ),
-                                        y: dataPoint.interactions
-                                    }
-                                ]
-                            };
-                            this.chartData.datasets = [
-                                ...this.chartData.datasets,
-                                newDataSet
-                            ];
-                        }
-                    });
-                });
 
-                //renderChart is part of Chart.js
-                this.renderChart(this.chartData, this.options);
+                // difference between all graphs
+
+                if (this.TopicsOverTime) {
+                    //correct the format for chart rendering
+                    this.metricsOverTime.forEach((metric, index) => {
+                        let color = colors[index];
+                        metric.forEach(dataPoint => {
+                            // push objects into the datasets
+                            if (
+                                this.chartData.datasets.filter(
+                                    dataset => dataset.label === dataPoint.name
+                                ).length > 0
+                            ) {
+                                let currentDataset = this.chartData.datasets.filter(
+                                    dataset => dataset.label === dataPoint.name
+                                )[0];
+                                let newDataPoint = {
+                                    x: moment(`${dataPoint.date}`).format(
+                                        'MM/DD/YYYY'
+                                    ),
+                                    y: dataPoint.interactions
+                                };
+                                currentDataset.data = [
+                                    ...currentDataset.data,
+                                    newDataPoint
+                                ];
+                            } else {
+                                let newDataSet = {
+                                    label: dataPoint.name,
+                                    backgroundColor: `#${color}`,
+                                    borderColor: `#${color}`,
+                                    fill: false,
+                                    pointRadius: 2,
+                                    data: [
+                                        {
+                                            x: moment(
+                                                `${dataPoint.date}`
+                                            ).format('MM/DD/YYYY'),
+                                            y: dataPoint.interactions
+                                        }
+                                    ]
+                                };
+                                this.chartData.datasets = [
+                                    ...this.chartData.datasets,
+                                    newDataSet
+                                ];
+                            }
+                        });
+                    });
+
+                    //renderChart is part of Chart.js
+                    this.renderChart(this.chartData, this.options);
+                } else {
+                    this.metricsOverTime.forEach((metric, index) => {
+                        let color = colors[index];
+                        metric.forEach(dataPoint => {
+                            // push objects into the datasets
+                            if (
+                                this.chartData.datasets.filter(
+                                    dataset =>
+                                        dataset.label ===
+                                        dataPoint.profile.name_en
+                                ).length > 0
+                            ) {
+                                let currentDataset = this.chartData.datasets.filter(
+                                    dataset =>
+                                        dataset.label ===
+                                        dataPoint.profile.name_en
+                                )[0];
+                                let newDataPoint = {
+                                    x: moment(`${dataPoint.date}`).format(
+                                        'MM/DD/YYYY'
+                                    ),
+                                    y: dataPoint.interactions
+                                };
+                                currentDataset.data = [
+                                    ...currentDataset.data,
+                                    newDataPoint
+                                ];
+                            } else {
+                                let newDataSet = {
+                                    label: dataPoint.profile.name_en,
+                                    backgroundColor: `#${color}`,
+                                    borderColor: `#${color}`,
+                                    fill: false,
+                                    pointRadius: 2,
+                                    data: [
+                                        {
+                                            x: moment(
+                                                `${dataPoint.date}`
+                                            ).format('MM/DD/YYYY'),
+                                            y: dataPoint.interactions
+                                        }
+                                    ]
+                                };
+                                this.chartData.datasets = [
+                                    ...this.chartData.datasets,
+                                    newDataSet
+                                ];
+                            }
+                        });
+                    });
+                    this.options.title.text = 'Engagements Over Time';
+                    //renderChart is part of Chart.js
+                    this.renderChart(this.chartData, this.options);
+                }
             }
         },
         async updateAll() {
