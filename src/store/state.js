@@ -11,7 +11,8 @@ export default {
             selectedNlpType: 'topics',
             nlpTypes: ['topics', 'entities', 'categories'],
             dates: null,
-            tagData: []
+            tagData: [],
+            tagsOverTime: []
         },
         web: {},
         content: {},

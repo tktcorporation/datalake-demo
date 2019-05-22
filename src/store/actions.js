@@ -1,7 +1,41 @@
 import API from '../api/index';
 import _ from 'lodash';
 export default {
-    async getTagsOverTime() {},
+    async getTagsOverTime(context) {
+        try {
+            await context.dispatch('getTagData');
+        } catch (err) {
+            console.log(err);
+        }
+        if (context.state.selectors.social.selectedNlpType === 'categories') {
+            try {
+                await context.getters.tagData.forEach(tag => {
+                    if (context.state.selectors.social.dates) {
+                        API.getTagsOverTime({
+                            tags: `${tag.name}`,
+                            start: context.state.selectors.social.dates.start,
+                            end: context.state.selectors.social.dates.end
+                        }).then(data => {
+                            console.log('metricovertime data', data);
+
+                            context.commit('getTagsOverTime', data);
+                        });
+                    } else {
+                        // 90 days default
+                        API.getTagsOverTime({
+                            tags: `${tag.name}`
+                        }).then(data => {
+                            console.log('metricovertime data', data);
+
+                            context.commit('getTagsOverTime', data);
+                        });
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    },
 
     async getTagData(context) {
         function parseNumber(value) {

@@ -95,24 +95,31 @@ export default {
 
     mounted() {
         this.$store.dispatch('getTagData'),
+            this.$store.dispatch('getTagsOverTime'),
             this.$store.watch(
                 state => state.selectors.social.selectedProfileIds,
                 () => {
-                    console.log('updating profile ids');
+                    this.$store.dispatch('getTagData');
+                }
+            ),
+            this.$store.watch(
+                state => state.selectors.social.selectedNetwork,
+                () => {
+                    this.$store.dispatch('getTagData');
+                }
+            ),
+            this.$store.watch(
+                state => state.selectors.social.selectedNlpType,
+                () => {
+                    this.$store.dispatch('getTagData');
+                }
+            ),
+            this.$store.watch(
+                state => state.selectors.social.dates,
+                () => {
+                    this.$store.dispatch('getTagData');
                 }
             );
-        this.$store.watch(
-            state => state.selectors.social.selectedNetwork,
-            () => {
-                console.log('updating network');
-            }
-        );
-        this.$store.watch(
-            state => state.selectors.social.selectedNlpType,
-            () => {
-                console.log('updating selected type');
-            }
-        );
     }
 };
 </script>
