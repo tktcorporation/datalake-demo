@@ -1,5 +1,6 @@
 <template>
   <div class="container" align="left">
+    <!-- Selectors !-->
     <div class="row">
       <div class="col-md-6">
         <social-profile-selector></social-profile-selector>
@@ -12,6 +13,7 @@
       </div>
     </div>
 
+    <!-- Tabs !-->
     <ul class="nav nav-tabs mt-3 mb-3">
       <li class="nav-item" v-for="(type, index) in nlpTypes" :key="index">
         <span
@@ -22,24 +24,29 @@
       </li>
     </ul>
 
+    <!-- Bar Graph !-->
     <div class="row" v-for="(type, index) in nlpTypes" :key="index">
       <div class="col" v-show="selectedNlpType == type">
         <tag-performance-bar></tag-performance-bar>
       </div>
     </div>
 
+    <!-- Line Charts !-->
     <div class="row mt-3">
       <div class="col">
-        <SocialLineChart class="h-100" NetworkOverTime="true"></SocialLineChart>
+        <!-- Comparing Networks !-->
+        <SocialLineChart :id="1" class="h-100" NetworkOverTime="true"></SocialLineChart>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col">
-        <SocialLineChart class="h-100" TopicsOverTime="true"></SocialLineChart>
+        <!-- Comparing Topics !-->
+        <SocialLineChart :id="2" class="h-100" TopicsOverTime="true"></SocialLineChart>
       </div>
     </div>
 
+    <!-- Pie Chart !-->
     <div class="row mt-3">
       <div class="col">
         <DonutNew class="h-100"></DonutNew>

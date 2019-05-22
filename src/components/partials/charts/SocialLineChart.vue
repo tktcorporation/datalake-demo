@@ -1,5 +1,5 @@
 <script>
-import { Line, mixins } from 'vue-chartjs';
+import { Line } from 'vue-chartjs';
 import API from '../../../api';
 import moment from 'moment';
 const ColorScheme = require('color-scheme');
@@ -11,6 +11,7 @@ export default {
             isLoading: false,
             tagData: null,
             metricsOverTime: [],
+            topics: [],
             chartData: {
                 datasets: []
             },
@@ -50,18 +51,62 @@ export default {
                 tooltips: {
                     callbacks: {
                         title: (toolTipItem, data) => {
-                            const dataPointInfo = this.metricsOverTime[
-                                toolTipItem[0].datasetIndex
-                            ][toolTipItem[0].index];
+                            if (this.TopicsOverTime) {
+                                let dataPointInfo = this.metricsOverTime[
+                                    toolTipItem[0].datasetIndex
+                                ][toolTipItem[0].index];
+                                console.log(dataPointInfo);
+                                return `${dataPointInfo.name} - ${
+                                    toolTipItem[0].label
+                                }`;
+                            } else {
+                                const dataPoint =
+                                    data.datasets[toolTipItem[0].datasetIndex]
+                                        .data[toolTipItem[0].index];
+
+                                console.log(
+                                    `${
+                                        this.metricsOverTime
+                                            .flat()
+                                            .filter(item => {
+                                                return (
+                                                    moment(
+                                                        `${item.date}`
+                                                    ).format('MM/DD/YYYY') ==
+                                                        dataPoint.x &&
+                                                    item.interactions ==
+                                                        dataPoint.y
+                                                );
+                                            })[0].name
+                                    } - ${
+                                        this.metricsOverTime
+                                            .flat()
+                                            .filter(item => {
+                                                return (
+                                                    moment(
+                                                        `${item.date}`
+                                                    ).format('MM/DD/YYYY') ==
+                                                        dataPoint.x &&
+                                                    item.interactions ==
+                                                        dataPoint.y
+                                                );
+                                            })[0].date
+                                    }`
+                                );
+                                debugger;
+                            }
+
+                            console.log(
+                                'these are the metrics',
+                                this.metricsOverTime
+                            );
                             console.log('titletooltip', toolTipItem);
                             console.log('titledata', data);
-                            console.log(dataPointInfo);
-
-                            return `${dataPointInfo.name} - ${
-                                toolTipItem[0].label
-                            }`;
                         },
                         label: (toolTipItem, data) => {
+                            if (this.TopicsOverTime) {
+                            }
+
                             const dataPoint =
                                 data.datasets[toolTipItem.datasetIndex].data[
                                     toolTipItem.index
@@ -71,10 +116,14 @@ export default {
                                 toolTipItem.datasetIndex
                             ][toolTipItem.index];
 
-                            console.log('tooltip', toolTipItem);
-                            console.log('data', data);
-                            console.log(dataPoint);
+                            console.log(
+                                'these are the metrics',
+                                this.metricsOverTime
+                            );
+                            console.log('titletooltip', toolTipItem);
+                            console.log('titledata', data);
                             console.log(dataPointInfo);
+                            debugger;
 
                             const facebookComments = `Facebook Comments: ${
                                 dataPointInfo.facebook_comments
@@ -245,6 +294,7 @@ export default {
 
                 if (this.TopicsOverTime) {
                     //correct the format for chart rendering
+
                     this.metricsOverTime.forEach((metric, index) => {
                         let color = colors[index];
                         metric.forEach(dataPoint => {
@@ -343,6 +393,7 @@ export default {
                                     newDataSet
                                 ];
                             }
+                            this.topics.push(dataPoint);
                         });
                     });
                     this.options.title.text = 'Engagements Over Time';
@@ -355,11 +406,6 @@ export default {
         },
         async updateAll() {
             await this.getTagData().then(() => {
-                $(function() {
-                    $('[data-toggle="popover"]').popover();
-                });
-                console.log(this.tagData);
-
                 // waits for tagData then renders
                 this.getTagsOverTime();
                 //this.update is a chartjs function
