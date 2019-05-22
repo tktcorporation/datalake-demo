@@ -10,7 +10,8 @@ export default {
             selectedNetwork: null,
             selectedNlpType: 'topics',
             nlpTypes: ['topics', 'entities', 'categories'],
-            dates: null
+            dates: null,
+            tagData: []
         },
         web: {},
         content: {},

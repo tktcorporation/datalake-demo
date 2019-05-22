@@ -91,6 +91,9 @@ export default {
         onSelectedNlpType(type) {
             this.$store.commit('selectNlpType', type);
         }
+    },
+    mounted() {
+        this.$store.dispatch('getTagData');
     }
 };
 </script>

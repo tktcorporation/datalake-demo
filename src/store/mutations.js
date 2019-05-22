@@ -26,6 +26,10 @@ export default {
         state.user.isSuper = isLevel('super');
         state.user.authenticated = isLevel('user');
     },
+    // API
+    getTagData(state, tagData) {
+        state.selectors.social.tagData = tagData;
+    },
 
     // Social
     selectNetwork(state, network) {
