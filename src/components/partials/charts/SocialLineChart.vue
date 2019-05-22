@@ -410,7 +410,6 @@ export default {
                 this.getTagsOverTime();
                 //this.update is a chartjs function
                 // this.update();
-                this.$store.dispatch('getTagData');
             });
         },
 
