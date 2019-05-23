@@ -16,7 +16,7 @@ export default {
                             start: context.state.selectors.social.dates.start,
                             end: context.state.selectors.social.dates.end
                         }).then(data => {
-                            console.log('metricovertime data', data);
+                            console.log('tagsovertime data', data);
 
                             context.commit('getTagsOverTime', data);
                         });
@@ -25,7 +25,7 @@ export default {
                         API.getTagsOverTime({
                             tags: `${tag.name}`
                         }).then(data => {
-                            console.log('metricovertime data', data);
+                            console.log('tagsovertime data', data);
 
                             context.commit('getTagsOverTime', data);
                         });
