@@ -57,11 +57,11 @@
     </div>
 
     <!-- Pie Chart !-->
-    <div class="row mt-3">
+    <!-- <div class="row mt-3">
       <div class="col">
-        <DonutNew class="h-100"></DonutNew>
+        <DonutNew v-if="this.selectedNlpType === 'categories'" class="h-100"></DonutNew>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
