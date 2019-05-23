@@ -217,7 +217,10 @@ export default {
         }
     },
     mounted() {
-        this.getTagsOverTime();
+        console.log('im mounted');
+
+        this.$store.dispatch('getTagsOverTime');
+        // this.getTagsOverTime();
     },
     methods: {
         async getTagsOverTime() {

@@ -105,7 +105,6 @@ export default {
 
     mounted() {
         this.$store.dispatch('getTagData'),
-            this.$store.dispatch('getTagsOverTime'),
             this.$store.watch(
                 state => state.selectors.social.selectedProfileIds,
                 () => {

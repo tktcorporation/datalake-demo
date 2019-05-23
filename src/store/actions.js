@@ -2,35 +2,47 @@ import API from '../api/index';
 import _ from 'lodash';
 export default {
     async getTagsOverTime(context) {
-        try {
-            await context.dispatch('getTagData');
-        } catch (err) {
-            console.log(err);
-        }
         if (context.state.selectors.social.selectedNlpType === 'categories') {
             try {
-                await context.getters.tagData.forEach(tag => {
-                    if (context.state.selectors.social.dates) {
-                        API.getTagsOverTime({
-                            tags: `${tag.name}`,
-                            start: context.state.selectors.social.dates.start,
-                            end: context.state.selectors.social.dates.end
-                        }).then(data => {
-                            console.log('tagsovertime data', data);
-
-                            context.commit('getTagsOverTime', data);
-                        });
-                    } else {
-                        // 90 days default
-                        API.getTagsOverTime({
-                            tags: `${tag.name}`
-                        }).then(data => {
-                            console.log('tagsovertime data', data);
-
-                            context.commit('getTagsOverTime', data);
-                        });
+                let isFinished = 0;
+                let tagsArray = [];
+                return await context.getters.tagData.forEach(
+                    async (tag, index, array) => {
+                        if (context.state.selectors.social.dates) {
+                            await API.getTagsOverTime({
+                                tags: `${tag.name}`,
+                                start:
+                                    context.state.selectors.social.dates.start,
+                                end: context.state.selectors.social.dates.end
+                            }).then(data => {
+                                tagsArray.push(data);
+                                isFinished++;
+                                if (isFinished === array.length) {
+                                    console.log('tagsarray', tagsArray);
+                                    context.commit(
+                                        'getTagsOverTime',
+                                        tagsArray
+                                    );
+                                }
+                            });
+                        } else {
+                            // 90 days default
+                            await API.getTagsOverTime({
+                                tags: `${tag.name}`
+                            }).then(data => {
+                                tagsArray.push(data);
+                                isFinished++;
+                                if (isFinished === array.length) {
+                                    console.log('tagsarray', tagsArray);
+                                    context.commit(
+                                        'getTagsOverTime',
+                                        tagsArray
+                                    );
+                                }
+                            });
+                        }
                     }
-                });
+                );
             } catch (error) {
                 console.log(error);
             }

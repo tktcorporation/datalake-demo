@@ -31,7 +31,12 @@ export default {
         state.selectors.social.tagData = tagData;
     },
     getTagsOverTime(state, tagsOverTime) {
-        [...state.selectors.social.tagsOverTime, tagsOverTime];
+        // state.selectors.social.tagsOverTime = [
+        //     ...state.selectors.social.tagsOverTime,
+        //     tagsOverTime
+        // ];
+
+        state.selectors.social.tagsOverTime = tagsOverTime;
     },
 
     // Social
