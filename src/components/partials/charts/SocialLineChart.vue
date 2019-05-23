@@ -2,6 +2,7 @@
 import { Line } from 'vue-chartjs';
 import API from '../../../api';
 import moment from 'moment';
+import { clearInterval } from 'timers';
 const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
@@ -202,6 +203,9 @@ export default {
     computed: {
         tagsOverTime() {
             return this.$store.getters.tagsOverTime;
+        },
+        dates() {
+            return this.$store.getters.dates;
         }
     },
     mounted() {
@@ -209,39 +213,43 @@ export default {
 
         this.$store.watch(
             state => state.selectors.social.selectedProfileIds,
-            () => {
-                this.$store.dispatch('getTagsOverTime');
+            async () => {
+                await this.$store.dispatch('getTagsOverTime');
             }
         ),
             this.$store.watch(
                 state => state.selectors.social.selectedNetwork,
-                () => {
-                    this.$store.dispatch('getTagsOverTime');
+                async () => {
+                    await this.$store.dispatch('getTagsOverTime');
                 }
             ),
             this.$store.watch(
                 state => state.selectors.social.selectedNlpType,
-                () => {
-                    this.$store.dispatch('getTagsOverTime');
+                async () => {
+                    await this.$store.dispatch('getTagsOverTime');
                 }
             ),
             this.$store.watch(
                 state => state.selectors.social.dates,
-                () => {
-                    this.$store.dispatch('getTagsOverTime');
+                async () => {
+                    await this.$store.dispatch('getTagsOverTime');
                 }
             );
+    },
+    watch: {
+        tagsOverTime() {
+            this.render();
+        }
     },
     methods: {
         render() {
             this.chartData = {
                 datasets: []
             };
-            if (this.metricsOverTime.length === this.tagData.length) {
-                console.log(this.metricsOverTime);
-                if (this.date) {
-                    this.options.scales.xAxes[0].time.min = this.date.start;
-                    this.options.scales.xAxes[0].time.max = this.date.end;
+            if (this.tagsOverTime) {
+                if (this.dates) {
+                    this.options.scales.xAxes[0].time.min = this.dates.start;
+                    this.options.scales.xAxes[0].time.max = this.dates.end;
                 } else {
                     this.options.scales.xAxes[0].time.min = moment().subtract(
                         90,
@@ -265,7 +273,7 @@ export default {
                 if (this.TopicsOverTime) {
                     //correct the format for chart rendering
 
-                    this.metricsOverTime.forEach((metric, index) => {
+                    this.tagsOverTime.forEach((metric, index) => {
                         let color = colors[index];
                         metric.forEach(dataPoint => {
                             // push objects into the datasets
@@ -315,7 +323,7 @@ export default {
                     this.renderChart(this.chartData, this.options);
                 } else {
                     let colorCount = 0;
-                    this.metricsOverTime.forEach((metric, index) => {
+                    this.tagsOverTime.forEach((metric, index) => {
                         metric.forEach(dataPoint => {
                             // push objects into the datasets
                             if (
@@ -363,7 +371,6 @@ export default {
                                     newDataSet
                                 ];
                             }
-                            this.topics.push(dataPoint);
                         });
                     });
                     this.options.title.text = 'Engagements Over Time';

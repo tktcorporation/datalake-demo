@@ -6,6 +6,9 @@ export default {
     tagsOverTime: state => {
         return state.selectors.social.tagsOverTime;
     },
+    dates: state => {
+        return state.selectors.social.dates;
+    },
     getNetworkMetricsOverTime() {},
     getTopicMetricsOverTime() {}
 };
