@@ -3,6 +3,7 @@ import _ from 'lodash';
 export default {
     async getTagsOverTime(context) {
         if (context.state.selectors.social.selectedNlpType === 'categories') {
+            await context.dispatch('getTagData');
             try {
                 let isFinished = 0;
                 let tagsArray = [];
