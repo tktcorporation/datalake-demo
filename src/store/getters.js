@@ -1,3 +1,11 @@
 export default {
-    // getters go here
+    tagData: state => {
+        return state.selectors.social.tagData;
+    },
+
+    tagsOverTime: state => {
+        return state.selectors.social.tagsOverTime;
+    },
+    getNetworkMetricsOverTime() {},
+    getTopicMetricsOverTime() {}
 };
