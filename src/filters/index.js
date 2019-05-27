@@ -19,7 +19,7 @@ Vue.filter('number', function (number, precision) {
 
 Vue.filter('humanNumber', function(number) {
   if (!number) {
-    return '';
+    return 0;
   }
   if (number < 1000) {
     return number;

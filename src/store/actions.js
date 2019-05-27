@@ -1,5 +1,6 @@
 import API from '../api/index';
 import _ from 'lodash';
+
 export default {
     async getTagsOverTime(context) {
         if (context.state.selectors.social.selectedNlpType === 'categories') {

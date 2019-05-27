@@ -41,6 +41,8 @@ export default {
 	
 	name: "usagm-network-selector",
 
+    props: ['value'],
+    
 	data() {
 		return {
             selectedUsagmNetworks: null,
@@ -58,10 +60,22 @@ export default {
         Multiselect
     },
 
+    mounted(){
+        if (this.value){
+            for (let i=0; i<this.networks.length; i+=1){
+                if (this.networks[i].name == this.value){
+                    this.selectedUsagmNetworks = this.networks[i]
+                }
+            }
+        }
+    },
+
 	methods: {
 
-        onSelectUsagmNetwork(){
-            this.$emit('onSelectUsagmNetwork', _.map(this.selectedUsagmNetworks, 'name'))
+        onSelectUsagmNetwork(){            
+            if (this.selectedUsagmNetworks && this.selectedUsagmNetworks.name){
+                this.$emit('input', this.selectedUsagmNetworks.name)
+            }
         }
 	}
 

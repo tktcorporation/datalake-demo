@@ -70,14 +70,10 @@ const API = {
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
-
-    async getUser() {
-        try {
-            return await this.__send('get', 'user', '', null);
-        } catch (err) {
-            return null;
-        }
-    },
+    //
+    // Session
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Redirect user to the login.gov login page, which then redirects back
@@ -88,11 +84,8 @@ const API = {
         // Clear tokens
         this.setPreference('token', '');
 
-        let CLIENT_ID =
-            'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
-        let REDIRECT_URI = `${window.location.protocol}//${
-            window.location.host
-        }/authenticate`;
+        let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
+        let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`;
 
         // A unique value at least 32 characters in length used for maintaining state between the request and the callback.
         // This value will be returned to the client on a successful authorization.
@@ -162,6 +155,23 @@ const API = {
         this.setPreference('token', null);
 
         await this.__send('delete', 'user', `?${$.param(opts)}`, null);
+    },
+
+    // ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // User
+    //
+    // ///////////////////////////////////////////////////////////////////////////////////////
+
+    async getUser() {
+        return await this.__send('get', 'user', '', null);
+    },
+
+    /**
+     * Updates the currently logged in user
+     */
+    async updateUser(userObj) {
+        return await this.__send('put', 'user', '', {user:userObj});
     },
 
     // ///////////////////////////////////////////////////////////////////////////////////////
@@ -245,6 +255,7 @@ const API = {
             null
         );
     },
+    
     async getHosts(opts) {
         var merged = _.defaults(opts, {});
         return await this.__send(
@@ -271,7 +282,10 @@ const API = {
     //
     // ///////////////////////////////////////////////////////////////////////////////////////
 
-    async getSocialProfiles() {
+    async getSocialProfiles(opts) {
+        if (opts){
+            return await this.__send('get', 'social', `profiles?${$.param(opts)}`, null);
+        }        
         return await this.__send('get', 'social', 'profiles', null);
     },
 
@@ -433,27 +447,16 @@ const API = {
 
         try {
             if (verb == 'post') {
-                response = await Vue.http.post(finalUrl, body, {
-                    headers: headers
-                });
+                response = await Vue.http.post(finalUrl, body, {headers: headers});
             } else if (verb == 'put') {
-                response = await Vue.http.put(finalUrl, body, {
-                    headers: headers
-                });
+                response = await Vue.http.put(finalUrl, body, {headers: headers});
             } else if (verb == 'get') {
-                response = await Vue.http.get(finalUrl, {
-                    headers: headers
-                });
+                response = await Vue.http.get(finalUrl, {headers: headers});
             } else if (verb == 'delete') {
-                response = await Vue.http.delete(finalUrl, {
-                    headers: headers
-                });
+                response = await Vue.http.delete(finalUrl, {headers: headers});
             }
         } catch (err) {
-            console.error(
-                `[${verb.toUpperCase()}][${service}] ${finalUrl}`,
-                err
-            );
+            console.error(`[${verb.toUpperCase()}][${service}] ${finalUrl}`, err);
             console.error(err);
             //return (err.body.message) ? err.body : null;
             if (err.body && err.body.message) {

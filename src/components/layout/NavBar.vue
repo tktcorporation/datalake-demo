@@ -72,6 +72,7 @@
 
                 <!-- Non-Mobile  -->
                 <ul class="navbar-nav ml-auto d-none d-lg-flex">
+
                     <li class="nav-item" v-if="user.authenticated">
                         <router-link class="nav-link" :to="{name:'social-dashboard'}">Social</router-link>
                     </li>
@@ -96,12 +97,29 @@
                         <span class="nav-link" @click="doLogin()">Login</span>
                     </li>
 
-                    <li class="nav-item" v-if="user.authenticated">
-                        <span class="nav-link" @click="doLogout()">Logout</span>
+                    <li class="nav-item dropdown" v-if="user.authenticated">
+
+                        <a class="nav-link" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <avatar style="float:right; margin-top:-4px" v-if="user.authenticated" :username="user.email" :size="32" :rounded="true"></avatar>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                            <router-link class="dropdown-item" :to="{name:'profile'}">Profile</router-link>
+
+                            <div class="dropdown-divider"></div>
+
+                            <span class="dropdown-item" @click="doLogout()">Logout</span>
+
+                        </div>
                     </li>
+
                 </ul>
 
-                <avatar v-if="user.authenticated" :username="user.email" :size="30"></avatar>
+
+
+
+
             </div>
         </div>
     </nav>

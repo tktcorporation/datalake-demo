@@ -8,6 +8,7 @@ import NotFound from "../components/pages/NotFound";
 import Authenticate from "../components/pages/Authenticate";
 import ContentSearch from "../components/pages/ContentSearch";
 import ContentGenerator from "../components/pages/ContentGenerator";
+import Profile from "../components/pages/Profile";
 import store from "../store";
 import API from "../api";
 
@@ -37,6 +38,14 @@ var router = new Router({
                 requiresAuth: true
             }
         },
+        {
+            path: "/profile",
+            name: "profile",
+            component: Profile,
+            meta: {
+                requiresAuth: true
+            }
+        },        
         {
             path: "/nlp",
             name: "similar",
