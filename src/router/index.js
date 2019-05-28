@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "../components/pages/Home";
+import Dashboard from "../components/pages/Dashboard";
 import SocialDashboard from "../components/pages/SocialDashboard";
 import WebTraffic from "../components/pages/WebTraffic";
 import SimilarPages from "../components/pages/SimilarPages";
@@ -30,6 +31,14 @@ var router = new Router({
                 requiresAuth: true
             }
         },
+        {
+            path: "/dashboard",
+            name: "dashboard",
+            component: Dashboard,
+            meta: {
+                requiresAuth: true
+            }
+        },        
         {
             path: "/web",
             name: "web-dashboard",
