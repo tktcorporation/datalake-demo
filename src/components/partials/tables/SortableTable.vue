@@ -5,6 +5,10 @@
             :columns="tableCols" 
             :rows="tableRows"
             styleClass="vgt-table condensed striped"
+            :pagination-options="{
+                enabled: true,
+                perPage: 10
+            }"
             :sort-options="{
                 enabled: true,
             }"                
