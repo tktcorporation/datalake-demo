@@ -1,7 +1,18 @@
+ <!-- <template>
+ <div>
+    <div class="spinner-border" role="status"></div>
+
+    <div>
+      <line-chart :chart-data="chartData"></line-chart>
+    </div>
+  </div>
+</template> -->
+
 <script>
 import { Line } from 'vue-chartjs';
 import API from '../../../api';
 import moment from 'moment';
+import { clearInterval } from 'timers';
 const ColorScheme = require('color-scheme');
 export default {
     extends: Line,
@@ -9,9 +20,6 @@ export default {
     data() {
         return {
             isLoading: false,
-            tagData: null,
-            metricsOverTime: [],
-            topics: [],
             chartData: {
                 datasets: []
             },
@@ -203,78 +211,55 @@ export default {
         };
     },
     computed: {
-        network() {
-            return this.$store.state.selectors.social.selectedNetwork;
+        tagsOverTime() {
+            return this.$store.getters.tagsOverTime;
         },
-        profileIds() {
-            return this.$store.state.selectors.social.selectedProfileIds;
-        },
-        type() {
-            return this.$store.state.selectors.social.selectedNlpType;
-        },
-        date() {
-            return this.$store.state.selectors.social.dates;
+        dates() {
+            return this.$store.getters.dates;
         }
     },
     mounted() {
-        console.log('im mounted');
-
         this.$store.dispatch('getTagsOverTime');
-        // this.getTagsOverTime();
+
+        this.$store.watch(
+            state => state.selectors.social.selectedProfileIds,
+            async () => {
+                await this.$store.dispatch('getTagsOverTime');
+            }
+        ),
+            this.$store.watch(
+                state => state.selectors.social.selectedNetwork,
+                async () => {
+                    await this.$store.dispatch('getTagsOverTime');
+                }
+            ),
+            this.$store.watch(
+                state => state.selectors.social.selectedNlpType,
+                async () => {
+                    await this.$store.dispatch('getTagsOverTime');
+                }
+            ),
+            this.$store.watch(
+                state => state.selectors.social.dates,
+                async () => {
+                    await this.$store.dispatch('getTagsOverTime');
+                }
+            );
+    },
+    watch: {
+        tagsOverTime() {
+            this.render();
+        }
     },
     methods: {
-        async getTagsOverTime() {
-            //get the metrics over time
-            if (this.type === 'categories') {
-                this.metricsOverTime = [];
-                await this.tagData.forEach(tag => {
-                    if (this.date) {
-                        API.getTagsOverTime({
-                            tags: `${tag.name}`,
-                            start: this.date.start,
-                            end: this.date.end
-                        }).then(data => {
-                            this.metricsOverTime = [
-                                ...this.metricsOverTime,
-                                data
-                            ];
-                            //only render when all the data is here
-                            if (
-                                this.metricsOverTime.length ===
-                                this.tagData.length
-                            ) {
-                                this.render();
-                            }
-                        });
-                    } else {
-                        // 90 days default
-                        API.getTagsOverTime({
-                            tags: `${tag.name}`
-                        }).then(data => {
-                            this.metricsOverTime = [
-                                ...this.metricsOverTime,
-                                data
-                            ];
-                            if (
-                                this.metricsOverTime.length ===
-                                this.tagData.length
-                            ) {
-                                this.render();
-                            }
-                        });
-                    }
-                });
-            }
-        },
         render() {
             this.chartData = {
                 datasets: []
             };
-            if (this.metricsOverTime.length === this.tagData.length) {
-                console.log(this.metricsOverTime);
-                if (this.date) {
-                    this.options.scales.xAxes[0].time.min = this.date.start;
-                    this.options.scales.xAxes[0].time.max = this.date.end;
+            if (this.tagsOverTime) {
+                if (this.dates) {
+                    this.options.scales.xAxes[0].time.min = this.dates.start;
+                    this.options.scales.xAxes[0].time.max = this.dates.end;
                 } else {
                     this.options.scales.xAxes[0].time.min = moment().subtract(
                         90,
@@ -298,7 +283,7 @@ export default {
                 if (this.TopicsOverTime) {
                     //correct the format for chart rendering
 
-                    this.metricsOverTime.forEach((metric, index) => {
+                    this.tagsOverTime.forEach((metric, index) => {
                         let color = colors[index];
                         metric.forEach(dataPoint => {
                             // push objects into the datasets
@@ -348,7 +333,7 @@ export default {
                     this.renderChart(this.chartData, this.options);
                 } else {
                     let colorCount = 0;
-                    this.metricsOverTime.forEach((metric, index) => {
+                    this.tagsOverTime.forEach((metric, index) => {
                         metric.forEach(dataPoint => {
                             // push objects into the datasets
                             if (
@@ -396,7 +381,6 @@ export default {
                                     newDataSet
                                 ];
                             }
-                            this.topics.push(dataPoint);
                         });
                     });
                     this.options.title.text = 'Engagements Over Time';
@@ -405,84 +389,6 @@ export default {
                     //renderChart is part of Chart.js
                     this.renderChart(this.chartData, this.options);
                 }
-            }
-        },
-        async updateAll() {
-            await this.getTagData().then(() => {
-                // waits for tagData then renders
-                this.getTagsOverTime();
-                //this.update is a chartjs function
-                // this.update();
-            });
-        },
-
-        async getTagData() {
-            function parseNumber(val) {
-                var val = parseInt(val);
-                if (!_.isFinite(val)) {
-                    return 0;
-                }
-                return val;
-            }
-
-            this.isLoading = true;
-            this.tags = await API.getTopTags(this.profileIds, {
-                type: this.type,
-                network: this.network
-            });
-            this.isLoading = false;
-
-            var max = -9999999;
-
-            // Now normalize data
-            for (let i = 0; i < this.tags.length; i += 1) {
-                var val = parseNumber(this.tags[i].interactions);
-                if (val > max) {
-                    max = val;
-                }
-            }
-
-            this.tagData = [];
-
-            for (let i = 0; i < this.tags.length; i += 1) {
-                this.tagData[i] = this.tags[i];
-
-                this.tagData[i].facebook_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].facebook_interactions)) /
-                        max
-                );
-                this.tagData[i].twitter_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].twitter_interactions)) / max
-                );
-                this.tagData[i].youtube_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].youtube_interactions)) / max
-                );
-                this.tagData[i].instagram_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].instagram_interactions)) /
-                        max
-                );
-            }
-        }
-    },
-    watch: {
-        network(val) {
-            if (this.type === 'categories') {
-                this.updateAll();
-            }
-        },
-        profileIds(val) {
-            if (this.type === 'categories') {
-                this.updateAll();
-            }
-        },
-        type() {
-            if (this.type === 'categories') {
-                this.updateAll();
-            }
-        },
-        date() {
-            if (this.type === 'categories') {
-                this.updateAll();
             }
         }
     }
