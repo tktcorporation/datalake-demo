@@ -29,6 +29,7 @@ export default {
                             });
                         } else {
                             // 90 days default
+
                             await API.getTagsOverTime({
                                 tags: `${tag.name}`
                             }).then(data => {
@@ -61,6 +62,11 @@ export default {
         }
 
         try {
+            console.log(
+                'fetching for tag',
+                context.state.selectors.social.selectedProfileIds
+            );
+
             await API.getTopTags(
                 context.state.selectors.social.selectedProfileIds,
                 {

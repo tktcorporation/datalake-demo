@@ -6,8 +6,10 @@
       </span>
 
       <div class="p-1 w-100 h-100" v-if="!isLoading">
+        <!-- Each Row !-->
         <div class="row" v-for="tag in tagData" :key="tag.name">
           <div class="col-md-2">
+            <!-- Label !-->
             <div
               class="tag-label"
               :title="`${tag.name}: facebook: ${tag.facebook_interactions}, twitter: ${tag.twitter_interactions}, youtube: ${tag.youtube_interactions}, instagram: ${tag.instagram_interactions}`"
@@ -18,6 +20,7 @@
               >{{tag.name}}</router-link>
             </div>
           </div>
+          <!-- Social Medias !-->
 
           <div class="col-md-10">
             <div class="progress mt-1">
@@ -94,8 +97,7 @@ export default {
     name: 'tag-performance-bar',
     data() {
         return {
-            isLoading: false,
-            tagData: null
+            isLoading: false
         };
     },
     computed: {
@@ -107,82 +109,19 @@ export default {
         },
         type() {
             return this.$store.state.selectors.social.selectedNlpType;
+        },
+        tagData() {
+            return this.$store.getters.tagData;
         }
     },
-    watch: {
-        network(val) {
-            this.update();
-        },
-
-        profileIds(val) {
-            this.update();
-        },
-        type() {
-            this.update();
-        }
-    },
-
-    methods: {
-        update() {
-            this.getTagData().then(() => {
-                $(function() {
-                    $('[data-toggle="popover"]').popover();
-                });
-            });
-        },
-
-        async getTagData() {
-            this.$log('Getting tag data...');
-
-            function parseNumber(val) {
-                var val = parseInt(val);
-                if (!_.isFinite(val)) {
-                    return 0;
-                }
-                return val;
+    watch: {},
+    mounted() {
+        this.$store.watch(
+            state => this.$store.getters.tagData,
+            () => {
+                this.$forceUpdate();
             }
-
-            this.isLoading = true;
-
-            this.tags = await API.getTopTags(this.profileIds, {
-                type: this.type,
-                network: this.network
-            });
-            this.isLoading = false;
-
-            var max = -9999999;
-
-            // Now normalize data
-            for (let i = 0; i < this.tags.length; i += 1) {
-                var val = parseNumber(this.tags[i].interactions);
-                if (val > max) {
-                    max = val;
-                }
-            }
-
-            this.$log(this.tags);
-
-            this.tagData = [];
-
-            for (let i = 0; i < this.tags.length; i += 1) {
-                this.tagData[i] = this.tags[i];
-
-                this.tagData[i].facebook_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].facebook_interactions)) /
-                        max
-                );
-                this.tagData[i].twitter_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].twitter_interactions)) / max
-                );
-                this.tagData[i].youtube_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].youtube_interactions)) / max
-                );
-                this.tagData[i].instagram_normalized = Math.round(
-                    (100 * parseNumber(this.tags[i].instagram_interactions)) /
-                        max
-                );
-            }
-        }
+        );
     }
 };
 </script>

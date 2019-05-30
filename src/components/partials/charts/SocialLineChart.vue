@@ -340,13 +340,13 @@ export default {
                                 this.chartData.datasets.filter(
                                     dataset =>
                                         dataset.label ===
-                                        dataPoint.profile.usagmNetwork
+                                        dataPoint.profile.usagm_network
                                 ).length > 0
                             ) {
                                 let currentDataset = this.chartData.datasets.filter(
                                     dataset =>
                                         dataset.label ===
-                                        dataPoint.profile.usagmNetwork
+                                        dataPoint.profile.usagm_network
                                 )[0];
                                 let newDataPoint = {
                                     x: moment(`${dataPoint.date}`).format(
@@ -362,7 +362,7 @@ export default {
                                 let color = colors[colorCount];
                                 colorCount++;
                                 let newDataSet = {
-                                    label: dataPoint.profile.usagmNetwork,
+                                    label: dataPoint.profile.usagm_network,
                                     backgroundColor: `#${color}`,
                                     borderColor: `#${color}`,
                                     fill: false,
