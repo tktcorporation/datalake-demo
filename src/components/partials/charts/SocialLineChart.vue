@@ -219,6 +219,7 @@ export default {
         }
     },
     mounted() {
+        //////////////////
         this.$store.dispatch('getTagsOverTime');
 
         this.$store.watch(

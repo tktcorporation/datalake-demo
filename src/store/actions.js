@@ -67,48 +67,47 @@ export default {
                 context.state.selectors.social.selectedProfileIds
             );
 
-            await API.getTopTags(
+            let data = await API.getTopTags(
                 context.state.selectors.social.selectedProfileIds,
                 {
                     type: context.state.selectors.social.selectedNlpType,
                     network: context.state.selectors.social.selectedNetwork
                 }
-            ).then(data => {
-                console.log('these are the tags', data);
+            );
 
-                let tags = data;
+            console.log('these are the tags', data);
 
-                let max = -9999999;
+            let tags = data;
 
-                // Now normalize data
-                for (let i = 0; i < tags.length; i += 1) {
-                    var val = parseNumber(tags[i].interactions);
-                    if (val > max) {
-                        max = val;
-                    }
+            let max = -9999999;
+
+            // Now normalize data
+            for (let i = 0; i < tags.length; i += 1) {
+                var val = parseNumber(tags[i].interactions);
+                if (val > max) {
+                    max = val;
                 }
-                let tagData = [];
+            }
+            let tagData = [];
 
-                for (let i = 0; i < tags.length; i += 1) {
-                    tagData[i] = tags[i];
+            for (let i = 0; i < tags.length; i += 1) {
+                tagData[i] = tags[i];
 
-                    tagData[i].facebook_normalized = Math.round(
-                        (100 * parseNumber(tags[i].facebook_interactions)) / max
-                    );
-                    tagData[i].twitter_normalized = Math.round(
-                        (100 * parseNumber(tags[i].twitter_interactions)) / max
-                    );
-                    tagData[i].youtube_normalized = Math.round(
-                        (100 * parseNumber(tags[i].youtube_interactions)) / max
-                    );
-                    tagData[i].instagram_normalized = Math.round(
-                        (100 * parseNumber(tags[i].instagram_interactions)) /
-                            max
-                    );
-                }
+                tagData[i].facebook_normalized = Math.round(
+                    (100 * parseNumber(tags[i].facebook_interactions)) / max
+                );
+                tagData[i].twitter_normalized = Math.round(
+                    (100 * parseNumber(tags[i].twitter_interactions)) / max
+                );
+                tagData[i].youtube_normalized = Math.round(
+                    (100 * parseNumber(tags[i].youtube_interactions)) / max
+                );
+                tagData[i].instagram_normalized = Math.round(
+                    (100 * parseNumber(tags[i].instagram_interactions)) / max
+                );
+            }
 
-                context.commit('getTagData', tagData);
-            });
+            context.commit('getTagData', tagData);
         } catch (err) {
             console.log(err);
         }
