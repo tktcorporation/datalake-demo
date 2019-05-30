@@ -82,6 +82,10 @@
 
                 <!-- Non-Mobile  -->
                 <ul class="navbar-nav ml-auto d-none d-lg-flex">
+                    
+                    <li class="nav-item" v-if="user.authenticated && user.isAdmin">
+                        <router-link class="nav-link" :to="{name:'dashboard-mbn'}">Snapshot MBN</router-link>
+                    </li>
 
                     <li class="nav-item" v-if="user.authenticated">
                         <router-link class="nav-link" :to="{name:'dashboard'}">Snapshot</router-link>

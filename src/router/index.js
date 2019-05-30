@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "../components/pages/Home";
 import Dashboard from "../components/pages/Dashboard";
+import SnapshotMBN from "../components/pages/SnapshotMBN";
 import SocialDashboard from "../components/pages/SocialDashboard";
 import WebTraffic from "../components/pages/WebTraffic";
 import SimilarPages from "../components/pages/SimilarPages";
@@ -31,6 +32,14 @@ var router = new Router({
                 requiresAuth: true
             }
         },
+        {
+            path: "/dashboard-mbn",
+            name: "dashboard-mbn",
+            component: SnapshotMBN,
+            meta: {
+                requiresAuth: true
+            }
+        },        
         {
             path: "/dashboard",
             name: "dashboard",

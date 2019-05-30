@@ -20,12 +20,7 @@ export default {
         Peity
 	},
     
-    props: {
-        data: {
-            type: Object,
-            default: []
-        }
-    },
+    props: ['data'],
 
     /*
     mounted(){
