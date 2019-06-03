@@ -1,6 +1,6 @@
 <template>
     <div class="sparkline-minichart d-inline">
-        <peity :type="'line'" :options="{ width: 200 }" :data="chartData"></peity>
+        <peity :type="'line'" :options="{ width: '100%' }" :data="chartData"></peity>
     </div>
 </template>
 

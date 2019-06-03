@@ -1,27 +1,20 @@
 <template>
     <div>
-        <div class="facebook-reach card" :class="{'text-white bg-success':followersDelta > threshold, 'text-white bg-danger':followersDelta < threshold}">
+        <div class="youtube-reach card" :class="{'text-white bg-success':weekTotal > threshold, 'text-white bg-danger':weekTotal < threshold}">
             <!--<img src="/imgs/facebook-logo.png" class="card-img-top" alt="">-->
-            <!--
-            <div class="card-header" :class="{'text-white bg-success':followersDelta > threshold, 'text-white bg-danger':followersDelta < threshold}">Facebook Reach</div>
-            -->
             <div class="card-body">
                 
                 <h5 class="card-title">
-                    <i class="fab fa-facebook"></i> Facebook Reach
+                    <i class="fab fa-youtube"></i> Youtube Reach
                 </h5>
                 
                 <div style="font-size:34px">
-                    {{followersDelta | humanNumber}}
+                    {{weekTotal | humanNumber}}
                     <span class="target-text" title="Metric Target">{{threshold | humanNumber}}</span>
                 </div>
 
                 <spark-line :data="totalsByDay"></spark-line>
 
-                <!--
-                <div class="small">{{profiles[0].name_en}}</div>
-                <div class="small">{{competitorProfiles[0].name_en}}</div>
-                -->
             </div>
 
         </div>
@@ -39,7 +32,7 @@ import _ from 'lodash'
 
 export default {
     
-    name: "facebook-reach",
+    name: "youtube-reach",
 
     props: {
         threshold: {
@@ -66,9 +59,7 @@ export default {
 
     data() {
         return {
-            usagm: null,
-            competitor: null,
-            followersDelta: 0,
+            weekTotal: 0,
             totalsByDay: []                
         };
     },
@@ -91,39 +82,20 @@ export default {
             
             var start = moment().subtract(this.noDays,'days').startOf('day').format('YYYY-MM-DD')
             var end =  moment().endOf('day').format('YYYY-MM-DD')
-            var proj = 'fans_change, date, profile_id'
+            var proj = 'subscribers_change, date'
 
-            var data = await API.getSocialProfileMetricsByNetwork('facebook', {
+            var data = await API.getSocialProfileMetricsByNetwork('youtube', {
                 start: start,
                 end: end,
                 proj: proj,
                 profileIds: this.profiles[0].profile_id
             })
 
-            this.$log('data = ', data)
-
-            this.usagm = data.results
-            this.usagm.totalsByDay = _.map(data.results, function(o){
-                return parseInt(o.fans_change)
-            })
-
-            data = await API.getSocialProfileMetricsByNetwork('facebook', {
-                start: start,
-                end: end,
-                proj: proj,
-                profileIds: this.competitorProfiles[0].profile_id
-            })    
-
-            this.competitor = data.results
-            this.competitor.totalsByDay = _.map(data.results, function(o){
-                return parseInt(o.fans_change)
-            })
-
-            for (let i=0; i<this.usagm.totalsByDay.length; i+=1){
-                this.$set(this.totalsByDay, i, this.usagm.totalsByDay[i] - this.competitor.totalsByDay[i])
+            for (let i=0; i<data.results.length; i+=1){
+                this.$set(this.totalsByDay, i, parseInt(data.results[i].subscribers_change))
             }
 
-            this.followersDelta = _.sumBy(this.usagm, function(o){return parseInt(o.fans_change)}) - _.sumBy(this.competitor, function(o){return parseInt(o.fans_change)})
+            this.weekTotal = _.sumBy(data.results, function(o){return parseInt(o.subscribers_change)})
 
         }   
     }
@@ -134,7 +106,7 @@ export default {
 
 <style lang="scss">
 
-.facebook-reach {
+.youtube-reach {
 
     .bg-success {
         background-color: '#4A9470' !important;
@@ -143,7 +115,7 @@ export default {
     .target-text {
         font-size: 12px;
         color: lightblue;
-    }      
+    }  
 
 }
 </style>
