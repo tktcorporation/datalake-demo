@@ -1,12 +1,3 @@
- <!-- <template>
- <div>
-    <div class="spinner-border" role="status"></div>
-
-    <div>
-      <line-chart :chart-data="chartData"></line-chart>
-    </div>
-  </div>
-</template> -->
 
 <script>
 import { Line } from 'vue-chartjs';

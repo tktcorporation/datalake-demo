@@ -35,24 +35,14 @@
     <div class="row mt-3">
       <div class="col">
         <!-- Comparing Networks !-->
-        <SocialLineChart
-          v-if="this.selectedNlpType === 'categories'"
-          :id="1"
-          class="h-100"
-          NetworkOverTime="true"
-        ></SocialLineChart>
+        <SocialLineChart :id="1" class="h-100" NetworkOverTime="true"></SocialLineChart>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col">
         <!-- Comparing Topics !-->
-        <SocialLineChart
-          v-if="this.selectedNlpType === 'categories'"
-          :id="2"
-          class="h-100"
-          TopicsOverTime="true"
-        ></SocialLineChart>
+        <SocialLineChart :id="2" class="h-100" TopicsOverTime="true"></SocialLineChart>
       </div>
     </div>
 
