@@ -104,9 +104,9 @@ export default {
         }
     },
 
-    async getPageData(context) {
-        const pageData = await API.getContent();
+    async getPostData(context) {
+        const postData = await API.getContent({ type: 'post' });
 
-        context.commit('getPages', pageData);
+        context.commit('getPosts', postData);
     }
 };

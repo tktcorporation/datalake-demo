@@ -34,8 +34,8 @@ export default {
         state.selectors.social.tagsOverTime = tagsOverTime;
     },
 
-    getPages(state, pageData) {
-        state.selectors.social.pageData = pageData;
+    getPosts(state, postData) {
+        state.selectors.social.postData = postData;
     },
 
     // Social

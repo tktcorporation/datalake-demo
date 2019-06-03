@@ -13,7 +13,7 @@ export default {
             dates: null,
             tagData: [],
             tagsOverTime: [],
-            pageData: []
+            postData: []
         },
         web: {},
         content: {},

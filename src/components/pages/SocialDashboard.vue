@@ -57,8 +57,15 @@
       <div class="col">
         <!-- Table of Top Posts !-->
         <SortableTable
-          :columns="[{label:`Network`, field: `name`}, {label: `Social Network`, field: `network`},{label: `Link`, field: `canonical_url`}, {label: `Account`, field: `host`}, {label: `Text`, field: `extract_en`},{label: `Topics`, field: `nlp_topics`}, {label: `Social Engagement`, field: `social_engagement`} ]"
-          :rows="pageData.results"
+          :columns="[{label:`Network`, field: `name`}, 
+          {label: `Social Network`, field: `network`},
+          {label: `Link`, field: `canonical_url`}, 
+          {label: `Account`, field: `host`}, 
+          {label: `Text`, field: `extract_en`},
+          {label: `Topics`, field: `nlp_topics`}, 
+          {label: `Social Engagement`, field: `social_engagement`}
+           ]"
+          :rows="postData.results"
           :options="{lineNumbers: true, maxHeight:`300px`, fixedHeader:true}"
         ></SortableTable>
       </div>
@@ -99,8 +106,8 @@ export default {
         selectedNlpType() {
             return this.$store.state.selectors.social.selectedNlpType;
         },
-        pageData() {
-            return this.$store.getters.pageData;
+        postData() {
+            return this.$store.getters.postData;
         }
     },
     methods: {
@@ -111,7 +118,7 @@ export default {
 
     mounted() {
         this.$store.dispatch('getTagData'),
-            this.$store.dispatch('getPageData'),
+            this.$store.dispatch('getPostData'),
             this.$store.watch(
                 state => state.selectors.social.selectedProfileIds,
                 () => {
