@@ -12,7 +12,8 @@ export default {
             nlpTypes: ['topics', 'entities', 'categories'],
             dates: null,
             tagData: [],
-            tagsOverTime: []
+            tagsOverTime: [],
+            pageData: []
         },
         web: {},
         content: {},

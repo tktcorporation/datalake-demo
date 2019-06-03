@@ -102,5 +102,11 @@ export default {
         } catch (err) {
             console.log(err);
         }
+    },
+
+    async getPageData(context) {
+        const pageData = await API.getContent();
+
+        context.commit('getPages', pageData);
     }
 };

@@ -34,6 +34,10 @@ export default {
         state.selectors.social.tagsOverTime = tagsOverTime;
     },
 
+    getPages(state, pageData) {
+        state.selectors.social.pageData = pageData;
+    },
+
     // Social
     selectNetwork(state, network) {
         state.selectors.social.selectedNetwork = network;
