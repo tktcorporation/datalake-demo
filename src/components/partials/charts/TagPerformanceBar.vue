@@ -21,7 +21,6 @@
             </div>
           </div>
           <!-- Social Medias !-->
-
           <div class="col-md-10">
             <div class="progress mt-1">
               <div

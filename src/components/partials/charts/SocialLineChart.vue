@@ -60,78 +60,57 @@ export default {
                     callbacks: {
                         title: (toolTipItem, data) => {
                             if (this.TopicsOverTime) {
-                                let dataPointInfo = this.metricsOverTime[
+                                let dataPointInfo = this.tagsOverTime[
                                     toolTipItem[0].datasetIndex
                                 ][toolTipItem[0].index];
+
                                 console.log(dataPointInfo);
                                 return `${dataPointInfo.name} - ${
                                     toolTipItem[0].label
                                 }`;
                             } else {
+                                //title
+                                const title =
+                                    data.datasets[toolTipItem[0].datasetIndex]
+                                        .label;
+
+                                // date
+                                const x = moment(
+                                    `${toolTipItem[0].xLabel}`
+                                ).toISOString();
+
+                                //interactions
+                                const y = toolTipItem[0].yLabel;
                                 const dataPoint =
                                     data.datasets[toolTipItem[0].datasetIndex]
                                         .data[toolTipItem[0].index];
 
-                                console.log(
-                                    `${
-                                        this.metricsOverTime
-                                            .flat()
-                                            .filter(item => {
-                                                return (
-                                                    moment(
-                                                        `${item.date}`
-                                                    ).format('MM/DD/YYYY') ==
-                                                        dataPoint.x &&
-                                                    item.interactions ==
-                                                        dataPoint.y
-                                                );
-                                            })[0].name
-                                    } - ${
-                                        this.metricsOverTime
-                                            .flat()
-                                            .filter(item => {
-                                                return (
-                                                    moment(
-                                                        `${item.date}`
-                                                    ).format('MM/DD/YYYY') ==
-                                                        dataPoint.x &&
-                                                    item.interactions ==
-                                                        dataPoint.y
-                                                );
-                                            })[0].date
-                                    }`
+                                let flatTagsArr = this.tagsOverTime.flat();
+                                console.log(x);
+                                console.log(y);
+                                console.log(flatTagsArr);
+                                // if you name this dataPointInfo like above, it doesnt work, it has weird scoping issues
+                                let point = flatTagsArr.filter(
+                                    point =>
+                                        point.profile.usagm_network == title &&
+                                        point.interactions == y &&
+                                        point.date == x
                                 );
-                                debugger;
-                            }
 
-                            console.log(
-                                'these are the metrics',
-                                this.metricsOverTime
-                            );
-                            console.log('titletooltip', toolTipItem);
-                            console.log('titledata', data);
+                                return `${point[0].profile.usagm_network} - ${
+                                    toolTipItem[0].xLabel
+                                }`;
+                            }
                         },
                         label: (toolTipItem, data) => {
                             if (this.TopicsOverTime) {
                             }
 
-                            const dataPoint =
-                                data.datasets[toolTipItem.datasetIndex].data[
-                                    toolTipItem.index
-                                ];
-
-                            const dataPointInfo = this.metricsOverTime[
+                            const dataPointInfo = this.tagsOverTime[
                                 toolTipItem.datasetIndex
                             ][toolTipItem.index];
 
-                            console.log(
-                                'these are the metrics',
-                                this.metricsOverTime
-                            );
-                            console.log('titletooltip', toolTipItem);
-                            console.log('titledata', data);
                             console.log(dataPointInfo);
-                            debugger;
 
                             const facebookComments = `Facebook Comments: ${
                                 dataPointInfo.facebook_comments

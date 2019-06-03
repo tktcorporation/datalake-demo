@@ -44,8 +44,9 @@ const API = {
 
         var rootUrl = process.env.VUE_APP_ROOT_URL
             ? process.env.VUE_APP_ROOT_URL
-            : //  'http://localhost';
-              'https://data.usagm.gov';
+            : 
+            // 'http://localhost';
+          'https://data.usagm.gov';
 
         if (window.location.host.search('localhost')) {
             rootUrl = process.env.VUE_APP_ROOT_URL
