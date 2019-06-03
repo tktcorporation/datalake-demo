@@ -215,7 +215,7 @@ const API = {
 
     async getContent(opts) {
         var merged = _.defaults(opts, {
-            limit: 100
+            limit: 50
             //type: 'topics',
             //range: 'last7days',
         });

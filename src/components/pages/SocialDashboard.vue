@@ -57,48 +57,8 @@
       <div class="col">
         <!-- Table of Top Posts !-->
         <SortableTable
-          :columns="[{label:`Network`, field: `name`}, {label: `Social Network`, field: `age`},{label: `Link`, field: `link`}, {label: `Account`, field: `account`}, {label: `Text`, field: `text`},{label: `Topics`, field: `topics`}, {label: `Social Engagement`, field: `social_engagement`} ]"
-          :rows="[{
-          name: `sam`, age: `21`
-          },
-          {
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },{
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },{
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },{
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },{
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          },
-          {
-            name: `sam`, age: `20`
-          }]"
+          :columns="[{label:`Network`, field: `name`}, {label: `Social Network`, field: `network`},{label: `Link`, field: `canonical_url`}, {label: `Account`, field: `host`}, {label: `Text`, field: `extract_en`},{label: `Topics`, field: `nlp_topics`}, {label: `Social Engagement`, field: `social_engagement`} ]"
+          :rows="pageData.results"
           :options="{lineNumbers: true, maxHeight:`300px`, fixedHeader:true}"
         ></SortableTable>
       </div>
@@ -138,6 +98,9 @@ export default {
         },
         selectedNlpType() {
             return this.$store.state.selectors.social.selectedNlpType;
+        },
+        pageData() {
+            return this.$store.getters.pageData;
         }
     },
     methods: {
