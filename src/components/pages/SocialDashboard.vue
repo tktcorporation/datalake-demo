@@ -52,6 +52,57 @@
         <DonutNew v-if="this.selectedNlpType === 'categories'" class="h-100"></DonutNew>
       </div>
     </div>-->
+
+    <div class="row mt-3">
+      <div class="col">
+        <!-- Comparing Topics !-->
+        <SortableTable
+          :columns="[{label:`Name`, field: `name`}, {label: `Age`, field: `age`}]"
+          :rows="[{
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },{
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },{
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },{
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },{
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          },
+          {
+            name: `sam`, age: `20`
+          }]"
+          :options="{lineNumbers: true, maxHeight:`300px`, fixedHeader:true}"
+        ></SortableTable>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,6 +114,7 @@ import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
 import DateCalendar from '../partials/selectors/DateCalendar.vue';
+import SortableTable from '../partials/tables/SortableTable.vue';
 
 export default {
     name: 'social-dashboard',
@@ -77,7 +129,8 @@ export default {
         SocialLineChart,
         SocialNetworkSelector,
         DonutNew,
-        DateCalendar
+        DateCalendar,
+        SortableTable
     },
     computed: {
         nlpTypes() {
