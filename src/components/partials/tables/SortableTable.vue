@@ -12,9 +12,9 @@
       :sort-options="{
                 enabled: true,
             }"
-      :line-numbers="options.lineNumbers || false"
-      :max-height="options.maxHeight || null"
-      :fixed-header="options.fixedHeader || false"
+      :line-numbers="options ? options.lineNumbers : false"
+      :max-height="options ? options.maxHeight : null"
+      :fixed-header="options ? options.fixedHeader : false"
     >
       <template slot="emptystate">
         <!--This will show up when there are no rows-->
