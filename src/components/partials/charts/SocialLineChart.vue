@@ -50,36 +50,32 @@ export default {
                 tooltips: {
                     callbacks: {
                         title: (toolTipItem, data) => {
-                            if (this.TopicsOverTime) {
-                                let dataPointInfo = this.tagsOverTime[
-                                    toolTipItem[0].datasetIndex
-                                ][toolTipItem[0].index];
+                            //title
+                            const title =
+                                data.datasets[toolTipItem[0].datasetIndex]
+                                    .label;
 
-                                console.log(dataPointInfo);
-                                return `${dataPointInfo.name} - ${
-                                    toolTipItem[0].label
+                            // date
+                            const x = moment(
+                                `${toolTipItem[0].xLabel}`
+                            ).toISOString();
+
+                            //interactions
+                            const y = toolTipItem[0].yLabel;
+
+                            let flatTagsArr = this.tagsOverTime.flat();
+                            if (this.TopicsOverTime) {
+                                let point = flatTagsArr.filter(
+                                    point =>
+                                        point.name == title &&
+                                        point.interactions == y &&
+                                        point.date == x
+                                );
+
+                                return `${point[0].name} - ${
+                                    toolTipItem[0].xLabel
                                 }`;
                             } else {
-                                //title
-                                const title =
-                                    data.datasets[toolTipItem[0].datasetIndex]
-                                        .label;
-
-                                // date
-                                const x = moment(
-                                    `${toolTipItem[0].xLabel}`
-                                ).toISOString();
-
-                                //interactions
-                                const y = toolTipItem[0].yLabel;
-                                const dataPoint =
-                                    data.datasets[toolTipItem[0].datasetIndex]
-                                        .data[toolTipItem[0].index];
-
-                                let flatTagsArr = this.tagsOverTime.flat();
-                                console.log(x);
-                                console.log(y);
-                                console.log(flatTagsArr);
                                 // if you name this dataPointInfo like above, it doesnt work, it has weird scoping issues
                                 let point = flatTagsArr.filter(
                                     point =>
@@ -94,63 +90,84 @@ export default {
                             }
                         },
                         label: (toolTipItem, data) => {
-                            if (this.TopicsOverTime) {
-                                const dataPointInfo = this.tagsOverTime[
-                                    toolTipItem.datasetIndex
-                                ][toolTipItem.index];
+                            //title
+                            const title =
+                                data.datasets[toolTipItem.datasetIndex].label;
 
-                                console.log(dataPointInfo);
+                            // date
+                            const x = moment(
+                                `${toolTipItem.xLabel}`
+                            ).toISOString();
+
+                            //interactions
+                            const y = toolTipItem.yLabel;
+                            const dataPoint =
+                                data.datasets[toolTipItem.datasetIndex].data[
+                                    toolTipItem.index
+                                ];
+
+                            let flatTagsArr = this.tagsOverTime.flat();
+
+                            if (this.TopicsOverTime) {
+                                let point = flatTagsArr.filter(
+                                    point =>
+                                        point.name == title &&
+                                        point.interactions == y &&
+                                        point.date == x
+                                );
+
+                                // if you name this dataPointInfo like above, it doesnt work, it has weird scoping issues
 
                                 const facebookComments = `Facebook Comments: ${
-                                    dataPointInfo.facebook_comments
+                                    point[0].facebook_comments
                                 }`;
 
                                 const facebookInteractions = `Facebook Interactions: ${
-                                    dataPointInfo.facebook_interactions
+                                    point[0].facebook_interactions
                                 }`;
 
                                 const facebookReactions = `Facebook Reactions: ${
-                                    dataPointInfo.facebook_reactions
+                                    point[0].facebook_reactions
                                 }`;
                                 const facebookShares = `Facebook Shares: ${
-                                    dataPointInfo.facebook_shares
+                                    point[0].facebook_shares
                                 }`;
 
                                 const instagramComments = `Instagram Comments: ${
-                                    dataPointInfo.instagram_comments
+                                    point[0].instagram_comments
                                 }`;
                                 const instagramInteractions = `Instagram Interactions: ${
-                                    dataPointInfo.instagram_interactions
+                                    point[0].instagram_interactions
                                 }`;
                                 const instagramLikes = `Instagram Likes: ${
-                                    dataPointInfo.instagram_likes
+                                    point[0].instagram_likes
                                 }`;
 
                                 const twitterInteractions = `Twitter Interactions: ${
-                                    dataPointInfo.twitter_interactions
+                                    point[0].twitter_interactions
                                 }`;
                                 const twitterLikes = `Twitter Likes: ${
-                                    dataPointInfo.twitter_likes
+                                    point[0].twitter_likes
                                 }`;
                                 const twitterShares = `Twitter Shares: ${
-                                    dataPointInfo.twitter_shares
+                                    point[0].twitter_shares
                                 }`;
 
                                 const youtubeInteractions = `Youtube Interactions: ${
-                                    dataPointInfo.youtube_interactions
+                                    point[0].youtube_interactions
                                 }`;
                                 const youtubeLikes = `Youtube Likes: ${
-                                    dataPointInfo.youtube_likes
+                                    point[0].youtube_likes
                                 }`;
                                 const youtubeImpressions = `Youtube Impressions: ${
-                                    dataPointInfo.youtube_impressions
+                                    point[0].youtube_impressions
                                 }`;
                                 const youtubeComments = `Youtube Comments: ${
-                                    dataPointInfo.youtube_comments
+                                    point[0].youtube_comments
                                 }`;
 
                                 const totalInteractions = `Total Interactions: ${
-                                    dataPointInfo.interactions
+                                    point[0].interactions
                                 }`;
 
                                 let toolTips = [
@@ -173,31 +190,14 @@ export default {
 
                                 return toolTips;
                             } else {
-                                //title
-                                const title =
-                                    data.datasets[toolTipItem.datasetIndex]
-                                        .label;
-
-                                // date
-                                const x = moment(
-                                    `${toolTipItem.xLabel}`
-                                ).toISOString();
-
-                                //interactions
-                                const y = toolTipItem.yLabel;
-                                const dataPoint =
-                                    data.datasets[toolTipItem.datasetIndex]
-                                        .data[toolTipItem.index];
-
-                                let flatTagsArr = this.tagsOverTime.flat();
-
-                                // if you name this dataPointInfo like above, it doesnt work, it has weird scoping issues
                                 let point = flatTagsArr.filter(
                                     point =>
                                         point.profile.usagm_network == title &&
                                         point.interactions == y &&
                                         point.date == x
                                 );
+
+                                // if you name this dataPointInfo like above, it doesnt work, it has weird scoping issues
 
                                 const facebookComments = `Facebook Comments: ${
                                     point[0].facebook_comments
