@@ -57,7 +57,7 @@
       <div class="col">
         <!-- Comparing Topics !-->
         <SortableTable
-          :columns="[{label:`Network`, field: `name`}, {label: `Age`, field: `age`}]"
+          :columns="[{label:`Network`, field: `name`}, {label: `Social Network`, field: `age`},{label: `Link`, field: `link`}, {label: `Account`, field: `account`}, {label: `Text`, field: `text`},{label: `Topics`, field: `topics`}, {label: `Social Engagement`, field: `social_engagement`} ]"
           :rows="[{
           name: `sam`, age: `21`
           },

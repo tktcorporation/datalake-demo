@@ -63,11 +63,6 @@ export default {
         VueGoodTable,
         SparkLine
     },
-
-    data() {
-        return {};
-    },
-
     computed: {
         tableCols: function() {
             if (_.isEmpty(this.columns)) {
@@ -86,11 +81,7 @@ export default {
                 return this.rows;
             }
         }
-    },
-
-    mounted() {},
-
-    methods: {}
+    }
 };
 </script>
 
