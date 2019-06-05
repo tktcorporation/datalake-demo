@@ -116,8 +116,6 @@ export default {
         this.getProfiles();
     },
 
-    destroyed() {},
-
     methods: {
         getProfiles(query) {
             this.isLoadingProfiles = true;

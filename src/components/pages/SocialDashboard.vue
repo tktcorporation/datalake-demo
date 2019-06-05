@@ -35,33 +35,34 @@
     <div class="row mt-3">
       <div class="col">
         <!-- Comparing Networks !-->
-        <SocialLineChart
-          v-if="this.selectedNlpType === 'categories'"
-          :id="1"
-          class="h-100"
-          NetworkOverTime="true"
-        ></SocialLineChart>
+        <SocialLineChart :id="1" class="h-100" NetworkOverTime="true"></SocialLineChart>
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col">
         <!-- Comparing Topics !-->
-        <SocialLineChart
-          v-if="this.selectedNlpType === 'categories'"
-          :id="2"
-          class="h-100"
-          TopicsOverTime="true"
-        ></SocialLineChart>
+        <SocialLineChart :id="2" class="h-100" TopicsOverTime="true"></SocialLineChart>
       </div>
     </div>
 
-    <!-- Pie Chart !-->
-    <!-- <div class="row mt-3">
+    <div class="row mt-3">
       <div class="col">
-        <DonutNew v-if="this.selectedNlpType === 'categories'" class="h-100"></DonutNew>
+        <!-- Table of Top Posts !-->
+        <SortableTable
+          :columns="[{label:`Network`, field: `name`}, 
+          {label: `Social Network`, field: `network`},
+          {label: `Link`, field: `url`}, 
+          {label: `Account`, field: `host`}, 
+          {label: `Text`, field: `extract_en`},
+          {label: `Topics`, field: `nlp_topics`}, 
+          {label: `Social Engagement`, field: `social_engagement`}
+           ]"
+          :rows="postData.results"
+          :options="{lineNumbers: true, maxHeight:`300px`, fixedHeader:true}"
+        ></SortableTable>
       </div>
-    </div>-->
+    </div>
   </div>
 </template>
 
@@ -73,6 +74,7 @@ import SocialNetworkSelector from '../partials/selectors/SocialNetworkSelector';
 import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
 import DateCalendar from '../partials/selectors/DateCalendar.vue';
+import SortableTable from '../partials/tables/SortableTable.vue';
 
 export default {
     name: 'social-dashboard',
@@ -87,7 +89,8 @@ export default {
         SocialLineChart,
         SocialNetworkSelector,
         DonutNew,
-        DateCalendar
+        DateCalendar,
+        SortableTable
     },
     computed: {
         nlpTypes() {
@@ -95,6 +98,9 @@ export default {
         },
         selectedNlpType() {
             return this.$store.state.selectors.social.selectedNlpType;
+        },
+        postData() {
+            return this.$store.getters.postData;
         }
     },
     methods: {
@@ -105,6 +111,7 @@ export default {
 
     mounted() {
         this.$store.dispatch('getTagData'),
+            this.$store.dispatch('getPostData'),
             this.$store.watch(
                 state => state.selectors.social.selectedProfileIds,
                 () => {

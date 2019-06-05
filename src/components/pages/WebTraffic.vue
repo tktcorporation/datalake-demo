@@ -1,5 +1,6 @@
 <template>
   <div class="container" align="left" id="WebTrafficPage">
+    <!-- Selectors !-->
     <div class="row mb-3">
       <div class="col">
         <host-selector @onSelect="onSelectHost"></host-selector>
@@ -25,12 +26,10 @@
       </div>
     </div>
 
-    {{periodStart}}
-    {{periodEnd}}
+    <!-- Tabs !-->
     <div class="row mt-5">
       <div class="col">
         <h4>What topics are being read?</h4>
-
         <ul class="nav mt-3">
           <li class="nav-item" v-for="(type, index) in nlpTypes" :key="index">
             <span
@@ -41,6 +40,7 @@
           </li>
         </ul>
 
+        <!-- Bar Graph !-->
         <div v-for="(type, index) in nlpTypes" :key="index">
           <div v-show="selectedNlpType == type">
             <tag-performance-bar :profile-ids="selectedProfileIds" network="web" :type="type"></tag-performance-bar>
@@ -57,52 +57,12 @@
       </div>
     </div>
 
-    <!--
-        <div class="row">
-
-            <div class="col">
-
-                <usagm-network-selector @onSelectUsagmNetwork="onSelectNetwork"></usagm-network-selector>
-
-            </div>
-            <div
-                class="Search__settings"
-                v-if="showSettings"
-            >
-
-                <datepicker
-                    input-class="Search__input"
-                    placeholder="Start Date"
-                    v-model="periodStart"
-                    name="start-date"
-                ></datepicker>
-
-                <datepicker
-                    input-class="Search__input"
-                    placeholder="End Date"
-                    v-model="periodEnd"
-                    name="end-date"
-                ></datepicker>
-
-            </div>
-
-        </div>
-
-        <div class="Chart__title">
-            <b> How many users are viewing? </b> <span>{{ formattedPeriod }}</span>
-            <hr>
-        </div>
-
-        <div class="row mt-3">
-            <div
-                class="col"
-                style="height:450px"
-            >
-                <web-line-chart :network-ids="selectedNetworkIds"></web-line-chart>
-            </div>
-        </div>
-
-    -->
+    <!-- Pie Chart !-->
+    <!-- <div class="row mt-3">
+      <div class="col">
+        <DonutNew v-if="this.selectedNlpType === 'categories'" class="h-100"></DonutNew>
+      </div>
+    </div>-->
   </div>
 </template>
 
@@ -248,3 +208,63 @@ export default {
     }
 }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <!--
+        <div class="row">
+
+            <div class="col">
+
+                <usagm-network-selector @onSelectUsagmNetwork="onSelectNetwork"></usagm-network-selector>
+
+            </div>
+            <div
+                class="Search__settings"
+                v-if="showSettings"
+            >
+
+                <datepicker
+                    input-class="Search__input"
+                    placeholder="Start Date"
+                    v-model="periodStart"
+                    name="start-date"
+                ></datepicker>
+
+                <datepicker
+                    input-class="Search__input"
+                    placeholder="End Date"
+                    v-model="periodEnd"
+                    name="end-date"
+                ></datepicker>
+
+            </div>
+
+        </div>
+
+        <div class="Chart__title">
+            <b> How many users are viewing? </b> <span>{{ formattedPeriod }}</span>
+            <hr>
+        </div>
+
+        <div class="row mt-3">
+            <div
+                class="col"
+                style="height:450px"
+            >
+                <web-line-chart :network-ids="selectedNetworkIds"></web-line-chart>
+            </div>
+        </div>
+
+    // -->

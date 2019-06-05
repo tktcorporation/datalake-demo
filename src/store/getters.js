@@ -9,6 +9,9 @@ export default {
     dates: state => {
         return state.selectors.social.dates;
     },
+    postData: state => {
+        return state.selectors.social.postData;
+    },
     getNetworkMetricsOverTime() {},
     getTopicMetricsOverTime() {}
 };
