@@ -351,7 +351,7 @@ export default {
                 if (this.TopicsOverTime) {
                     //correct the format for chart rendering
 
-                    this.tagsOverTime.forEach((metric, index) => {
+                    this.tagsOverTime.forEach((metric, index, array) => {
                         let color = colors[index];
                         metric.forEach(dataPoint => {
                             // push objects into the datasets

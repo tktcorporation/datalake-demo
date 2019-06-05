@@ -46,13 +46,6 @@
       </div>
     </div>
 
-    <!-- Pie Chart !-->
-    <!-- <div class="row mt-3">
-      <div class="col">
-        <DonutNew v-if="this.selectedNlpType === 'categories'" class="h-100"></DonutNew>
-      </div>
-    </div>-->
-
     <div class="row mt-3">
       <div class="col">
         <!-- Table of Top Posts !-->
