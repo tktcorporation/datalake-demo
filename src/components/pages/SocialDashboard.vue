@@ -59,7 +59,7 @@
         <SortableTable
           :columns="[{label:`Network`, field: `name`}, 
           {label: `Social Network`, field: `network`},
-          {label: `Link`, field: `canonical_url`}, 
+          {label: `Link`, field: `url`}, 
           {label: `Account`, field: `host`}, 
           {label: `Text`, field: `extract_en`},
           {label: `Topics`, field: `nlp_topics`}, 
