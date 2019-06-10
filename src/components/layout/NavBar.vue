@@ -24,6 +24,7 @@
       <!-- Mobile -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto w-100 d-lg-none mobile-menu">
+          
           <li class="nav-item">
             <router-link
               class="nav-link"
@@ -32,6 +33,16 @@
               data-target="#navbarSupportedContent"
             >Dashboard</router-link>
           </li>
+
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
+              :to="{name:'dashboard-mbn'}"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+            >Dashboard MBN</router-link>
+          </li>
+
 
           <li class="nav-item">
             <router-link
@@ -81,10 +92,15 @@
 
         <!-- Non-Mobile  -->
         <ul class="navbar-nav ml-auto d-none d-lg-flex">
+          
           <li class="nav-item" v-if="user.authenticated">
             <router-link class="nav-link" :to="{name:'dashboard'}">Snapshot</router-link>
           </li>
 
+          <li class="nav-item" v-if="user.authenticated">
+            <router-link class="nav-link" :to="{name:'dashboard-mbn'}">Snapshot-MBN</router-link>
+          </li>
+          
           <li class="nav-item" v-if="user.authenticated && user.isAdmin">
             <router-link class="nav-link" :to="{name:'social-dashboard'}">Social</router-link>
           </li>

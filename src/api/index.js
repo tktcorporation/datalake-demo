@@ -85,11 +85,8 @@ const API = {
         // Clear tokens
         this.setPreference('token', '');
 
-        let CLIENT_ID =
-            'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
-        let REDIRECT_URI = `${window.location.protocol}//${
-            window.location.host
-        }/authenticate`;
+        let CLIENT_ID = 'urn:gov:gsa:openidconnect.profiles:sp:sso:usagm:opranalytics';
+        let REDIRECT_URI = `${window.location.protocol}//${window.location.host}/authenticate`;
 
         // A unique value at least 32 characters in length used for maintaining state between the request and the callback.
         // This value will be returned to the client on a successful authorization.
