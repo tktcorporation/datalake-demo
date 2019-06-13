@@ -31,6 +31,14 @@
       </div>
     </div>
 
+    <!-- Horizontal Bar Graph !-->
+    <div class="row mt-3">
+      <div class="col">
+        <!-- Comparing Networks !-->
+        <HorizontalBar></HorizontalBar>
+      </div>
+    </div>
+
     <!-- Line Charts !-->
     <div class="row mt-3">
       <div class="col">
@@ -75,6 +83,7 @@ import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
 import DateCalendar from '../partials/selectors/DateCalendar.vue';
 import SortableTable from '../partials/tables/SortableTable.vue';
+import HorizontalBar from '../partials/charts/HorizontalBar';
 
 export default {
     name: 'social-dashboard',
@@ -90,7 +99,8 @@ export default {
         SocialNetworkSelector,
         DonutNew,
         DateCalendar,
-        SortableTable
+        SortableTable,
+        HorizontalBar
     },
     computed: {
         nlpTypes() {
