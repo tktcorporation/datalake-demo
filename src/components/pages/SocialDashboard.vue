@@ -34,7 +34,6 @@
     <!-- Horizontal Bar Graph !-->
     <div class="row mt-3">
       <div class="col">
-        <!-- Comparing Networks !-->
         <HorizontalBar></HorizontalBar>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { HorizontalBar } from 'vue-chartjs';
 const ColorScheme = require('color-scheme');
-import moment from 'moment';
 
 export default {
     extends: HorizontalBar,
@@ -13,19 +12,27 @@ export default {
             options: {
                 title: {
                     display: true,
-                    text: 'Side Bar Graph'
+                    text: 'Engagement by Subject'
                 },
                 scales: {
                     yAxes: [
                         {
-                            stacked: true
+                            stacked: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Subjects'
+                            }
                         }
                     ],
                     xAxes: [
                         {
                             stacked: true,
                             categoryPercentage: 0.5,
-                            barPercentage: 1
+                            barPercentage: 1,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Engagements'
+                            }
                         }
                     ]
                 },
@@ -43,6 +50,11 @@ export default {
     computed: {
         tagData() {
             return this.$store.getters.tagData;
+        }
+    },
+    watch: {
+        tagData() {
+            this.render();
         }
     },
     methods: {
