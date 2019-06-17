@@ -1,6 +1,4 @@
 export default {
-    // mutations go here
-
     // Store the value of a search query in the navbar
     setUser(state, info) {
         const levels = { user: 10, admin: 20, super: 30 };

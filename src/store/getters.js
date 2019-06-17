@@ -11,7 +11,5 @@ export default {
     },
     postData: state => {
         return state.selectors.social.postData;
-    },
-    getNetworkMetricsOverTime() {},
-    getTopicMetricsOverTime() {}
+    }
 };

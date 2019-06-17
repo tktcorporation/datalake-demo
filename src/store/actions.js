@@ -105,8 +105,13 @@ export default {
     },
 
     async getPostData(context) {
-        const postData = await API.getContent({ type: 'post' });
+        try {
+            console.log('getPostData called');
 
-        context.commit('getPosts', postData);
+            const postData = await API.getContent();
+            context.commit('getPosts', postData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 };

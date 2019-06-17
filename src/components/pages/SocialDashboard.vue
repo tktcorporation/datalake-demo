@@ -54,7 +54,7 @@
       <div class="col">
         <!-- Table of Top Posts !-->
         <SortableTable
-          :columns="[{label:`Network`, field: `name`}, 
+          :columns="[{label:`Network`, field: `host`}, 
           {label: `Social Network`, field: `network`},
           {label: `Link`, field: `url`}, 
           {label: `Account`, field: `host`}, 
@@ -63,7 +63,7 @@
           {label: `Social Engagement`, field: `social_engagement`}
            ]"
           :rows="postData.results"
-          :options="{lineNumbers: true, maxHeight:`300px`, fixedHeader:true}"
+          :options="{lineNumbers: true, maxHeight:`500px`, fixedHeader:true}"
         ></SortableTable>
       </div>
     </div>
