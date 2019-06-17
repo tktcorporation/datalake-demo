@@ -42,17 +42,14 @@
     <div class="row mt-3">
       <div class="col">
         <!-- Comparing Networks !-->
-        <SocialLineChart :id="1" class="h-100" NetworkOverTime="true"></SocialLineChart>
+        <SocialLineChart :id="1" NetworkOverTime="true"></SocialLineChart>
       </div>
-    </div>
 
-    <div class="row mt-3">
       <div class="col">
         <!-- Comparing Topics !-->
-        <SocialLineChart :id="2" class="h-100" TopicsOverTime="true"></SocialLineChart>
+        <SocialLineChart :id="2" TopicsOverTime="true"></SocialLineChart>
       </div>
     </div>
-
     <div class="row mt-3">
       <div class="col">
         <!-- Table of Top Posts !-->
@@ -82,7 +79,7 @@ import TagPerformanceBar from '../partials/charts/TagPerformanceBar';
 import DonutNew from '../partials/charts/DonutNew.vue';
 import DateCalendar from '../partials/selectors/DateCalendar.vue';
 import SortableTable from '../partials/tables/SortableTable.vue';
-import HorizontalBar from '../partials/charts/HorizontalBar';
+import HorizontalBar from '../partials/charts/HorizontalBar.vue';
 
 export default {
     name: 'social-dashboard',
@@ -148,3 +145,16 @@ export default {
     }
 };
 </script>
+<style lang="scss" scoped>
+.tag-performance-bar-chart {
+    .tag-link {
+        display: inline-block;
+        font-size: 12px;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 0px;
+        max-width: 100%;
+        text-overflow: ellipsis;
+    }
+}
+</style>

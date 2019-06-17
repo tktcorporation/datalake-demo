@@ -1,3 +1,4 @@
+<script>
 import { HorizontalBar } from 'vue-chartjs';
 const ColorScheme = require('color-scheme');
 
@@ -120,3 +121,4 @@ export default {
         }
     }
 };
+</script>
