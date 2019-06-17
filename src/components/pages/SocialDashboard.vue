@@ -54,7 +54,9 @@
       <div class="col">
         <!-- Table of Top Posts !-->
         <SortableTable
-          :columns="[{label:`Network`, field: `host`}, 
+          :columns="[
+          {label: ``, field:`picture`, slot: `picture`},
+          {label:`Network`, field: `host`}, 
           {label: `Social Network`, field: `network`},
           {label: `Link`, field: `url`}, 
           {label: `Account`, field: `host`}, 

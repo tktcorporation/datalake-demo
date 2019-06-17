@@ -28,8 +28,14 @@
             class="rounded float-left user-list-image"
             :src="props.row.picture"
           >
+
           <img
-            v-if="!props.row.picture"
+            v-if="props.row.thumbnail"
+            class="rounded float-left user-list-image"
+            :src="props.row.thumbnail"
+          >
+          <img
+            v-if="!props.row.picture && !props.row.thumbnail"
             class="rounded float-left user-list-image"
             src="http://lorempixel.com/35/35"
           >
